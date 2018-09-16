@@ -1,0 +1,7 @@
+chrony_servers:
+  - 0.de.pool.ntp.org
+  - 1.de.pool.ntp.org
+  - 2.de.pool.ntp.org
+  - 3.de.pool.ntp.org
+chrony_net_mask: "{{ansible_default_ipv4.network}}/{{ansible_default_ipv4.netmask}}"
+chrony_allow_network: "{{chrony_net_mask | ipaddr('net')}}"

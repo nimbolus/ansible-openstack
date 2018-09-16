@@ -1,0 +1,6 @@
+127.0.0.1   localhost
+::1         localhost ip6-localhost ip6-loopback
+
+{% for node in groups.nodes %}
+{{hostvars[node].management_ip_address}} {{hostvars[node].inventory_hostname}}
+{% endfor %}

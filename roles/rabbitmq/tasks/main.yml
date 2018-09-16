@@ -1,0 +1,18 @@
+- name: install
+  apt:
+    name: rabbitmq-server
+
+- name: add user
+  rabbitmq_user:
+    user: "{{rabbitmq_user}}"
+    password: "{{rabbitmq_user_password}}"
+    permissions:
+      - vhost: /
+        configure_priv: .*
+        read_priv: .*
+        write_priv: .*
+
+- name: enable
+  systemd:
+    name: rabbitmq-server
+    enabled: true

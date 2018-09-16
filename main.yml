@@ -1,0 +1,30 @@
+- name: openstack
+  hosts: nodes
+  become: true
+  vars_files:
+    - vars/secrets.yml
+  roles:
+    - role: bootstrap
+      tags: bootstrap
+    - role: ntp
+      tags: ntp
+    - role: mariadb
+      tags: db,mariadb,mysql
+      when: "'controller_nodes' in group_names"
+    - role: rabbitmq
+      tags: rabbit,rabbitmq
+      when: "'controller_nodes' in group_names"
+    - role: memcached
+      tags: memcached
+      when: "'controller_nodes' in group_names"
+    - role: etcd
+      tags: etcd
+      when: "'controller_nodes' in group_names"
+    - role: keystone
+      tags: keystone
+      when: "'controller_nodes' in group_names"
+    - role: glance
+      tags: glance
+      when: "'controller_nodes' in group_names"
+    - role: nova
+      tags: nova

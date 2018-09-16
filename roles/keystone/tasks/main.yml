@@ -1,0 +1,78 @@
+- name: create database
+  mysql_db:
+    name: keystone
+    login_user: root
+    login_password: "{{keystone_db_root_password}}"
+
+- name: create database user
+  mysql_user:
+    name: keystone
+    password: "{{keystone_db_user_password}}"
+    host: "%"
+    priv: "keystone.*:ALL"
+    login_user: root
+    login_password: "{{keystone_db_root_password}}"
+
+- name: install
+  apt:
+    name: "{{item}}"
+  loop:
+    - keystone
+    - apache2
+    - libapache2-mod-wsgi
+
+- name: configure database connection
+  ini_file:
+    path: /etc/keystone/keystone.conf
+    section: database
+    option: connection
+    value: "mysql+pymysql://keystone:{{keystone_db_user_password}}@{{keystone_db_host}}/keystone"
+  notify: init keystone db
+
+- name: configure token provider
+  ini_file:
+    path: /etc/keystone/keystone.conf
+    section: token
+    option: provider
+    value: fernet
+  notify: init keystone token provider
+
+- name: flush handlers
+  meta: flush_handlers
+
+- name: bootstrap keystone
+  shell: |
+    keystone-manage bootstrap --bootstrap-password {{keystone_admin_password}} \
+      --bootstrap-admin-url http://{{inventory_hostname}}:5000/v3/ \
+      --bootstrap-internal-url http://{{inventory_hostname}}:5000/v3/ \
+      --bootstrap-public-url http://{{inventory_hostname}}:5000/v3/ \
+      --bootstrap-region-id RegionOne
+  when: keystone_bootstrap
+
+- name: configure apache2
+  lineinfile:
+    path: /etc/apache2/apache2.conf
+    line: "ServerName {{inventory_hostname}}"
+    regexp: '^ServerName '
+  notify: restart apache2
+
+- name: enable apache2
+  systemd:
+    name: apache2
+    enabled: true
+
+- name: create env file for debugging
+  template:
+    src: admin-openrc.j2
+    dest: ~/admin-openrc
+  become: false
+
+- name: flush handlers
+  meta: flush_handlers
+
+- name: create service project
+  os_project:
+    auth: "{{os_admin_auth}}"
+    name: service
+    description: Service Project
+    domain: default

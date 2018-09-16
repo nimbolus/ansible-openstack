@@ -1,0 +1,84 @@
+- name: configure defaults
+  ini_file:
+    path: /etc/nova/nova.conf
+    section: DEFAULT
+    option: "{{item.option}}"
+    value: "{{item.value}}"
+  loop:
+    - option: transport_url
+      value: rabbit://{{nova_rabbitmq_user}}:{{nova_rabbitmq_user_password}}@{{nova_rabbitmq_host}}
+    - option: my_ip
+      value: "{{nova_ip_address}}"
+    - option: use_neutron
+      value: "true"
+    - option: firewall_driver
+      value: nova.virt.firewall.NoopFirewallDriver
+
+- name: configure auth_strategy
+  ini_file:
+    path: /etc/nova/nova.conf
+    section: api
+    option: auth_strategy
+    value: keystone
+
+- name: configure keystone authtoken
+  ini_file:
+    path: /etc/nova/nova.conf
+    section: keystone_authtoken
+    option: "{{item.option}}"
+    value: "{{item.value}}"
+  loop:
+    - option: auth_url
+      value: "http://{{nova_keystone_host}}:5000/v3"
+    - option: memcached_servers
+      value: "{{nova_memcached_host}}:11211"
+    - option: auth_type
+      value: password
+    - option: project_domain_name
+      value: default
+    - option: user_domain_name
+      value: default
+    - option: project_name
+      value: service
+    - option: username
+      value: nova
+    - option: password
+      value: "{{nova_user_password}}"
+
+- name: configure glance
+  ini_file:
+    path: /etc/nova/nova.conf
+    section: glance
+    option: api_servers
+    value: http://{{nova_glance_api_host}}:9292
+
+- name: configure oslo concurrency
+  ini_file:
+    path: /etc/nova/nova.conf
+    section: oslo_concurrency
+    option: lock_path
+    value: /var/lib/nova/tmp
+
+- name: configure placement
+  ini_file:
+    path: /etc/nova/nova.conf
+    section: placement
+    option: "{{item.option}}"
+    value: "{{item.value}}"
+  loop:
+    - option: region_name
+      value: RegionOne
+    - option: project_domain_name
+      value: Default
+    - option: project_name
+      value: service
+    - option: auth_type
+      value: password
+    - option: user_domain_name
+      value: Default
+    - option: auth_url
+      value: "http://{{nova_keystone_host}}:5000/v3"
+    - option: username
+      value: placement
+    - option: password
+      value: "{{nova_placement_user_password}}"

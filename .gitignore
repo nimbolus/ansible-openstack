@@ -1,0 +1,5 @@
+*.swp
+*.retry
+
+vars/*
+!vars/*_sample.yml

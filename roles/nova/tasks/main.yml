@@ -1,0 +1,47 @@
+- name: install controller
+  apt:
+    name: "{{item}}"
+  loop:
+    - nova-api
+    - nova-conductor
+    - nova-novncproxy
+    - nova-scheduler
+    - nova-placement-api
+  when: "'controller_nodes' in group_names"
+
+- name: install compute
+  apt:
+    name: nova-compute
+  when: "'compute_nodes' in group_names"
+
+- name: setup controller
+  import_tasks: controller_setup.yml
+  when:  "'controller_nodes' in group_names"
+
+- name: configure
+  import_tasks: config.yml
+  notify:
+    - restart nova-api
+    - restart nova-scheduler
+    - restart nova-conductor
+    - restart nova-novncproxy
+    - restart nova-compute
+
+
+- name: configure controller
+  import_tasks: controller_config.yml
+  when: "'controller_nodes' in group_names"
+  notify:
+    - restart nova-api
+    - restart nova-scheduler
+    - restart nova-conductor
+    - restart nova-novncproxy
+  
+- name: configure compute
+  import_tasks: compute_config.yml
+  when: "'compute_nodes' in group_names"
+  notify:
+    - restart nova-compute
+
+- name: flush handlers
+  meta: flush_handlers

@@ -1,0 +1,1 @@
+memcached_listen_ip: "{{management_ip_address}}"

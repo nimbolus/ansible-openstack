@@ -1,0 +1,91 @@
+- name: create database
+  mysql_db:
+    name: glance
+    login_user: root
+    login_password: "{{glance_db_root_password}}"
+
+- name: create database user
+  mysql_user:
+    name: glance
+    password: "{{glance_db_user_password}}"
+    host: "%"
+    priv: "glance.*:ALL"
+    login_user: root
+    login_password: "{{glance_db_root_password}}"
+
+- name: create user
+  os_user:
+    auth: "{{os_admin_auth}}"
+    name: glance
+    password: "{{glance_user_password}}"
+    domain: default
+
+- name: add admin role to user
+  os_user_role:
+    auth: "{{os_admin_auth}}"
+    project: service
+    user: glance
+    role: admin
+
+- name: create service
+  os_keystone_service:
+    auth: "{{os_admin_auth}}"
+    name: glance
+    description: OpenStack Image
+    service_type: image
+
+- name: create api endpoints
+  os_keystone_endpoint:
+    auth: "{{os_admin_auth}}"
+    region: RegionOne
+    service: glance
+    endpoint_interface: "{{item}}"
+    url: "http://{{inventory_hostname}}:9292"
+  loop:
+    - public
+    - internal
+    - admin
+
+- name: install
+  apt:
+    name: glance
+
+- include_tasks: configure.yml
+  loop:
+    - name: api
+      file: /etc/glance/glance-api.conf
+    - name: registry
+      file: /etc/glance/glance-registry.conf
+  loop_control:
+    loop_var: config
+  notify:
+    - restart glance-registry
+    - restart glance-api
+
+- name: configure api glance store
+  ini_file:
+    path: /etc/glance/glance-api.conf
+    section: glance_store
+    option: "{{item.option}}"
+    value: "{{item.value}}"
+  loop:
+    - option: stores
+      value: file,http
+    - option: default_store
+      value: file
+    - option: filesystem_store_datadir
+      value: /var/lib/glance/images/
+  notify:
+    - restart glance-registry
+    - restart glance-api
+
+- name: enable
+  systemd:
+    name: "{{item}}"
+    enabled: true
+  loop:
+    - glance-registry
+    - glance-api
+
+- name: flush handlers
+  meta: flush_handlers

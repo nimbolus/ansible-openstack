@@ -1,0 +1,20 @@
+- name: configure vnc
+  ini_file:
+    path: /etc/nova/nova.conf
+    section: vnc
+    option: "{{item.option}}"
+    value: "{{item.value}}"
+  loop:
+    - option: enabled
+      value: "true"
+    - option: server_listen
+      value: "0.0.0.0"
+    - option: server_proxyclient_address
+      value: "$my_ip"
+    - option: novncproxy_base_url
+      value: http://{{nova_novnc_host}}:6080/vnc_auto.html
+
+- name: enable
+  systemd:
+    name: nova-compute
+    enabled: true

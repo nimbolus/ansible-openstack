@@ -1,0 +1,15 @@
+- name: init keystone db
+  shell: su -s /bin/sh -c "keystone-manage db_sync" keystone
+  args:
+    warn: false
+  
+
+- name: init keystone token provider
+  shell: |
+    keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
+    keystone-manage credential_setup --keystone-user keystone --keystone-group keystone
+
+- name: restart apache2
+  systemd:
+    name: apache2
+    state: restarted

@@ -1,0 +1,40 @@
+- name: "configure {{config.name}} database connection"
+  ini_file:
+    path: "{{config.file}}"
+    section: database
+    option: connection
+    value: "mysql+pymysql://glance:{{glance_db_user_password}}@{{glance_db_host}}/glance"
+  notify: init glance db
+
+- name: "configure {{config.name}} keystone authtoken"
+  ini_file:
+    path: "{{config.file}}"
+    section: keystone_authtoken
+    option: "{{item.option}}"
+    value: "{{item.value}}"
+  loop:
+    - option: www_authenticate_uri
+      value: "http://{{glance_keystone_host}}:5000"
+    - option: auth_url
+      value: "http://{{glance_keystone_host}}:5000"
+    - option: memcached_servers
+      value: "{{glance_memcached_host}}:11211"
+    - option: auth_type
+      value: password
+    - option: project_domain_name
+      value: Default
+    - option: user_domain_name
+      value: Default
+    - option: project_name
+      value: service
+    - option: username
+      value: glance
+    - option: password
+      value: "{{glance_user_password}}"
+
+- name: "configure {{config.name}} paste deploy"
+  ini_file:
+    path: "{{config.file}}"
+    section: paste_deploy
+    option: flavor
+    value: keystone

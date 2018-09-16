@@ -1,0 +1,21 @@
+- name: set hostname
+  hostname:
+    name: "{{inventory_hostname}}"
+
+- name: configure hosts
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+
+- name: add openstack repository key
+  apt:
+    name: ubuntu-cloud-keyring
+
+- name: add openstack repository
+  apt_repository:
+    repo: "deb http://ubuntu-cloud.archive.canonical.com/ubuntu bionic-updates/{{bootstrap_openstack_release}} main"
+    filename: "cloudarchive-{{bootstrap_openstack_release}}.list"
+
+- name: install python-openstackclient
+  apt:
+    name: python-openstackclient

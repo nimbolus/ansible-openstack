@@ -1,0 +1,14 @@
+- name: init glance db
+  shell: su -s /bin/sh -c "glance-manage db_sync" glance
+  args:
+    warn: false
+
+- name: restart glance-registry
+  systemd:
+    name: glance-registry
+    state: restarted
+  
+- name: restart glance-api
+  systemd:
+    name: glance-api
+    state: restarted

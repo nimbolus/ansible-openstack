@@ -1,0 +1,2 @@
+rabbitmq_user: openstack
+rabbitmq_user_password: "{{secrets_rabbit_pass}}"

@@ -1,0 +1,5 @@
+keystone_db_root_password: "{{secrets_db_root_pass}}"
+keystone_db_user_password: "{{secrets_keystone_dbpass}}"
+keystone_db_host: "{{hostvars[groups.controller_nodes[0]].inventory_hostname}}"
+keystone_admin_password: "{{secrets_admin_pass}}"
+keystone_bootstrap: false
