@@ -1,0 +1,202 @@
+- name: install
+  apt:
+    name: "{{item}}"
+  loop:
+    - neutron-server
+    - neutron-plugin-ml2
+    - neutron-linuxbridge-agent
+    - neutron-l3-agent
+    - neutron-dhcp-agent
+    - neutron-metadata-agent
+
+# server component
+
+- name: configure database connection
+  ini_file:
+    path: /etc/neutron/neutron.conf
+    section: database
+    option: connection
+    value: "mysql+pymysql://neutron:{{neutron_db_user_password}}@{{neutron_db_host}}/neutron"
+  notify: init neutron db
+
+- name: configure defaults
+  ini_file:
+    path: /etc/neutron/neutron.conf
+    section: DEFAULT
+    option: "{{item.option}}"
+    value: "{{item.value}}"
+  loop:
+    - option: transport_url
+      value: rabbit://{{neutron_rabbitmq_user}}:{{neutron_rabbitmq_user_password}}@{{neutron_rabbitmq_host}}
+    - option: core_plugin
+      value: ml2
+    - option: service_plugins
+      value: router
+    - option: allow_overlapping_ips
+      value: "true"
+    - option: notify_nova_on_port_status_changes
+      value: "true"
+    - option: notify_nova_on_port_data_changes
+      value: "true"
+    # https://lists.launchpad.net/yahoo-eng-team/msg56670.html
+    - option: lock_path
+      value: /var/lib/neutron/tmp
+
+- name: configure keystone authtoken
+  ini_file:
+    path: /etc/neutron/neutron.conf
+    section: keystone_authtoken
+    option: "{{item.option}}"
+    value: "{{item.value}}"
+  loop:
+    - option: auth_url
+      value: "http://{{neutron_keystone_host}}:5000/v3"
+    - option: memcached_servers
+      value: "{{neutron_memcached_host}}:11211"
+    - option: auth_type
+      value: password
+    - option: project_domain_name
+      value: default
+    - option: user_domain_name
+      value: default
+    - option: project_name
+      value: service
+    - option: username
+      value: neutron
+    - option: password
+      value: "{{neutron_user_password}}"
+
+- name: configure nova
+  ini_file:
+    path: /etc/neutron/neutron.conf
+    section: nova
+    option: "{{item.option}}"
+    value: "{{item.value}}"
+  loop:
+    - option: auth_url
+      value: "http://{{neutron_keystone_host}}:5000"
+    - option: auth_type
+      value: password
+    - option: project_domain_name
+      value: default
+    - option: user_domain_name
+      value: default
+    - option: region_name
+      value: RegionOne
+    - option: project_name
+      value: service
+    - option: username
+      value: "{{neutron_nova_user}}"
+    - option: password
+      value: "{{neutron_nova_user_password}}"
+
+# modular layer 2 plugin
+
+- name: configure ml2
+  ini_file:
+    path: /etc/neutron/plugins/ml2/ml2_conf.ini
+    section: ml2
+    option: "{{item.option}}"
+    value: "{{item.value}}"
+  loop:
+    - option: type_drivers
+      value: flat,vlan,vxlan
+    - option: tenant_network_types
+      value: vxlan
+    - option: mechanism_drivers
+      value: linuxbridge,l2population
+    - option: extension_drivers
+      value: port_security
+
+- name: configure ml2_type_flat
+  ini_file:
+    path: /etc/neutron/plugins/ml2/ml2_conf.ini
+    section: ml2_type_flat
+    option: flat_networks
+    value: provider
+
+- name: configure ml2_type_vxlan
+  ini_file:
+    path: /etc/neutron/plugins/ml2/ml2_conf.ini
+    section: ml2_type_vxlan
+    option: vni_ranges
+    value: "1:1000"
+
+- name: configure securitygroup
+  ini_file:
+    path: /etc/neutron/plugins/ml2/ml2_conf.ini
+    section: securitygroup
+    option: enable_ipset
+    value: "true"
+
+# linux bridge agent
+
+- name: configure linux_bridge
+  ini_file:
+    path: /etc/neutron/plugins/ml2/linuxbridge_agent.ini
+    section: linux_bridge
+    option: physical_interface_mappings
+    value: "provider:{{neutron_provider_interface}}"
+
+- name: configure vxlan
+  ini_file:
+    path: /etc/neutron/plugins/ml2/linuxbridge_agent.ini
+    section: vxlan
+    option: "{{item.option}}"
+    value: "{{item.value}}"
+  loop:
+    - option: enable_vxlan
+      value: "true"
+    - option: local_ip
+      value: "{{neutron_overlay_ip_address}}"
+    - option: l2_population
+      value: "true"
+
+- name: configure vxsecuritygrouplan
+  ini_file:
+    path: /etc/neutron/plugins/ml2/linuxbridge_agent.ini
+    section: securitygroup
+    option: "{{item.option}}"
+    value: "{{item.value}}"
+  loop:
+    - option: enable_security_group
+      value: "true"
+    - option: firewall_driver
+      value: neutron.agent.linux.iptables_firewall.IptablesFirewallDriver
+
+- name: allow bridge filters
+  sysctl:
+    name: "{{item}}"
+    value: "1"
+  loop:
+    - net.bridge.bridge-nf-call-iptables
+    - net.bridge.bridge-nf-call-ip6tables
+
+- name: add br_netfilter kernel module
+  modprobe:
+    name: br_netfilter
+
+# layer-3 agent
+
+- name: configure defaults
+  ini_file:
+    path: /etc/neutron/l3_agent.ini
+    section: DEFAULT
+    option: interface_driver
+    value: linuxbridge
+
+# dhcp agent
+
+- name: configure defaults
+  ini_file:
+    path: /etc/neutron/dhcp_agent.ini
+    section: DEFAULT
+    option: "{{item.option}}"
+    value: "{{item.value}}"
+  loop:
+    - option: interface_driver
+      value: linuxbridge
+    - option: dhcp_driver
+      value: neutron.agent.linux.dhcp.Dnsmasq
+    - option: enable_isolated_metadata
+      value: "true"

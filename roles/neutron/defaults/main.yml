@@ -1,0 +1,14 @@
+neutron_db_root_password: "{{secrets_db_root_pass}}"
+neutron_db_user_password: "{{secrets_neutron_dbpass}}"
+neutron_db_host: "{{hostvars[groups.controller_nodes[0]].inventory_hostname}}"
+neutron_user_password: "{{secrets_neutron_pass}}"
+neutron_keystone_host: "{{hostvars[groups.controller_nodes[0]].inventory_hostname}}"
+neutron_memcached_host: "{{hostvars[groups.controller_nodes[0]].inventory_hostname}}"
+neutron_provider_interface: "{{ansible_default_ipv4.interface}}"
+neutron_overlay_ip_address: "{{ansible_default_ipv4.address}}"
+neutron_metadata_secret: "{{secrets_metadata_secret}}"
+neutron_rabbitmq_user: openstack
+neutron_rabbitmq_host: "{{hostvars[groups.controller_nodes[0]].inventory_hostname}}"
+neutron_rabbitmq_user_password: "{{secrets_rabbit_pass}}"
+neutron_nova_user: nova
+neutron_nova_user_password: "{{secrets_nova_pass}}"

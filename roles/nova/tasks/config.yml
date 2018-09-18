@@ -52,6 +52,36 @@
     option: api_servers
     value: http://{{nova_glance_api_host}}:9292
 
+- name: configure neutron
+  ini_file:
+    path: /etc/nova/nova.conf
+    section: neutron
+    option: "{{item.option}}"
+    value: "{{item.value}}"
+  loop:
+    - option: url
+      value: "http://{{nova_neutron_host}}:9696"
+    - option: auth_url
+      value: "http://{{nova_keystone_host}}:5000"
+    - option: auth_type
+      value: password
+    - option: project_domain_name
+      value: default
+    - option: user_domain_name
+      value: default
+    - option: region_name
+      value: RegionOne
+    - option: project_name
+      value: service
+    - option: username
+      value: neutron
+    - option: password
+      value: "{{nova_neutron_user_password}}"
+    - option: service_metadata_proxy
+      value: "true"
+    - option: metadata_proxy_shared_secret
+      value: "{{nova_metadata_secret}}"
+
 - name: configure oslo concurrency
   ini_file:
     path: /etc/nova/nova.conf

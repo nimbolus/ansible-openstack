@@ -7,6 +7,7 @@
     - nova-novncproxy
     - nova-scheduler
     - nova-placement-api
+    - nova-consoleauth
   when: "'controller_nodes' in group_names"
 
 - name: install compute
@@ -25,8 +26,9 @@
     - restart nova-scheduler
     - restart nova-conductor
     - restart nova-novncproxy
+    - restart nova-consoleauth
     - restart nova-compute
-
+    - discover nova hosts
 
 - name: configure controller
   import_tasks: controller_config.yml
@@ -36,6 +38,7 @@
     - restart nova-scheduler
     - restart nova-conductor
     - restart nova-novncproxy
+    - restart nova-consoleauth
   
 - name: configure compute
   import_tasks: compute_config.yml

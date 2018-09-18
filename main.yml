@@ -28,3 +28,8 @@
       when: "'controller_nodes' in group_names"
     - role: nova
       tags: nova
+    - role: neutron
+      tags: neutron
+    - role: horizon
+      tags: horizon
+      when: "'controller_nodes' in group_names"

@@ -1,0 +1,26 @@
+- name: install
+  apt:
+    name: neutron-linuxbridge-agent
+
+- name: configure controller
+  import_tasks: controller_config.yml
+  when: "'controller_nodes' in group_names"
+
+- name: configure self service networks
+  import_tasks: self_service_network.yml
+  notify:
+    - restart neutron-server
+    - restart neutron-linuxbridge-agent
+    - restart neutron-dhcp-agent
+    - restart neutron-metadata-agent
+    - restart neutron-l3-agent
+  when: "'controller_nodes' in group_names"
+
+- name: configure compute
+  import_tasks: compute_config.yml
+  notify:
+    - restart neutron-linuxbridge-agent
+  when: "'compute_nodes' in group_names"
+
+- name: flush handlers
+  meta: flush_handlers
