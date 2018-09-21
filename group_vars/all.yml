@@ -1,8 +1,0 @@
-os_admin_auth:
-  auth_url: http://{{hostvars[groups.controller_nodes[0]].inventory_hostname}}:5000/v3
-  username: admin
-  password: "{{secrets_admin_pass}}"
-  user_domain_name: Default
-  project_domain_name: Default
-  project_name: admin
-

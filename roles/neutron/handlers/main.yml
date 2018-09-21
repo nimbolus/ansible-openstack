@@ -4,31 +4,26 @@
       --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head" neutron
   args:
     warn: false
-  when: "'controller_nodes' in group_names"
 
 - name: restart neutron-server
   systemd:
     name: neutron-server
     state: restarted
-  when: "'controller_nodes' in group_names"
 
 - name: restart neutron-dhcp-agent
   systemd:
     name: neutron-dhcp-agent
     state: restarted
-  when: "'controller_nodes' in group_names"
 
 - name: restart neutron-metadata-agent
   systemd:
     name: neutron-metadata-agent
     state: restarted
-  when: "'compute_nodes' in group_names"
 
 - name: restart neutron-l3-agent
   systemd:
     name: neutron-l3-agent
     state: restarted
-  when: "'compute_nodes' in group_names"
 
 - name: restart neutron-linuxbridge-agent
   systemd:

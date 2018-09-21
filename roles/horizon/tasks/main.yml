@@ -2,15 +2,9 @@
   apt:
     name: openstack-dashboard
 
-# - name: configure
-#   lineinfile:
-#     path: /etc/openstack-dashboard/local_settings.py
-#     regexp: "^{{item.option}} = "
-#     line: "{{item.option}} = \"{{item.value}}\""
-#   loop:
-# OPENSTACK_HOST = "controller"
-# SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-# OPENSTACK_KEYSTONE_URL = "http://%s:5000/v3" % OPENSTACK_HOST
-# OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True
-# OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = "Default"
-# OPENSTACK_KEYSTONE_DEFAULT_ROLE = "user"
+- name: configure
+  template:
+    src: local_settings.py.j2
+    dest: /etc/openstack-dashboard/local_settings.py
+    backup: true
+  notify: reload apache2

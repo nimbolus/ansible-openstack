@@ -1,0 +1,61 @@
+# {{ansible_managed}}
+
+[DEFAULT]
+core_plugin = ml2
+# https://lists.launchpad.net/yahoo-eng-team/msg56670.html
+lock_path = /var/lib/neutron/tmp
+service_plugins = router
+allow_overlapping_ips = true
+notify_nova_on_port_status_changes = true
+notify_nova_on_port_data_changes = true
+transport_url = rabbit://{{neutron_rabbitmq_user}}:{{neutron_rabbitmq_user_password}}@{{rabbitmq_host}}
+
+[agent]
+root_helper = "sudo /usr/bin/neutron-rootwrap /etc/neutron/rootwrap.conf"
+
+[cors]
+
+[database]
+connection = mysql+pymysql://neutron:{{neutron_db_user_password}}@{{db_host}}/neutron
+
+[keystone_authtoken]
+auth_url = http://{{keystone_host}}:5000/v3
+memcached_servers = {{memcached_host}}:11211
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+project_name = service
+username = neutron
+password = {{neutron_user_password}}
+
+[matchmaker_redis]
+
+[nova]
+region_name = RegionOne
+auth_url = http://{{keystone_host}}:5000
+auth_type = password
+username = {{neutron_nova_user}}
+password = {{neutron_nova_user_password}}
+project_domain_name = default
+project_name = service
+user_domain_name = default
+
+[oslo_concurrency]
+
+[oslo_messaging_amqp]
+
+[oslo_messaging_kafka]
+
+[oslo_messaging_notifications]
+
+[oslo_messaging_rabbit]
+
+[oslo_messaging_zmq]
+
+[oslo_middleware]
+
+[oslo_policy]
+
+[quotas]
+
+[ssl]

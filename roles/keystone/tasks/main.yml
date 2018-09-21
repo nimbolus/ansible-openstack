@@ -1,17 +1,11 @@
-- name: create database
-  mysql_db:
-    name: keystone
-    login_user: root
-    login_password: "{{keystone_db_root_password}}"
-
-- name: create database user
-  mysql_user:
-    name: keystone
-    password: "{{keystone_db_user_password}}"
-    host: "%"
-    priv: "keystone.*:ALL"
-    login_user: root
-    login_password: "{{keystone_db_root_password}}"
+- name: init database
+  include_role:
+    name: mariadb
+    tasks_from: init_db.yml
+  vars:
+    db_name: keystone
+    db_user: keystone
+    db_user_password: "{{keystone_db_user_password}}"
 
 - name: install
   apt:
@@ -21,21 +15,14 @@
     - apache2
     - libapache2-mod-wsgi
 
-- name: configure database connection
-  ini_file:
-    path: /etc/keystone/keystone.conf
-    section: database
-    option: connection
-    value: "mysql+pymysql://keystone:{{keystone_db_user_password}}@{{keystone_db_host}}/keystone"
-  notify: init keystone db
-
-- name: configure token provider
-  ini_file:
-    path: /etc/keystone/keystone.conf
-    section: token
-    option: provider
-    value: fernet
-  notify: init keystone token provider
+- name: configure
+  template:
+    src: conf.j2
+    dest: /etc/keystone/keystone.conf
+    backup: true
+  notify: 
+    - init keystone db
+    - init keystone token provider
 
 - name: flush handlers
   meta: flush_handlers
@@ -72,7 +59,7 @@
 
 - name: create service project
   os_project:
-    auth: "{{os_admin_auth}}"
+    auth: "{{keystone_admin_auth}}"
     name: service
     description: Service Project
     domain: default

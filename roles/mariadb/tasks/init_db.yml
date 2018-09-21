@@ -1,0 +1,14 @@
+- name: "create database {{db_name}}"
+  mysql_db:
+    name: "{{db_name}}"
+    login_user: root
+    login_password: "{{db_root_password}}"
+
+- name: create database user
+  mysql_user:
+    name: "{{db_name}}"
+    password: "{{db_user_password}}"
+    host: "%"
+    priv: "{{db_user}}.*:ALL"
+    login_user: root
+    login_password: "{{db_root_password}}"

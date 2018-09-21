@@ -1,5 +1,13 @@
-keystone_db_root_password: "{{secrets_db_root_pass}}"
-keystone_db_user_password: "{{secrets_keystone_dbpass}}"
-keystone_db_host: "{{hostvars[groups.controller_nodes[0]].inventory_hostname}}"
 keystone_admin_password: "{{secrets_admin_pass}}"
 keystone_bootstrap: false
+keystone_db_user_password: "{{secrets_keystone_dbpass}}"
+
+keystone_host: "{{hostvars[groups.controller_nodes[0]].inventory_hostname}}"
+
+keystone_admin_auth:
+  auth_url: http://{{hostvars[groups.controller_nodes[0]].inventory_hostname}}:5000/v3
+  username: admin
+  password: "{{secrets_admin_pass}}"
+  user_domain_name: Default
+  project_domain_name: Default
+  project_name: admin

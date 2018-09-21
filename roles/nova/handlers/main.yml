@@ -6,46 +6,38 @@
     su -s /bin/sh -c "nova-manage db sync" nova
   args:
     warn: false
-  when:  "'controller_nodes' in group_names"
 
 - name: discover nova hosts
   shell: su -s /bin/sh -c "nova-manage cell_v2 discover_hosts" nova
   args:
     warn: false
-  when:  "'controller_nodes' in group_names"
 
 - name: restart nova-api
   systemd:
     name: nova-api
     state: restarted
-  when:  "'controller_nodes' in group_names"
 
 - name: restart nova-scheduler
   systemd:
     name: nova-scheduler
     state: restarted
-  when:  "'controller_nodes' in group_names"
 
 - name: restart nova-conductor
   systemd:
     name: nova-conductor
     state: restarted
-  when:  "'controller_nodes' in group_names"
 
 - name: restart nova-novncproxy
   systemd:
     name: nova-novncproxy
     state: restarted
-  when:  "'controller_nodes' in group_names"
 
 - name: restart nova-consoleauth
   systemd:
     name: nova-consoleauth
     state: restarted
-  when:  "'controller_nodes' in group_names"
 
 - name: restart nova-compute
   systemd:
     name: nova-compute
     state: restarted
-  when:  "'compute_nodes' in group_names"

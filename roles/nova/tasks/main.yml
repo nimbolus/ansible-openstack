@@ -15,36 +15,104 @@
     name: nova-compute
   when: "'compute_nodes' in group_names"
 
-- name: setup controller
-  import_tasks: controller_setup.yml
-  when:  "'controller_nodes' in group_names"
+- name: init
+  block:
+    - name: create databases
+      mysql_db:
+        name: "{{item}}"
+        login_user: root
+        login_password: "{{db_root_password}}"
+      loop:
+        - nova_api
+        - nova
+        - nova_cell0
+        - placement
 
-- name: configure
-  import_tasks: config.yml
-  notify:
-    - restart nova-api
-    - restart nova-scheduler
-    - restart nova-conductor
-    - restart nova-novncproxy
-    - restart nova-consoleauth
-    - restart nova-compute
-    - discover nova hosts
+    - name: create database user
+      mysql_user:
+        name: nova
+        password: "{{nova_db_user_password}}"
+        host: "%"
+        priv: "nova_api.*:ALL/nova.*:ALL/nova_cell0.*:ALL"
+        login_user: root
+        login_password: "{{db_root_password}}"
+
+    - name: create placement database user
+      mysql_user:
+        name: placement
+        password: "{{nova_db_placement_user_password}}"
+        host: "%"
+        priv: "placement.*:ALL"
+        login_user: root
+        login_password: "{{db_root_password}}"
+
+    - name: init keystone nova
+      include_role:
+        name: keystone
+        tasks_from: init_api.yml
+      vars:
+        keystone_user: nova
+        keystone_user_password: "{{nova_user_password}}"
+        keystone_service_name: nova
+        keystone_service_description: OpenStack Compute
+        keystone_service_type: compute
+        keystone_service_url: "http://{{inventory_hostname}}:8774/v2.1"
+
+    - name: init keystone placement
+      include_role:
+        name: keystone
+        tasks_from: init_api.yml
+      vars:
+        keystone_user: placement
+        keystone_user_password: "{{nova_placement_user_password}}"
+        keystone_service_name: placement
+        keystone_service_description: Placement API
+        keystone_service_type: placement
+        keystone_service_url: "http://{{inventory_hostname}}:8778"
+  
+  when: "'controller_nodes' in group_names"
 
 - name: configure controller
-  import_tasks: controller_config.yml
-  when: "'controller_nodes' in group_names"
+  template:
+    src: controller.conf.j2
+    dest: /etc/nova/nova.conf
+    backup: true
+  when:  "'controller_nodes' in group_names"
   notify:
+    - init nova db
     - restart nova-api
     - restart nova-scheduler
     - restart nova-conductor
     - restart nova-novncproxy
     - restart nova-consoleauth
-  
+    - discover nova hosts
+
 - name: configure compute
-  import_tasks: compute_config.yml
+  template:
+    src: compute.conf.j2
+    dest: /etc/nova/nova.conf
+    backup: true
   when: "'compute_nodes' in group_names"
-  notify:
-    - restart nova-compute
+  notify: restart nova-compute
+
+- name: enable
+  systemd:
+    name: "{{item}}"
+    enabled: true
+  loop:
+    - nova-api
+    - nova-scheduler
+    - nova-conductor
+    - nova-novncproxy
+    - nova-consoleauth
+  when:  "'controller_nodes' in group_names"
+
+- name: enable
+  systemd:
+    name: nova-compute
+    enabled: true
+  when: "'compute_nodes' in group_names"
+
 
 - name: flush handlers
   meta: flush_handlers

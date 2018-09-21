@@ -1,0 +1,32 @@
+- name: "create user {{keystone_user}}"
+  os_user:
+    auth: "{{keystone_admin_auth}}"
+    name: "{{keystone_user}}"
+    password: "{{keystone_user_password}}"
+    domain: default
+
+- name: "add admin role to user {{keystone_user}}"
+  os_user_role:
+    auth: "{{keystone_admin_auth}}"
+    project: service
+    user: "{{keystone_user}}"
+    role: admin
+
+- name: "create service {{keystone_service_name}}"
+  os_keystone_service:
+    auth: "{{keystone_admin_auth}}"
+    name: "{{keystone_service_name}}"
+    description: "{{keystone_service_description}}"
+    service_type: "{{keystone_service_type}}"
+
+- name: "create api endpoints for service {{keystone_service_name}}"
+  os_keystone_endpoint:
+    auth: "{{keystone_admin_auth}}"
+    region: RegionOne
+    service: "{{keystone_service_name}}"
+    endpoint_interface: "{{item}}"
+    url: "{{keystone_service_url}}"
+  loop:
+    - public
+    - internal
+    - admin

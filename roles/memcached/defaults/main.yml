@@ -1,1 +1,2 @@
 memcached_listen_ip: "{{management_ip_address}}"
+memcached_host: "{{hostvars[groups.controller_nodes[0]].inventory_hostname}}"
