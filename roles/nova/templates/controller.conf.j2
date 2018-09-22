@@ -8,6 +8,7 @@ my_ip = {{nova_ip_address}}
 use_neutron = true
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
 transport_url = rabbit://{{nova_rabbitmq_user}}:{{nova_rabbitmq_user_password}}@{{rabbitmq_host}}
+allow_resize_to_same_host = True
 
 [api]
 auth_strategy = keystone
