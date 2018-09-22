@@ -30,6 +30,8 @@
       tags: nova
     - role: neutron
       tags: neutron
+    - role: cinder
+      tags: cinder
     - role: horizon
       tags: horizon
       when: "'controller_nodes' in group_names"

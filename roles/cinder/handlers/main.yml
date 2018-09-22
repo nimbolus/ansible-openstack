@@ -1,0 +1,24 @@
+- name: init cinder db
+  shell: su -s /bin/sh -c "cinder-manage db sync" cinder
+  args:
+    warn: false
+
+- name: restart cinder-scheduler
+  systemd:
+    name: cinder-scheduler
+    state: restarted
+
+- name: restart cinder-volume
+  systemd:
+    name: cinder-volume
+    state: restarted
+
+- name: restart tgt
+  systemd:
+    name: tgt
+    state: restarted
+
+- name: restart apache2
+  systemd:
+    name: apache2
+    state: restarted

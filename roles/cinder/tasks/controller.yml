@@ -1,0 +1,62 @@
+- name: init database
+  include_role:
+    name: mariadb
+    tasks_from: init_db.yml
+  vars:
+    db_name: cinder
+    db_user: cinder
+    db_user_password: "{{cinder_db_user_password}}"
+
+- name: init keystone v2
+  include_role:
+    name: keystone
+    tasks_from: init_api.yml
+  vars:
+    keystone_user: cinder
+    keystone_user_password: "{{cinder_user_password}}"
+    keystone_service_name: cinderv2
+    keystone_service_description: OpenStack Block Storage
+    keystone_service_type: volumev2
+    keystone_service_url: "http://{{inventory_hostname}}:8776/v2/%(project_id)s"
+
+- name: init keystone v3
+  include_role:
+    name: keystone
+    tasks_from: init_api.yml
+  vars:
+    keystone_user: cinder
+    keystone_user_password: "{{cinder_user_password}}"
+    keystone_service_name: cinderv3
+    keystone_service_description: OpenStack Block Storage
+    keystone_service_type: volumev3
+    keystone_service_url: "http://{{inventory_hostname}}:8776/v3/%(project_id)s"
+
+- name: install
+  apt:
+    name: "{{item}}"
+  loop:
+    - cinder-api
+    - cinder-scheduler
+
+- name: configure controller
+  template:
+    src: controller.conf.j2
+    dest: /etc/cinder/cinder.conf
+    backup: true
+  notify:
+    - init cinder db
+    - restart cinder-scheduler
+    - restart apache2
+
+- name: configure nova compute
+  blockinfile:
+    dest: /etc/nova/nova.conf
+    block: |
+      [cinder]
+      os_region_name = RegionOne
+  notify: restart nova-api
+
+- name: enable
+  systemd:
+    name: cinder-scheduler
+    enabled: true

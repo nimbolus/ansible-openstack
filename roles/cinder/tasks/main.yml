@@ -1,0 +1,19 @@
+- name: configure controller
+  import_tasks: controller.yml
+  when: "'controller_nodes' in group_names"
+
+- name: configure storage node
+  import_tasks: storage_node.yml
+  when: "'block_storage_nodes' in group_names"
+
+- name: configure lvm filter
+  lineinfile:
+    path: /etc/lvm/lvm.conf
+    insertafter: '# filter ='
+    regexp: "^\tfilter ="
+    line: "\tfilter = [ \"a|^/dev/sd[a-z][0-9]$|\", \"r/.*/\" ]"
+  when: "'block_storage_nodes' in group_names 
+          or 'compute_nodes' in group_names"
+
+- name: flush handlers
+  meta: flush_handlers
