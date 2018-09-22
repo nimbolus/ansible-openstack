@@ -32,6 +32,9 @@
       tags: neutron
     - role: cinder
       tags: cinder
+    - role: heat
+      tags: heat
+      when: "'controller_nodes' in group_names"
     - role: horizon
       tags: horizon
       when: "'controller_nodes' in group_names"

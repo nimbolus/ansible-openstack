@@ -1,0 +1,91 @@
+- name: init database
+  include_role:
+    name: mariadb
+    tasks_from: init_db.yml
+  vars:
+    db_name: heat
+    db_user: heat
+    db_user_password: "{{heat_db_user_password}}"
+
+- name: init keystone heat service
+  include_role:
+    name: keystone
+    tasks_from: init_api.yml
+  vars:
+    keystone_user: heat
+    keystone_user_password: "{{heat_user_password}}"
+    keystone_service_name: heat
+    keystone_service_description: Orchestration
+    keystone_service_type: orchestration
+    keystone_service_url: "http://{{inventory_hostname}}:8004/v1/%(tenant_id)s"
+
+- name: init keystone heat-cfn service
+  include_role:
+    name: keystone
+    tasks_from: init_api.yml
+  vars:
+    keystone_user: heat
+    keystone_user_password: "{{heat_user_password}}"
+    keystone_service_name: heat-cfn
+    keystone_service_description: Orchestration
+    keystone_service_type: cloudformation
+    keystone_service_url: "http://{{inventory_hostname}}:8000/v1"
+
+- name: create domain
+  os_keystone_domain:
+    auth: "{{keystone_admin_auth}}"
+    name: heat
+    description: Stack projects and users
+
+- name: create admin user
+  os_user:
+    auth: "{{keystone_admin_auth}}"
+    name: heat_domain_admin
+    password: "{{heat_admin_password}}"
+    domain: heat
+
+# heat domain not found ?!
+# - name: add admin role to admin user
+#   os_user_role:
+#     auth: "{{keystone_admin_auth}}"
+#     user: heat_domain_admin
+#     role: admin
+#     domain: heat
+
+- name: create heat stack owner role
+  os_keystone_role:
+    auth: "{{keystone_admin_auth}}"
+    name: heat_stack_owner
+
+- name: create heat stack user role
+  os_keystone_role:
+    auth: "{{keystone_admin_auth}}"
+    name: heat_stack_user
+
+# - name: add heat stack owner to project
+#   os_user_role:
+#     auth: "{{keystone_admin_auth}}"
+#     user: admin
+#     role: heat_stack_owner
+#     domain: default
+
+- name: install
+  apt:
+    name: "{{item}}"
+  loop:
+    - heat-api
+    - heat-api-cfn
+    - heat-engine
+    - python-heat-dashboard
+  notify: restart apache2
+
+- name: configure
+  template:
+    src: conf.j2
+    dest: /etc/heat/heat.conf
+    backup: true
+  notify:
+    - init heat db
+    - restart heat-api
+    - restart heat-api-cfn
+    - restart heat-engine

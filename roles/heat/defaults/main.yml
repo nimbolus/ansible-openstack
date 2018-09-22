@@ -1,0 +1,7 @@
+heat_db_user_password: "{{secrets_heat_dbpass}}"
+heat_user_password: "{{secrets_heat_pass}}"
+heat_admin_password: "{{secrets_heat_admin_pass}}"
+heat_rabbitmq_user: openstack
+heat_rabbitmq_user_password: "{{secrets_rabbit_pass}}"
+
+heat_metadata_host: "{{hostvars[groups.controller_nodes[0]].inventory_hostname}}"
