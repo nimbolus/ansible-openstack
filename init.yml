@@ -1,0 +1,9 @@
+- name: setup
+  hosts: nodes
+  tasks:
+    - name: configure sudoers
+      lineinfile:
+        path: /etc/sudoers
+        line: '%ansible ALL=(ALL) NOPASSWD:ALL'
+        validate: visudo -cf %s
+      become: true

@@ -11,7 +11,7 @@ auth_strategy = keystone
 state_path = /var/lib/cinder
 lock_path = /var/lock/cinder
 volumes_dir = /var/lib/cinder/volumes
-enabled_backends = lvm
+enabled_backends = {% for p in cinder_pools %}{{p.type}}{% if not loop.last %},{% endif %}{% endfor %}
 transport_url = rabbit://{{cinder_rabbitmq_user}}:{{cinder_rabbitmq_user_password}}@{{rabbitmq_host}}
 auth_strategy = keystone
 my_ip = {{cinder_ip_address}}
@@ -34,8 +34,13 @@ password = {{cinder_user_password}}
 [oslo_concurrency]
 lock_path = /var/lib/cinder/tmp
 
-[lvm]
+[backend_default]
 volume_driver = cinder.volume.drivers.lvm.LVMVolumeDriver
-volume_group = cinder-volumes
 iscsi_protocol = iscsi
 iscsi_helper = tgtadm
+
+{% for p in cinder_pools %}
+[{{p.type}}]
+volume_group = cinder-{{p.type}}
+
+{% endfor %}

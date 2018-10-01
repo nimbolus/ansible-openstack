@@ -6,24 +6,11 @@
     - lvm2
     - thin-provisioning-tools
 
-- name: patition disk
-  parted:
-    device: "{{item}}"
-    number: 1
-    state: present
-  loop: "{{cinder_drives}}"
-
-- name: create filesystem
-  filesystem:
-    device: "{{item}}1"
-    fstype: lvm
-    opts: -L cinder-volumes
-  loop: "{{cinder_drives}}"
-
-- name: create volume group
-  lvg:
-    vg: cinder-volumes
-    pvs: "{{cinder_drives | map('regex_replace', '$', '1') | list | join(',')}}"
+- name: prepare vg
+  include_tasks: prepare_vg.yml
+  loop: "{{cinder_pools}}"
+  loop_control:
+    loop_var: pool
 
 - name: configure
   template:

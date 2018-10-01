@@ -1,0 +1,10 @@
+- name: create filesystem
+  filesystem:
+    device: "{{item}}"
+    fstype: lvm
+  loop: "{{pool.members}}"
+
+- name: create volume group
+  lvg:
+    vg: "cinder-{{pool.type}}"
+    pvs: "{{pool.members | join(',')}}"
