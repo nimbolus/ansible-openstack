@@ -1,1 +1,2 @@
-management_ip_address: "{{ansible_default_ipv4.address}}"
+management_ip_address: "{{ansible_host}}"
+provider_interface: "{{ansible_default_ipv4.interface}}"

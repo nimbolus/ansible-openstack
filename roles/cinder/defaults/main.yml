@@ -3,6 +3,7 @@ cinder_db_user_password: "{{secrets_cinder_dbpass}}"
 cinder_rabbitmq_user: openstack
 cinder_rabbitmq_user_password: "{{secrets_rabbit_pass}}"
 cinder_ip_address: "{{management_ip_address}}"
+cinder_default_volume_type: ssd
 cinder_pools: []
   # - name: ssd
   #   members:
