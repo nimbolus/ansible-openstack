@@ -16,6 +16,6 @@
     repo: "deb http://ubuntu-cloud.archive.canonical.com/ubuntu bionic-updates/{{bootstrap_openstack_release}} main"
     filename: "cloudarchive-{{bootstrap_openstack_release}}.list"
 
-- name: install python-openstackclient
+- name: install openstack client
   apt:
     name: python-openstackclient

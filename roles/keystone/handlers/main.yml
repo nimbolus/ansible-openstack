@@ -3,7 +3,6 @@
   args:
     warn: false
   
-
 - name: init keystone token provider
   shell: |
     keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
