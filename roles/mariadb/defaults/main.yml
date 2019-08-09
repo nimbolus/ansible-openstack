@@ -1,5 +1,2 @@
 mariadb_root_password: "{{secrets_db_root_pass}}"
-mariadb_bind_address: "{{management_ip_address}}"
-
-db_root_password: "{{secrets_db_root_pass}}"
-db_host: "{{hostvars[groups.controller_nodes[0]].inventory_hostname}}"
+mariadb_bind_address: "{{management_ipv4.address}}"

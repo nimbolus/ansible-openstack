@@ -1,21 +1,19 @@
-- name: set hostname
-  hostname:
-    name: "{{inventory_hostname}}"
-
 - name: configure hosts
   template:
     src: hosts.j2
     dest: /etc/hosts
 
-- name: add openstack repository key
-  apt:
-    name: ubuntu-cloud-keyring
-
 - name: add openstack repository
-  apt_repository:
-    repo: "deb http://ubuntu-cloud.archive.canonical.com/ubuntu bionic-updates/{{bootstrap_openstack_release}} main"
-    filename: "cloudarchive-{{bootstrap_openstack_release}}.list"
+  yum:
+    name: "centos-release-openstack-{{bootstrap_openstack_release}}"
 
-- name: install openstack client
-  apt:
-    name: python-openstackclient
+- name: upgrade system
+  yum:
+    name: '*'
+    state: latest
+
+- name: install openstack client and selinux support
+  yum:
+    name: 
+      - python-openstackclient
+      - openstack-selinux

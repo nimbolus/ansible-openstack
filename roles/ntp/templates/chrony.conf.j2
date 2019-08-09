@@ -6,11 +6,11 @@
 server {{s}} iburst
 {% endfor %}
 
-allow {{chrony_allow_network}}
+allow {{chrony_allow_network | ipaddr('net')}}
 {% else %}
 # use controller nodes as ntp source
 {% for s in groups.controller_nodes %}
-server {{hostvars[s].inventory_hostname}} iburst
+server {{hostvars[s].ansible_fqdn}} iburst
 {% endfor %}
 {% endif %}
 

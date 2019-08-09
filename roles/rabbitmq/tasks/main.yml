@@ -1,6 +1,12 @@
 - name: install
-  apt:
+  yum:
     name: rabbitmq-server
+
+- name: start and enable
+  systemd:
+    name: rabbitmq-server
+    state: started
+    enabled: true
 
 - name: add user
   rabbitmq_user:
@@ -11,8 +17,3 @@
         configure_priv: .*
         read_priv: .*
         write_priv: .*
-
-- name: enable
-  systemd:
-    name: rabbitmq-server
-    enabled: true

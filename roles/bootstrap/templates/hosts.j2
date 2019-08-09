@@ -1,8 +1,8 @@
-127.0.0.1   localhost
-::1         localhost ip6-localhost ip6-loopback
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
 # {{ansible_managed}}
 
 {% for node in groups.nodes %}
-{{hostvars[node].management_ip_address}} {{hostvars[node].inventory_hostname}}
+{{hostvars[node].management_ipv4.address}} {{hostvars[node].ansible_fqdn}} {{hostvars[node].ansible_hostname}}
 {% endfor %}

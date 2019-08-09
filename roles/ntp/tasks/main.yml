@@ -1,16 +1,17 @@
 - name: install
-  apt:
+  yum:
     name: chrony
 
 - name: configure
   template:
     src: chrony.conf.j2
-    dest: /etc/chrony/chrony.conf
+    dest: /etc/chrony.conf
   notify: restart chrony
 
-- name: enable
+- name: start and enable
   systemd:
-    name: chrony
+    name: chronyd
+    state: started
     enabled: true
 
 - name: flush handlers

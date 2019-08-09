@@ -1,3 +1,4 @@
 etcd_servers: "{{groups.controller_nodes}}"
-etcd_name_var: inventory_hostname
-etcd_ip_address_var: management_ip_address
+etcd_ip_address_var: management_ipv4.address
+etcd_cluster_token: etcd-cluster-01
+etcd_listen_interface: management_ipv4

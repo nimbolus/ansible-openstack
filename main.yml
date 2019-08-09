@@ -3,7 +3,14 @@
   become: true
   vars_files:
     - vars/secrets.yml
+  pre_tasks:
+    - name: set management_ipv4
+      set_fact:
+        management_ipv4: "{{hostvars[inventory_hostname]['ansible_' + management_interface].ipv4}}"
+      tags:
+        - always
   roles:
+    # environment services
     - role: bootstrap
       tags: bootstrap
     - role: ntp
@@ -20,11 +27,16 @@
     - role: etcd
       tags: etcd
       when: "'controller_nodes' in group_names"
+
+    # openstack services
     - role: keystone
       tags: keystone
       when: "'controller_nodes' in group_names"
     - role: glance
       tags: glance
+      when: "'controller_nodes' in group_names"
+    - role: placement
+      tags: placement
       when: "'controller_nodes' in group_names"
     - role: nova
       tags: nova

@@ -1,4 +1,4 @@
 rabbitmq_user: openstack
 rabbitmq_user_password: "{{secrets_rabbit_pass}}"
 
-rabbitmq_host: "{{hostvars[groups.controller_nodes[0]].inventory_hostname}}"
+rabbitmq_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"

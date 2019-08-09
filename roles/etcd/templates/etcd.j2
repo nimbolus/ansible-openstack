@@ -1,9 +1,14 @@
-ETCD_NAME="{{hostvars[inventory_hostname][etcd_name_var]}}"
+# {{ansible_managed}}
+
+#[Member]
+ETCD_NAME="{{ansible_hostname}}"
 ETCD_DATA_DIR="/var/lib/etcd"
-ETCD_INITIAL_CLUSTER_STATE="new"
-ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster-01"
-ETCD_INITIAL_CLUSTER="{% for s in etcd_servers %}{{hostvars[s][etcd_name_var]}}=http://{{hostvars[s][etcd_ip_address_var]}}:2380{% endfor %}"
-ETCD_INITIAL_ADVERTISE_PEER_URLS="http://{{hostvars[inventory_hostname][etcd_ip_address_var]}}:2380"
-ETCD_ADVERTISE_CLIENT_URLS="http://{{hostvars[inventory_hostname][etcd_ip_address_var]}}:2379"
 ETCD_LISTEN_PEER_URLS="http://0.0.0.0:2380"
-ETCD_LISTEN_CLIENT_URLS="http://{{hostvars[inventory_hostname][etcd_ip_address_var]}}:2379"
+ETCD_LISTEN_CLIENT_URLS="http://{{hostvars[inventory_hostname][etcd_listen_interface].address}}:2379"
+
+#[Clustering]
+ETCD_INITIAL_ADVERTISE_PEER_URLS="http://{{ansible_fqdn}}:2380"
+ETCD_ADVERTISE_CLIENT_URLS="http://{{ansible_fqdn}}:2379"
+ETCD_INITIAL_CLUSTER="{% for s in etcd_servers %}{{hostvars[s].ansible_hostname}}=http://{{hostvars[s][etcd_listen_interface].address}}:2380{% if not loop.last %},{% endif %}{% endfor %}"
+ETCD_INITIAL_CLUSTER_TOKEN="{{etcd_cluster_token}}"
+ETCD_INITIAL_CLUSTER_STATE="new"

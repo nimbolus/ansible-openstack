@@ -1,18 +1,17 @@
 - name: install
-  apt:
-    name: "{{item}}"
-  loop:
-    - memcached
-    - python-memcache
+  yum:
+    name:
+      - memcached
+      - python-memcached
 
 - name: configure
   lineinfile:
-    path: /etc/memcached.conf
-    line: "-l {{memcached_listen_ip}}"
-    regexp: '^-l '
+    path: /etc/sysconfig/memcached
+    line: "OPTIONS=\"-l 127.0.0.1,::1,{{memcached_listen_ip}}\""
+    regexp: '^OPTIONS='
   notify: restart memcached
 
-- name: enable
+- name: start and enable
   systemd:
     name: memcached
     enabled: true

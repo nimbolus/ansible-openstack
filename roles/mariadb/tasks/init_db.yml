@@ -1,14 +1,19 @@
+# this can be called by other roles to create their databases
+# folowing variables must be defined to do that: db_name, db_user, db_user_password
+
 - name: "create database {{db_name}}"
   mysql_db:
     name: "{{db_name}}"
     login_user: root
-    login_password: "{{db_root_password}}"
+    login_password: "{{mariadb_root_password}}"
+    login_host: "{{mariadb_bind_address}}"
 
-- name: create database user
+- name: "create database user {{db_user}}"
   mysql_user:
-    name: "{{db_name}}"
+    name: "{{db_user}}"
     password: "{{db_user_password}}"
     host: "%"
     priv: "{{db_user}}.*:ALL"
     login_user: root
-    login_password: "{{db_root_password}}"
+    login_password: "{{mariadb_root_password}}"
+    login_host: "{{mariadb_bind_address}}"

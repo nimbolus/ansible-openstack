@@ -1,14 +1,14 @@
 - name: install
-  apt:
+  yum:
     name: etcd
 
 - name: configure
   template:
     src: etcd.j2
-    dest: /etc/default/etcd
+    dest: /etc/etcd/etcd.conf
   notify: restart etcd
 
-- name: enable
+- name: start and enable
   systemd:
     name: etcd
     enabled: true
