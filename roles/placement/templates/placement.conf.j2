@@ -1,7 +1,7 @@
 # {{ansible_managed}}
 
-[database]
-connection = mysql+pymysql://glance:{{glance_db_user_password}}@{{db_host}}/glance
+[placement_database]
+connection = mysql+pymysql://placement:{{placement_db_user_password}}@{{db_host}}/placement
 
 [keystone_authtoken]
 www_authenticate_uri = https://{{keystone_host}}:5000
@@ -11,8 +11,5 @@ auth_type = password
 project_domain_name = Default
 user_domain_name = Default
 project_name = service
-username = glance
-password = {{glance_user_password}}
-
-[paste_deploy]
-flavor = keystone
+username = placement
+password = {{placement_user_password}}

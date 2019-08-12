@@ -10,26 +10,26 @@
 - name: init keystone heat service
   include_role:
     name: keystone
-    tasks_from: init_api.yml
+    tasks_from: init_auth.yml
   vars:
     keystone_user: heat
     keystone_user_password: "{{heat_user_password}}"
     keystone_service_name: heat
     keystone_service_description: Orchestration
     keystone_service_type: orchestration
-    keystone_service_url: "http://{{inventory_hostname}}:8004/v1/%(tenant_id)s"
+    keystone_service_url: "http://{{ansible_fqdn}}:8004/v1/%(tenant_id)s"
 
 - name: init keystone heat-cfn service
   include_role:
     name: keystone
-    tasks_from: init_api.yml
+    tasks_from: init_auth.yml
   vars:
     keystone_user: heat
     keystone_user_password: "{{heat_user_password}}"
     keystone_service_name: heat-cfn
     keystone_service_description: Orchestration
     keystone_service_type: cloudformation
-    keystone_service_url: "http://{{inventory_hostname}}:8000/v1"
+    keystone_service_url: "http://{{ansible_fqdn}}:8000/v1"
 
 - name: create domain
   os_keystone_domain:
@@ -70,9 +70,8 @@
 #     domain: default
 
 - name: install
-  apt:
-    name: "{{item}}"
-  loop:
+  yum:
+    name:
     - heat-api
     - heat-api-cfn
     - heat-engine

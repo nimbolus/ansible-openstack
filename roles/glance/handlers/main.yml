@@ -5,10 +5,10 @@
 
 - name: restart glance-registry
   systemd:
-    name: glance-registry
+    name: openstack-glance-registry
     state: restarted
   
 - name: restart glance-api
   systemd:
-    name: glance-api
+    name: openstack-glance-api
     state: restarted

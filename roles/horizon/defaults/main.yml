@@ -1,1 +1,1 @@
-horizon_host: "{{hostvars[groups.controller_nodes[0]].inventory_hostname}}"
+horizon_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"

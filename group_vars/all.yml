@@ -1,5 +1,7 @@
 db_root_password: "{{secrets_db_root_pass}}"
+ssl_dir: /etc/ssl
 
+ca_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"
 db_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"
 keystone_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"
 glance_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"

@@ -1,0 +1,9 @@
+- name: init placement db
+  shell: su -s /bin/sh -c "placement-manage db sync" placement
+  args:
+    warn: false
+
+- name: restart httpd
+  systemd:
+    name: httpd
+    state: restarted

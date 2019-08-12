@@ -10,18 +10,18 @@
 - name: init keystone
   include_role:
     name: keystone
-    tasks_from: init_api.yml
+    tasks_from: init_auth.yml
   vars:
     keystone_user: glance
     keystone_user_password: "{{glance_user_password}}"
     keystone_service_name: glance
     keystone_service_description: OpenStack Image
     keystone_service_type: image
-    keystone_service_url: "http://{{inventory_hostname}}:9292"
+    keystone_service_url: "http://{{ansible_fqdn}}:9292"
 
 - name: install
-  apt:
-    name: glance
+  yum:
+    name: openstack-glance
 
 - name: configure api
   template:
@@ -40,13 +40,14 @@
   notify:
     - restart glance-registry
 
-- name: enable
+- name: stand and enable
   systemd:
     name: "{{item}}"
+    state: started
     enabled: true
   loop:
-    - glance-registry
-    - glance-api
+    - openstack-glance-registry
+    - openstack-glance-api
 
 - name: flush handlers
   meta: flush_handlers

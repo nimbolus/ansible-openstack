@@ -8,12 +8,11 @@
     db_user_password: "{{keystone_db_user_password}}"
 
 - name: install
-  apt:
-    name: "{{item}}"
-  loop:
-    - keystone
-    - apache2
-    - libapache2-mod-wsgi
+  yum:
+    name:
+    - openstack-keystone
+    - httpd
+    - mod_wsgi
 
 - name: configure
   template:
@@ -23,39 +22,47 @@
   notify: 
     - init keystone db
     - init keystone token provider
+    - bootstrap keystone
 
 - name: flush handlers
   meta: flush_handlers
 
-- name: bootstrap keystone
-  shell: |
-    keystone-manage bootstrap --bootstrap-password {{keystone_admin_password}} \
-      --bootstrap-admin-url http://{{inventory_hostname}}:5000/v3/ \
-      --bootstrap-internal-url http://{{inventory_hostname}}:5000/v3/ \
-      --bootstrap-public-url http://{{inventory_hostname}}:5000/v3/ \
-      --bootstrap-region-id RegionOne
-  when: keystone_bootstrap
+- name: request certificate
+  include_role:
+    name: ca
+    tasks_from: req_cert.yml
+  vars:
+    req_name: keystone
+    req_common_name: "{{ansible_fqdn}}"
 
-- name: configure apache2
+- name: configure httpd
   lineinfile:
-    path: /etc/apache2/apache2.conf
-    line: "ServerName {{inventory_hostname}}"
+    path: /etc/httpd/conf/httpd.conf
+    line: "ServerName {{ansible_fqdn}}"
     regexp: '^ServerName '
-  notify: restart apache2
+  notify: restart httpd
 
-- name: enable apache2
+- name: configure httpd virtual host
+  template:
+    src: wsgi-keystone.conf.j2
+    dest: /etc/httpd/conf.d/wsgi-keystone.conf
+  notify: restart httpd
+
+- name: start and enable httpd
   systemd:
-    name: apache2
+    name: httpd
+    state: started
     enabled: true
+
+- name: flush handlers
+  meta: flush_handlers
 
 - name: create env file for debugging
   template:
     src: admin-openrc.j2
     dest: ~/admin-openrc
+    mode: 0600
   become: false
-
-- name: flush handlers
-  meta: flush_handlers
 
 - name: create service project
   os_project:

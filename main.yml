@@ -13,6 +13,8 @@
     # environment services
     - role: bootstrap
       tags: bootstrap
+    - role: ca
+      tags: ca
     - role: ntp
       tags: ntp
     - role: mariadb

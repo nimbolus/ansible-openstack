@@ -1,7 +1,6 @@
 - name: install
-  apt:
-    name: "{{item}}"
-  loop:
+  yum:
+    name:
     - cinder-volume
     - lvm2
     - thin-provisioning-tools

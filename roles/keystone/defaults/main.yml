@@ -1,11 +1,9 @@
 keystone_admin_password: "{{secrets_admin_pass}}"
-keystone_bootstrap: false
 keystone_db_user_password: "{{secrets_keystone_dbpass}}"
-
-keystone_host: "{{hostvars[groups.controller_nodes[0]].inventory_hostname}}"
+keystone_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"
 
 keystone_admin_auth:
-  auth_url: http://{{hostvars[groups.controller_nodes[0]].inventory_hostname}}:5000/v3
+  auth_url: https://{{keystone_host}}:5000/v3
   username: admin
   password: "{{keystone_admin_password}}"
   user_domain_name: Default

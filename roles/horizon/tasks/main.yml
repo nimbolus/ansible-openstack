@@ -1,5 +1,5 @@
 - name: install
-  apt:
+  yum:
     name: openstack-dashboard
 
 - name: configure

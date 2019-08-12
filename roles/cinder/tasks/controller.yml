@@ -10,31 +10,30 @@
 - name: init keystone v2
   include_role:
     name: keystone
-    tasks_from: init_api.yml
+    tasks_from: init_auth.yml
   vars:
     keystone_user: cinder
     keystone_user_password: "{{cinder_user_password}}"
     keystone_service_name: cinderv2
     keystone_service_description: OpenStack Block Storage
     keystone_service_type: volumev2
-    keystone_service_url: "http://{{inventory_hostname}}:8776/v2/%(project_id)s"
+    keystone_service_url: "http://{{ansible_fqdn}}:8776/v2/%(project_id)s"
 
 - name: init keystone v3
   include_role:
     name: keystone
-    tasks_from: init_api.yml
+    tasks_from: init_auth.yml
   vars:
     keystone_user: cinder
     keystone_user_password: "{{cinder_user_password}}"
     keystone_service_name: cinderv3
     keystone_service_description: OpenStack Block Storage
     keystone_service_type: volumev3
-    keystone_service_url: "http://{{inventory_hostname}}:8776/v3/%(project_id)s"
+    keystone_service_url: "http://{{ansible_fqdn}}:8776/v3/%(project_id)s"
 
 - name: install
-  apt:
-    name: "{{item}}"
-  loop:
+  yum:
+    name:
     - cinder-api
     - cinder-scheduler
 

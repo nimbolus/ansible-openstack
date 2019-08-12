@@ -1,0 +1,4 @@
+placement_user_password: "{{secrets_placement_pass}}"
+placement_db_user_password: "{{secrets_placement_dbpass}}"
+
+placement_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"

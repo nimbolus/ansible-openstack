@@ -22,8 +22,8 @@ glance_api_servers = http://{{glance_host}}:9292
 connection = mysql+pymysql://cinder:{{cinder_db_user_password}}@{{db_host}}/cinder
 
 [keystone_authtoken]
-www_authenticate_uri = http://{{keystone_host}}:5000
-auth_url = http://{{keystone_host}}:5000
+www_authenticate_uri = https://{{keystone_host}}:5000
+auth_url = https://{{keystone_host}}:5000
 memcached_servers = {{memcached_host}}:11211
 auth_type = password
 project_domain_id = default

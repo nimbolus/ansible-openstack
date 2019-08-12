@@ -1,0 +1,36 @@
+- name: create ca directory
+  file:
+    name: "{{item}}"
+    state: directory
+  loop:
+    - "{{ca_dir}}"
+    - "{{ca_dir}}/private"
+    - "{{ca_dir}}/certs"
+    - "{{ca_dir}}/csr"
+  when: ansible_fqdn == ca_host
+
+- name: create ssl directory
+  file:
+    name: "{{item}}"
+    state: directory
+  loop:
+    - "{{ca_ssl_dir}}"
+    - "{{ca_ssl_dir}}/private"
+    - "{{ca_ssl_dir}}/certs"
+
+- name: fetch ca certificate
+  slurp:
+    path: "{{ca_cert_path}}"
+  register: ca_cert
+  delegate_to: "{{ca_host}}"
+  when: ca_install_trust | bool
+
+- name: copy ca certificate to trust anchors
+  copy:
+    content: "{{ca_cert.content | b64decode}}"
+    dest: /etc/pki/ca-trust/source/anchors/ca.crt
+  when: ca_install_trust | bool
+
+- name: update ca trust
+  shell: update-ca-trust extract
+  when: ca_install_trust | bool

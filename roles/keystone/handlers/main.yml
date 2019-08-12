@@ -8,7 +8,15 @@
     keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
     keystone-manage credential_setup --keystone-user keystone --keystone-group keystone
 
-- name: restart apache2
+- name: bootstrap keystone
+  shell: |
+    keystone-manage bootstrap --bootstrap-password {{keystone_admin_password}} \
+      --bootstrap-admin-url https://{{ansible_fqdn}}:5000/v3/ \
+      --bootstrap-internal-url https://{{ansible_fqdn}}:5000/v3/ \
+      --bootstrap-public-url https://{{ansible_fqdn}}:5000/v3/ \
+      --bootstrap-region-id RegionOne
+
+- name: restart httpd
   systemd:
-    name: apache2
+    name: httpd
     state: restarted

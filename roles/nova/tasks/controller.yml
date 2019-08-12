@@ -1,0 +1,65 @@
+- name: install controller
+  yum:
+    name:
+    - openstack-nova-api
+    - openstack-nova-conductor
+    - openstack-nova-novncproxy
+    - openstack-nova-scheduler
+
+- name: create databases
+  include_role:
+    name: mariadb
+    tasks_from: init_db.yml
+  vars:
+    db_name: "{{item}}"
+  loop:
+    - nova_api
+    - nova
+    - nova_cell0
+
+- name: create database user
+  mysql_user:
+    name: nova
+    password: "{{nova_db_user_password}}"
+    host: "%"
+    priv: "nova_api.*:ALL/nova.*:ALL/nova_cell0.*:ALL"
+    login_user: root
+    login_password: "{{db_root_password}}"
+    login_host: "{{mariadb_bind_address}}"
+  delegate_to: "{{db_host}}"
+
+- name: init keystone nova
+  include_role:
+    name: keystone
+    tasks_from: init_auth.yml
+  vars:
+    keystone_user: nova
+    keystone_user_password: "{{nova_user_password}}"
+    keystone_service_name: nova
+    keystone_service_description: OpenStack Compute
+    keystone_service_type: compute
+    keystone_service_url: "http://{{ansible_fqdn}}:8774/v2.1"
+
+- name: configure controller
+  template:
+    src: controller.conf.j2
+    dest: /etc/nova/nova.conf
+    backup: true
+  notify:
+    - init nova db
+    - restart nova-api
+    - restart nova-scheduler
+    - restart nova-conductor
+    - restart nova-novncproxy
+    # - discover nova hosts
+
+- name: start and enable
+  systemd:
+    name: "{{item}}"
+    enabled: true
+    state: started
+  loop:
+    - openstack-nova-api
+    - openstack-nova-scheduler
+    - openstack-nova-conductor
+    - openstack-nova-novncproxy

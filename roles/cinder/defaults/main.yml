@@ -2,11 +2,11 @@ cinder_user_password: "{{secrets_cinder_pass}}"
 cinder_db_user_password: "{{secrets_cinder_dbpass}}"
 cinder_rabbitmq_user: openstack
 cinder_rabbitmq_user_password: "{{secrets_rabbit_pass}}"
-cinder_ip_address: "{{management_ip_address}}"
+cinder_ip_address: "{{management_ipv4.address}}"
 cinder_default_volume_type: ssd
 cinder_pools: []
   # - name: ssd
   #   members:
   #     - /dev/sdb2
 
-cinder_host: "{{hostvars[groups.controller_nodes[0]].inventory_hostname}}"
+cinder_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"

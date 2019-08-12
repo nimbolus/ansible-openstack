@@ -1,0 +1,44 @@
+- name: init database
+  include_role:
+    name: mariadb
+    tasks_from: init_db.yml
+  vars:
+    db_name: placement
+    db_user: placement
+    db_user_password: "{{placement_db_user_password}}"
+
+- name: init keystone
+  include_role:
+    name: keystone
+    tasks_from: init_auth.yml
+  vars:
+    keystone_user: placement
+    keystone_user_password: "{{placement_user_password}}"
+    keystone_service_name: placement
+    keystone_service_description: Placement API
+    keystone_service_type: placement
+    keystone_service_url: "http://{{ansible_fqdn}}:8778"
+
+- name: install
+  yum:
+    name:
+      - openstack-placement-api
+      - httpd
+
+- name: configure
+  template:
+    src: placement.conf.j2
+    dest: /etc/placement/placement.conf
+    backup: true
+  notify:
+    - init placement db
+    - restart httpd
+
+- name: start and enable
+  systemd:
+    name: httpd
+    state: started
+    enabled: true
+
+- name: flush handlers
+  meta: flush_handlers

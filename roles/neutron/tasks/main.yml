@@ -1,11 +1,10 @@
 - name: install
-  apt:
+  yum:
     name: neutron-linuxbridge-agent
 
 - name: install
-  apt:
-    name: "{{item}}"
-  loop:
+  yum:
+    name:
     - neutron-server
     - neutron-plugin-ml2
     - neutron-linuxbridge-agent
@@ -28,14 +27,14 @@
     - name: init keystone
       include_role:
         name: keystone
-        tasks_from: init_api.yml
+        tasks_from: init_auth.yml
       vars:
         keystone_user: neutron
         keystone_user_password: "{{neutron_user_password}}"
         keystone_service_name: neutron
         keystone_service_description: OpenStack Networking
         keystone_service_type: network
-        keystone_service_url: "http://{{inventory_hostname}}:9696"
+        keystone_service_url: "http://{{ansible_fqdn}}:9696"
       
   when: "'controller_nodes' in group_names"
 

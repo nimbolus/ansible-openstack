@@ -14,30 +14,25 @@
 
 - name: restart nova-api
   systemd:
-    name: nova-api
+    name: openstack-nova-api
     state: restarted
 
 - name: restart nova-scheduler
   systemd:
-    name: nova-scheduler
+    name: openstack-nova-scheduler
     state: restarted
 
 - name: restart nova-conductor
   systemd:
-    name: nova-conductor
+    name: openstack-nova-conductor
     state: restarted
 
 - name: restart nova-novncproxy
   systemd:
-    name: nova-novncproxy
-    state: restarted
-
-- name: restart nova-consoleauth
-  systemd:
-    name: nova-consoleauth
+    name: openstack-nova-novncproxy
     state: restarted
 
 - name: restart nova-compute
   systemd:
-    name: nova-compute
+    name: openstack-nova-compute
     state: restarted

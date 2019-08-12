@@ -1,4 +1,4 @@
 glance_user_password: "{{secrets_glance_pass}}"
 glance_db_user_password: "{{secrets_glance_dbpass}}"
 
-glance_host: "{{hostvars[groups.controller_nodes[0]].inventory_hostname}}"
+glance_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"
