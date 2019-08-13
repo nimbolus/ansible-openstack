@@ -5,20 +5,20 @@
 
 - name: restart cinder-scheduler
   systemd:
-    name: cinder-scheduler
+    name: openstack-cinder-scheduler
     state: restarted
 
 - name: restart cinder-volume
   systemd:
-    name: cinder-volume
+    name: openstack-cinder-volume
     state: restarted
 
-- name: restart tgt
+- name: restart target
   systemd:
-    name: tgt
+    name: target
     state: restarted
 
-- name: restart apache2
+- name: restart httpd
   systemd:
-    name: apache2
+    name: httpd
     state: restarted

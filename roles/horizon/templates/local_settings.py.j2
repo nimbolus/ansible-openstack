@@ -1,23 +1,31 @@
 import os
 from django.utils.translation import ugettext_lazy as _
-from horizon.utils import secret_key
 from openstack_dashboard.settings import HORIZON_CONFIG
 DEBUG = False
-WEBROOT = '/'
-OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True
- 
-CONSOLE_TYPE = "AUTO"
-LOCAL_PATH = os.path.dirname(os.path.abspath(__file__))
-SECRET_KEY = secret_key.generate_or_read_from_file('/var/lib/openstack-dashboard/secret_key')
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '{{memcached_host}}:11211',
-    },
-}
+WEBROOT = '/dashboard/'
+ALLOWED_HOSTS = [{% for h in horizon_allowed_hosts %}'{{h}}'{% if not loop.last %},{% endif %}{% endfor %}]
+SHOW_OPENRC_FILE = True
+SHOW_OPENSTACK_CLOUDS_YAML = True
+LOCAL_PATH = '/tmp'
+SECRET_KEY='{{horizon_secret_key}}'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 OPENSTACK_HOST = "{{horizon_host}}"
-OPENSTACK_KEYSTONE_URL = "http://%s:5000/v3" % OPENSTACK_HOST
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+CACHES = {
+    'default': {
+         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+         'LOCATION': '{{memcached_host}}:11211',
+    }
+}
+OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = False
+OPENSTACK_API_VERSIONS = {
+    "identity": 3,
+    "image": 2,
+    "volume": 3,
+}
+OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = "Default"
+OPENSTACK_KEYSTONE_DEFAULT_ROLE = "user"
+OPENSTACK_KEYSTONE_URL = "https://%s:5000/v3" % OPENSTACK_HOST
 OPENSTACK_KEYSTONE_DEFAULT_ROLE = "_member_"
 OPENSTACK_KEYSTONE_BACKEND = {
     'name': 'native',
@@ -43,7 +51,6 @@ OPENSTACK_NEUTRON_NETWORK = {
     'enable_distributed_router': False,
     'enable_ha_router': False,
     'enable_fip_topology_check': True,
-    'supported_vnic_types': ['*'],
     'physical_networks': [],
 }
 OPENSTACK_HEAT_STACK = {
@@ -63,7 +70,8 @@ API_RESULT_PAGE_SIZE = 20
 SWIFT_FILE_TRANSFER_CHUNK_SIZE = 512 * 1024
 INSTANCE_LOG_LENGTH = 35
 DROPDOWN_MAX_ITEMS = 30
-TIME_ZONE = "Europe/Berlin"
+TIME_ZONE = "UTC"
+POLICY_FILES_PATH = '/etc/openstack-dashboard'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -72,6 +80,8 @@ LOGGING = {
             'format': '%(levelname)s %(name)s %(message)s'
         },
         'operation': {
+            # The format of "%(message)s" is defined by
+            # OPERATION_LOG_OPTIONS['format']
             'format': '%(message)s'
         },
     },
@@ -81,6 +91,7 @@ LOGGING = {
             'class': 'logging.NullHandler',
         },
         'console': {
+            # Set the level to "DEBUG" for verbose output logging.
             'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'console',
@@ -294,9 +305,4 @@ REST_API_REQUIRED_SETTINGS = ['OPENSTACK_HYPERVISOR_FEATURES',
                               'OPENSTACK_KEYSTONE_DEFAULT_DOMAIN',
                               'CREATE_IMAGE_DEFAULTS',
                               'ENFORCE_PASSWORD_CHECK']
-DEFAULT_THEME = 'ubuntu'
-WEBROOT='/horizon/'
-ALLOWED_HOSTS = '*'
-COMPRESS_OFFLINE = True
 ALLOWED_PRIVATE_SUBNET_CIDR = {'ipv4': [], 'ipv6': []}
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'

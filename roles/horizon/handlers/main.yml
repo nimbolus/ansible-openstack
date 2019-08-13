@@ -1,4 +1,4 @@
-- name: reload apache2
+- name: reload httpd
   systemd:
-    name: apache2
+    name: httpd
     state: reloaded

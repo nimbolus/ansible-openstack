@@ -3,8 +3,8 @@
   when: "'controller_nodes' in group_names"
 
 - name: setup compute
-  include_tasks: compute.yml
-  when: "'compute_nodes' in group_names"
+  include_tasks: network_node.yml
+  when: "'network_nodes' in group_names"
 
 - name: allow bridge filters
   sysctl:

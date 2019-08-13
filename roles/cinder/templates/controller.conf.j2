@@ -1,18 +1,6 @@
 # {{ansible_managed}}
 
 [DEFAULT]
-rootwrap_config = /etc/cinder/rootwrap.conf
-api_paste_confg = /etc/cinder/api-paste.ini
-iscsi_helper = tgtadm
-volume_name_template = volume-%s
-volume_group = cinder-volumes
-verbose = True
-auth_strategy = keystone
-state_path = /var/lib/cinder
-lock_path = /var/lock/cinder
-volumes_dir = /var/lib/cinder/volumes
-enabled_backends = lvm
-default_volume_type = {{cinder_default_volume_type}}
 transport_url = rabbit://{{cinder_rabbitmq_user}}:{{cinder_rabbitmq_user_password}}@{{rabbitmq_host}}
 auth_strategy = keystone
 my_ip = {{cinder_ip_address}}

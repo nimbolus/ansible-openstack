@@ -18,7 +18,7 @@
     name: heat-engine
     state: restarted
 
-- name: restart apache2
+- name: restart httpd
   systemd:
-    name: apache2
+    name: httpd
     state: restarted

@@ -33,9 +33,7 @@
 
 - name: install
   yum:
-    name:
-    - cinder-api
-    - cinder-scheduler
+    name: openstack-cinder
 
 - name: configure controller
   template:
@@ -45,17 +43,4 @@
   notify:
     - init cinder db
     - restart cinder-scheduler
-    - restart apache2
-
-- name: configure nova compute
-  blockinfile:
-    dest: /etc/nova/nova.conf
-    block: |
-      [cinder]
-      os_region_name = RegionOne
-  notify: restart nova-api
-
-- name: enable
-  systemd:
-    name: cinder-scheduler
-    enabled: true
+    - restart httpd

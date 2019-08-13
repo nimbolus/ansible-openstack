@@ -76,7 +76,7 @@
     - heat-api-cfn
     - heat-engine
     - python-heat-dashboard
-  notify: restart apache2
+  notify: restart httpd
 
 - name: configure
   template:

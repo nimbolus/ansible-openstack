@@ -1,21 +1,15 @@
 - name: install
   yum:
-    name:
-    - cinder-volume
-    - lvm2
-    - thin-provisioning-tools
-
-- name: prepare vg
-  include_tasks: prepare_vg.yml
-  loop: "{{cinder_pools}}"
-  loop_control:
-    loop_var: pool
+    name: 
+      - openstack-cinder
+      - python-keystone
 
 - name: configure
   template:
     src: storage_node.conf.j2
     dest: /etc/cinder/cinder.conf
     backup: true
-  notify: 
-    - restart tgt
-    - restart cinder-volume
+  notify: restart cinder-volume
+
+- name: configure backend
+  include_tasks: "backends/{{cinder_backend}}.yml"

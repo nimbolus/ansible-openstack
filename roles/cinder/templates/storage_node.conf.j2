@@ -1,22 +1,16 @@
 # {{ansible_managed}}
 
 [DEFAULT]
-rootwrap_config = /etc/cinder/rootwrap.conf
-api_paste_confg = /etc/cinder/api-paste.ini
-iscsi_helper = tgtadm
-volume_name_template = volume-%s
-volume_group = cinder-volumes
-verbose = True
-auth_strategy = keystone
-state_path = /var/lib/cinder
-lock_path = /var/lock/cinder
-volumes_dir = /var/lib/cinder/volumes
-enabled_backends = {% for p in cinder_pools %}{{p.type}}{% if not loop.last %},{% endif %}{% endfor %}
-
 transport_url = rabbit://{{cinder_rabbitmq_user}}:{{cinder_rabbitmq_user_password}}@{{rabbitmq_host}}
 auth_strategy = keystone
 my_ip = {{cinder_ip_address}}
 glance_api_servers = http://{{glance_host}}:9292
+
+{% if cinder_backend == 'lvm' %}
+enabled_backends = {% for p in cinder_lvm_pools %}{{p.type}}{% if not loop.last %},{% endif %}{% endfor %}
+{% elif cinder_backend == 'rbd' %}
+enabled_backends = rbd
+{% endif %}
 
 [database]
 connection = mysql+pymysql://cinder:{{cinder_db_user_password}}@{{db_host}}/cinder
@@ -35,14 +29,25 @@ password = {{cinder_user_password}}
 [oslo_concurrency]
 lock_path = /var/lib/cinder/tmp
 
+{% if cinder_backend == 'lvm' %}
+# lvm backend
 [backend_default]
 volume_driver = cinder.volume.drivers.lvm.LVMVolumeDriver
-iscsi_protocol = iscsi
-iscsi_helper = tgtadm
+target_protocol = iscsi
+target_helper = lioadm
 
-{% for p in cinder_pools %}
+{% for p in cinder_lvm_pools %}
 [{{p.type}}]
 volume_group = cinder-{{p.type}}
 volume_backend_name = {{p.type}}
 
 {% endfor %}
+{% elif cinder_backend == 'rbd' %}
+# rbd backend
+[rbd]
+volume_driver = cinder.volume.drivers.rbd.RBDDriver
+rbd_pool = "{{cinder_rbd_pool}}"
+rbd_ceph_conf = "{{cinder_rbd_ceph_conf}}"
+rbd_keyring_conf = "{{cinder_rbd_keyring_conf}}"
+rbd_user = "{{cinder_rbd_user}}"
+{% endif %}

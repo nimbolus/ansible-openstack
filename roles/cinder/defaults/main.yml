@@ -3,10 +3,14 @@ cinder_db_user_password: "{{secrets_cinder_dbpass}}"
 cinder_rabbitmq_user: openstack
 cinder_rabbitmq_user_password: "{{secrets_rabbit_pass}}"
 cinder_ip_address: "{{management_ipv4.address}}"
-cinder_default_volume_type: ssd
-cinder_pools: []
+cinder_backend: lvm # lvm or rbd
+cinder_lvm_pools: []
   # - name: ssd
   #   members:
-  #     - /dev/sdb2
+  #     - /dev/sdb
+cinder_rbd_pool: cinder
+cinder_rbd_ceph_conf: /etc/ceph/ceph.conf
+cinder_rbd_keyring_conf: /etc/ceph/ceph.client.cinder.keyring
+cinder_rbd_user: cinder
 
 cinder_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"

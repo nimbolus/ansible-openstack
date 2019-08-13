@@ -1,0 +1,22 @@
+- name: install rbd requirements
+  yum:
+    name:
+    - python-rbd
+    - python-rados
+
+- name: create ceph directory
+  file:
+    path: /etc/ceph
+    state: directory
+
+- name: copy ceph config
+  copy:
+    src: ceph.conf
+    dest: /etc/ceph/ceph.conf
+
+- name: copy ceph keyring
+  copy:
+    src: ceph.client.cinder.keyring
+    dest: /etc/ceph/ceph.client.cinder.keyring
+    mode: 0600
+    owner: cinder
