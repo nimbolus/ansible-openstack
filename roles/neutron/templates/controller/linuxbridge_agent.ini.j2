@@ -1,13 +1,7 @@
 # {{ansible_managed}}
 
-[DEFAULT]
-
-[agent]
-
 [linux_bridge]
 physical_interface_mappings = provider:{{neutron_provider_interface}}
-
-[network_log]
 
 [securitygroup]
 firewall_driver = neutron.agent.linux.iptables_firewall.IptablesFirewallDriver

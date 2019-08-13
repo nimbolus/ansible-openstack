@@ -34,6 +34,12 @@
     - init placement db
     - restart httpd
 
+- name: configure httpd
+  template:
+    src: httpd_placement-api.conf.j2
+    dest: /etc/httpd/conf.d/00-placement-api.conf
+  notify: restart httpd
+
 - name: start and enable
   systemd:
     name: httpd

@@ -2,17 +2,11 @@
 
 [DEFAULT]
 core_plugin = ml2
-# https://lists.launchpad.net/yahoo-eng-team/msg56670.html
-lock_path = /var/lib/neutron/tmp
 auth_strategy = keystone
 transport_url = rabbit://{{neutron_rabbitmq_user}}:{{neutron_rabbitmq_user_password}}@{{rabbitmq_host}}
 
-[agent]
-root_helper = "sudo /usr/bin/neutron-rootwrap /etc/neutron/rootwrap.conf"
-
-[cors]
-
-[database]
+# https://lists.launchpad.net/yahoo-eng-team/msg56670.html
+#lock_path = /var/lib/neutron/tmp
 
 [keystone_authtoken]
 www_authenticate_uri = https://{{keystone_host}}:5000
@@ -25,26 +19,5 @@ project_name = service
 username = neutron
 password = {{neutron_user_password}}
 
-[matchmaker_redis]
-
-[nova]
-
 [oslo_concurrency]
-
-[oslo_messaging_amqp]
-
-[oslo_messaging_kafka]
-
-[oslo_messaging_notifications]
-
-[oslo_messaging_rabbit]
-
-[oslo_messaging_zmq]
-
-[oslo_middleware]
-
-[oslo_policy]
-
-[quotas]
-
-[ssl]
+lock_path = /var/lib/neutron/tmp
