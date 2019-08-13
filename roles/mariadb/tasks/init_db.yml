@@ -8,6 +8,7 @@
     login_password: "{{mariadb_root_password}}"
     login_host: "{{mariadb_bind_address}}"
   delegate_to: "{{db_host}}"
+  run_once: true
 
 - name: "create database user {{db_user}}"
   mysql_user:
@@ -19,4 +20,5 @@
     login_password: "{{mariadb_root_password}}"
     login_host: "{{mariadb_bind_address}}"
   delegate_to: "{{db_host}}"
+  run_once: true
   when: db_user is defined and db_user_password is defined

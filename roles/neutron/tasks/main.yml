@@ -1,10 +1,10 @@
 - name: setup controller
   include: controller.yml
-  when: "'controller_nodes' in group_names"
+  when: is_controller_node
 
 - name: setup compute
   include_tasks: network_node.yml
-  when: "'network_nodes' in group_names"
+  when: is_network_node
 
 - name: allow bridge filters
   sysctl:
@@ -31,7 +31,7 @@
     - neutron-dhcp-agent
     - neutron-metadata-agent
     - neutron-l3-agent
-  when: "'controller_nodes' in group_names"
+  when: is_controller_node
 
 - name: start and enable linuxbridge agent
   systemd:

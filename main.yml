@@ -19,36 +19,43 @@
       tags: ntp
     - role: mariadb
       tags: db,mariadb,mysql
-      when: "'controller_nodes' in group_names"
+      when: is_controller_node
     - role: rabbitmq
       tags: rabbit,rabbitmq
-      when: "'controller_nodes' in group_names"
+      when: is_controller_node
     - role: memcached
       tags: memcached
-      when: "'controller_nodes' in group_names"
+      when: is_controller_node
     - role: etcd
       tags: etcd
-      when: "'controller_nodes' in group_names"
+      when: is_controller_node
 
     # openstack services
     - role: keystone
       tags: keystone
-      when: "'controller_nodes' in group_names"
+      when: is_controller_node
     - role: glance
       tags: glance
-      when: "'controller_nodes' in group_names"
+      when: is_controller_node
     - role: placement
       tags: placement
-      when: "'controller_nodes' in group_names"
+      when: is_controller_node
     - role: nova
       tags: nova
+      when: is_controller_node 
+            or is_compute_node
     - role: neutron
       tags: neutron
+      when: "is_network_node 
+            or is_compute_node"
     - role: cinder
       tags: cinder
+      when: is_controller_node 
+            or is_compute_node 
+            or is_block_storage_node
     # - role: heat
     #   tags: heat
-    #   when: "'controller_nodes' in group_names"
+    #   when: is_controller_node
     - role: horizon
       tags: horizon
-      when: "'controller_nodes' in group_names"
+      when: is_controller_node

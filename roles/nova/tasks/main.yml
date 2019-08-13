@@ -1,10 +1,53 @@
 - name: setup controller
   include: controller.yml
-  when: "'controller_nodes' in group_names"
+  when: is_controller_node
 
-- name: setup compute
-  include_tasks: compute.yml
-  when: "'compute_nodes' in group_names"
+- name: install compute
+  yum:
+    name: openstack-nova-compute
+  when: is_compute_node
+
+- name: configure
+  template:
+    src: nova.conf.j2
+    dest: /etc/nova/nova.conf
+    backup: true
+  notify:
+    - init nova db
+    - restart nova-api
+    - restart nova-scheduler
+    - restart nova-conductor
+    - restart nova-novncproxy
+    - restart nova-compute
 
 - name: flush handlers
   meta: flush_handlers
+
+- name: start and enable controller
+  systemd:
+    name: "{{item}}"
+    enabled: true
+    state: started
+  loop:
+    - openstack-nova-api
+    - openstack-nova-scheduler
+    - openstack-nova-conductor
+    - openstack-nova-novncproxy
+  when: is_controller_node
+
+- name: start and enable compute
+  systemd:
+    name: openstack-nova-compute
+    enabled: true
+    state: started
+  when: is_compute_node
+
+- name: add flavors
+  os_nova_flavor:
+    auth: "{{keystone_admin_auth}}"
+    name: "{{item.name}}"
+    vcpus: "{{item.vcpus}}"
+    ram: "{{item.ram}}"
+    disk: "{{item.disk}}"
+  loop: "{{nova_flavors}}"
+  run_once: true

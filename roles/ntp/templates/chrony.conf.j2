@@ -1,6 +1,6 @@
 # {{ansible_managed}}
 
-{% if 'controller_nodes' in group_names %}
+{% if is_controller_node %}
 # use official servers as ntp source
 {% for s in chrony_servers %}
 server {{s}} iburst

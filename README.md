@@ -2,7 +2,7 @@
 
 ## Installation
 
-    ansible-playbook main.yml --extra-vars=keystone_bootstrap=true
+    ansible-playbook main.yml
 
 ## Discover new compute nodes
 

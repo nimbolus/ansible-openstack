@@ -28,8 +28,8 @@
     insertafter: '# filter ='
     regexp: "^\tfilter ="
     line: "\tfilter = [ \"a|^/dev/sd[a-z][0-9]$|\", \"r/.*/\" ]"
-  when: "'block_storage_nodes' in group_names 
-          or 'compute_nodes' in group_names"
+  when: "is_block_storage_node 
+          or is_compute_node"
 
 - name: start and enable lvmetad and target service
   systemd:

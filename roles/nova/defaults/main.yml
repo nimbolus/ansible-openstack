@@ -8,3 +8,25 @@ nova_ip_address: "{{management_ipv4.address}}"
 nova_neutron_user_password: "{{secrets_neutron_pass}}"
 nova_metadata_secret: "{{secrets_metadata_secret}}"
 nova_novnc_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"
+
+nova_flavors:
+  - name: m1.tiny
+    vcpus: 1
+    disk: 1
+    ram: 512
+  - name: m1.small
+    vcpus: 1
+    disk: 20
+    ram: 2048
+  - name: m1.medium
+    vcpus: 2
+    disk: 40
+    ram: 4096
+  - name: m1.large
+    vcpus: 4
+    disk: 80
+    ram: 8192
+  - name: m1.xlarge
+    vcpus: 8
+    disk: 160
+    ram: 16384

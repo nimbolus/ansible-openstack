@@ -2,23 +2,29 @@
   shell: su -s /bin/sh -c "cinder-manage db sync" cinder
   args:
     warn: false
+  when: is_controller_node
+  run_once: true
+
+- name: define ceph secret
+  shell: |
+    virsh secret-define --file /etc/ceph/libvirt_ceph.xml
+    virsh secret-set-value --secret {{cinder_rbd_secret_uuid}} --base64 {{cinder_rbd_client_key}}
+  args:
+    warn: false
 
 - name: restart cinder-scheduler
   systemd:
     name: openstack-cinder-scheduler
     state: restarted
+  when: is_controller_node
 
 - name: restart cinder-volume
   systemd:
     name: openstack-cinder-volume
     state: restarted
+  when: is_block_storage_node
 
 - name: restart target
   systemd:
     name: target
-    state: restarted
-
-- name: restart httpd
-  systemd:
-    name: httpd
     state: restarted

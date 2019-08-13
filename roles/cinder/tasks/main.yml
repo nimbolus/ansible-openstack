@@ -1,10 +1,32 @@
+- name: install
+  yum:
+    name: 
+      - openstack-cinder
+      - python-keystone
+
 - name: configure controller
   import_tasks: controller.yml
-  when: "'controller_nodes' in group_names"
+  when: is_controller_node
 
-- name: configure storage node
-  import_tasks: storage_node.yml
-  when: "'block_storage_nodes' in group_names"
+- name: configure
+  template:
+    src: cinder.conf.j2
+    dest: /etc/cinder/cinder.conf
+    backup: true
+  notify:
+    - init cinder db
+    - restart cinder-scheduler
+    - restart cinder-volume
+
+- name: configure lvm backend
+  include_tasks: "backends/lvm.yml"
+  when: "is_block_storage_node
+        and cinder_backend == 'lvm'"
+
+- name: configure rbd backend
+  include_tasks: backends/rbd.yml
+  when: "(is_block_storage_node or is_compute_node)
+        and cinder_backend == 'rbd'"
 
 - name: flush handlers
   meta: flush_handlers
@@ -17,11 +39,11 @@
   loop:
     - openstack-cinder-api
     - openstack-cinder-scheduler
-  when: "'controller_nodes' in group_names"
+  when: is_controller_node
 
 - name: start and enable volume service
   systemd:
     name: openstack-cinder-volume
     enabled: true
     state: started
-  when: "'block_storage_nodes' in group_names"
+  when: is_block_storage_node

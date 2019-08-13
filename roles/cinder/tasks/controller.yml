@@ -6,6 +6,7 @@
     db_name: cinder
     db_user: cinder
     db_user_password: "{{cinder_db_user_password}}"
+  run_once: true
 
 - name: init keystone v2
   include_role:
@@ -30,17 +31,3 @@
     keystone_service_description: OpenStack Block Storage
     keystone_service_type: volumev3
     keystone_service_url: "http://{{ansible_fqdn}}:8776/v3/%(project_id)s"
-
-- name: install
-  yum:
-    name: openstack-cinder
-
-- name: configure controller
-  template:
-    src: controller.conf.j2
-    dest: /etc/cinder/cinder.conf
-    backup: true
-  notify:
-    - init cinder db
-    - restart cinder-scheduler
-    - restart httpd

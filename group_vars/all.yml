@@ -5,3 +5,8 @@ ca_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"
 db_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"
 keystone_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"
 glance_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"
+
+is_controller_node: "{{'controller_nodes' in group_names}}"
+is_compute_node: "{{'compute_nodes' in group_names}}"
+is_block_storage_node: "{{'block_storage_nodes' in group_names}}"
+is_network_node: "{{'network_nodes' in group_names}}"
