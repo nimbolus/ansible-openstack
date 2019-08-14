@@ -6,7 +6,7 @@
     name: "{{db_name}}"
     login_user: root
     login_password: "{{mariadb_root_password}}"
-    login_host: "{{mariadb_bind_address}}"
+    login_host: "{{db_host}}"
   delegate_to: "{{db_host}}"
   run_once: true
 
@@ -18,7 +18,7 @@
     priv: "{{db_user}}.*:ALL"
     login_user: root
     login_password: "{{mariadb_root_password}}"
-    login_host: "{{mariadb_bind_address}}"
+    login_host: "{{db_host}}"
   delegate_to: "{{db_host}}"
   run_once: true
   when: db_user is defined and db_user_password is defined

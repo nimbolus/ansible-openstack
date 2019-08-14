@@ -13,10 +13,11 @@
     - openstack-keystone
     - httpd
     - mod_wsgi
+    - mod_ssl
 
 - name: configure
   template:
-    src: conf.j2
+    src: keystone.conf.j2
     dest: /etc/keystone/keystone.conf
     backup: true
   notify: 
@@ -34,6 +35,8 @@
   vars:
     req_name: keystone
     req_common_name: "{{ansible_fqdn}}"
+    req_owner: apache
+    req_group: apache
 
 - name: configure httpd
   lineinfile:

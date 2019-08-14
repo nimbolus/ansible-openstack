@@ -16,10 +16,25 @@
   vars:
     req_name: horizon
     req_common_name: "{{ansible_fqdn}}"
+    req_owner: apache
+    req_group: apache
+
+- name: configure ssl for httpd
+  lineinfile:
+    path: /etc/httpd/conf.d/ssl.conf
+    regexp: "^{{item.regexp}}"
+    line: "{{item.line}}"
+  loop:
+    - regexp: SSLCertificateFile 
+      line: "SSLCertificateFile {{req_cert_path}}"
+    - regexp: SSLCertificateKeyFile 
+      line: "SSLCertificateKeyFile {{req_privatekey_path}}"
+  notify: reload httpd
 
 - name: configure httpd
-  lineinfile:
-    path: /etc/httpd/conf.d/openstack-dashboard.conf
-    line: WSGIApplicationGroup %{GLOBAL}
-    regexp: '^WSGIApplicationGroup'
+  template:
+    src: openstack-dashboard.conf.j2
+    dest: /etc/httpd/conf.d/openstack-dashboard.conf
   notify: reload httpd
+
+  # WSGIApplicationGroup %{GLOBAL}

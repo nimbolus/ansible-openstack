@@ -37,9 +37,12 @@
 
 - name: start and enable compute
   systemd:
-    name: openstack-nova-compute
+    name: "{{item}}"
     enabled: true
     state: started
+  loop:
+    - libvirtd
+    - openstack-nova-compute
   when: is_compute_node
 
 - name: add flavors

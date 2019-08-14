@@ -6,7 +6,6 @@ Listen 5000
     SSLEngine on
     SSLCertificateFile {{req_cert_path}}
     SSLCertificateKeyFile {{req_privatekey_path}}
-    SSLCACertificateFile {{req_ca_cert_path}}
     WSGIDaemonProcess keystone-public processes=5 threads=1 user=keystone group=keystone display-name=%{GROUP}
     WSGIProcessGroup keystone-public
     WSGIScriptAlias / /usr/bin/keystone-wsgi-public

@@ -30,6 +30,10 @@
     backup: true
   notify: restart neutron-linuxbridge-agent
 
+- name: add br_netfilter kernel module
+  modprobe:
+    name: br_netfilter
+
 - name: allow bridge filters
   sysctl:
     name: "{{item}}"
@@ -37,10 +41,6 @@
   loop:
     - net.bridge.bridge-nf-call-iptables
     - net.bridge.bridge-nf-call-ip6tables
-
-- name: add br_netfilter kernel module
-  modprobe:
-    name: br_netfilter
 
 - name: flush handlers
   meta: flush_handlers

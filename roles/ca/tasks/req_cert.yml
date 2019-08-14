@@ -4,8 +4,8 @@
 
 - name: "set facts for {{req_name}}"
   set_fact:
-    req_privatekey_path: "{{ca_dir}}/private/{{req_common_name}}_{{req_name}}.key"
-    req_cert_path: "{{ca_dir}}/certs/{{req_common_name}}_{{req_name}}.crt"
+    req_privatekey_path: "{{ca_ssl_dir}}/private/{{req_common_name}}_{{req_name}}.key"
+    req_cert_path: "{{ca_ssl_dir}}/certs/{{req_common_name}}_{{req_name}}.crt"
     req_ca_cert_path: "{{ca_cert_path}}"
 
 - name: "create private key for {{req_name}}"

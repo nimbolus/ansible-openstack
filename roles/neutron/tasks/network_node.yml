@@ -14,7 +14,6 @@
     db_name: neutron
     db_user: neutron
     db_user_password: "{{neutron_db_user_password}}"
-  run_once: true
 
 - name: init keystone
   include_role:

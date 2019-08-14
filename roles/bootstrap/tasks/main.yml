@@ -3,6 +3,24 @@
     src: hosts.j2
     dest: /etc/hosts
 
+- name: disable network manager
+  systemd:
+    name: NetworkManager
+    state: stopped
+    enabled: false
+
+- name: enable network
+  systemd:
+    name: network
+    state: started
+    enabled: true
+
+- name: disable firewalld
+  systemd:
+    name: firewalld
+    state: stopped
+    enabled: false
+
 - name: add openstack repository
   yum:
     name: "centos-release-openstack-{{bootstrap_openstack_release}}"

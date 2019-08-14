@@ -7,6 +7,11 @@ my_ip = {{nova_ip_address}}
 use_neutron = true
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
 allow_resize_to_same_host = True
+{% if is_controller_node %}
+ssl_only = true
+cert = {{ req_cert_path }}
+key = {{ req_privatekey_path }}
+{% endif %}
 
 [api]
 auth_strategy = keystone
@@ -69,6 +74,6 @@ server_proxyclient_address = $my_ip
 {% if is_controller_node %}
 server_listen = $my_ip
 {% elif is_compute_node %}
-novncproxy_base_url = http://{{nova_novnc_host}}:6080/vnc_auto.html
+novncproxy_base_url = https://{{nova_novnc_host}}:6080/vnc_auto.html
 server_listen = 0.0.0.0
 {% endif %}

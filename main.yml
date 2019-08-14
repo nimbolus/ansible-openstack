@@ -12,44 +12,44 @@
   roles:
     # environment services
     - role: bootstrap
-      tags: bootstrap
+      tags: environment,bootstrap
     - role: ca
-      tags: ca
+      tags: environment,ca
     - role: ntp
-      tags: ntp
+      tags: environment,ntp
     - role: mariadb
-      tags: db,mariadb,mysql
+      tags: environment,db,mariadb,mysql
       when: is_controller_node
     - role: rabbitmq
-      tags: rabbit,rabbitmq
+      tags: environment,rabbit,rabbitmq
       when: is_controller_node
     - role: memcached
-      tags: memcached
+      tags: environment,memcached
       when: is_controller_node
     - role: etcd
-      tags: etcd
+      tags: environment,etcd
       when: is_controller_node
 
     # openstack services
     - role: keystone
-      tags: keystone
+      tags: openstack,keystone
       when: is_controller_node
     - role: glance
-      tags: glance
+      tags: openstack,glance
       when: is_controller_node
     - role: placement
-      tags: placement
+      tags: openstack,placement
       when: is_controller_node
     - role: nova
-      tags: nova
+      tags: openstack,nova
       when: is_controller_node 
             or is_compute_node
     - role: neutron
-      tags: neutron
+      tags: openstack,neutron
       when: "is_network_node 
             or is_compute_node"
     - role: cinder
-      tags: cinder
+      tags: openstack,cinder
       when: is_controller_node 
             or is_compute_node 
             or is_block_storage_node
@@ -57,5 +57,5 @@
     #   tags: heat
     #   when: is_controller_node
     - role: horizon
-      tags: horizon
+      tags: openstack,horizon
       when: is_controller_node
