@@ -1,5 +1,19 @@
 # {{ansible_managed}}
 
+[DEFAULT]
+transport_url = rabbit://{{cinder_rabbitmq_user}}:{{cinder_rabbitmq_user_password}}@{{rabbitmq_host}}
+auth_strategy = keystone
+my_ip = {{cinder_ip_address}}
+{% if is_block_storage_node %}
+glance_api_servers = http://{{glance_host}}:9292
+{% if cinder_backend == 'lvm' %}
+enabled_backends = {% for p in cinder_lvm_pools %}lvm_{{p.type}}{% if not loop.last %},{% endif %}{% endfor %}
+{% elif cinder_backend == 'rbd' %}
+enabled_backends = {% for p in cinder_rbd_pools %}rbd_{{p}}{% if not loop.last %},{% endif %}{% endfor %}
+{% endif %}
+{% endif %}
+
+
 [database]
 connection = mysql+pymysql://cinder:{{cinder_db_user_password}}@{{db_host}}/cinder
 
@@ -17,44 +31,29 @@ password = {{cinder_user_password}}
 [oslo_concurrency]
 lock_path = /var/lib/cinder/tmp
 
-[DEFAULT]
-transport_url = rabbit://{{cinder_rabbitmq_user}}:{{cinder_rabbitmq_user_password}}@{{rabbitmq_host}}
-auth_strategy = keystone
-my_ip = {{cinder_ip_address}}
-
 {% if is_block_storage_node %}
-# block storage node specific config
-
-glance_api_servers = http://{{glance_host}}:9292
-
 {% if cinder_backend == 'lvm' %}
-enabled_backends = {% for p in cinder_lvm_pools %}{{p.type}}{% if not loop.last %},{% endif %}{% endfor %}
-{% elif cinder_backend == 'rbd' %}
-enabled_backends = rbd
-{% endif %}
-
-{% if cinder_backend == 'lvm' %}
-# lvm backend
-[backend_default]
+# lvm backends
+{% for p in cinder_lvm_pools %}
+[lvm_{{p.type}}]
 volume_driver = cinder.volume.drivers.lvm.LVMVolumeDriver
+volume_group = cinder-{{p.type}}
+volume_backend_name = {{p.type}}
 target_protocol = iscsi
 target_helper = lioadm
 
-{% for p in cinder_lvm_pools %}
-[{{p.type}}]
-volume_group = cinder-{{p.type}}
-volume_backend_name = {{p.type}}
-
 {% endfor %}
 {% elif cinder_backend == 'rbd' %}
-# rbd backend
-[rbd]
+# rbd backends
+{% for p in cinder_rbd_pools %}
+[rbd_{{p}}]
 volume_driver = cinder.volume.drivers.rbd.RBDDriver
-rbd_pool = "{{cinder_rbd_pool}}"
+rbd_pool = "{{p}}"
 rbd_ceph_conf = "{{cinder_rbd_ceph_conf}}"
 rbd_keyring_conf = "{{cinder_rbd_keyring_conf}}"
 rbd_user = "{{cinder_rbd_user}}"
 rbd_secret_uuid = "{{cinder_rbd_secret_uuid}}"
 glance_api_version = 2
+{% endfor %}
 {% endif %}
 {% endif %}

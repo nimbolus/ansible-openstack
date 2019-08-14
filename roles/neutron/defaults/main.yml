@@ -2,11 +2,11 @@ neutron_db_user_password: "{{secrets_neutron_dbpass}}"
 neutron_user_password: "{{secrets_neutron_pass}}"
 neutron_provider_interface: "{{provider_interface}}"
 neutron_overlay_ip_address: "{{management_ipv4.address}}"
-neutron_metadata_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"
 neutron_metadata_secret: "{{secrets_metadata_secret}}"
 neutron_rabbitmq_user: openstack
 neutron_rabbitmq_user_password: "{{secrets_rabbit_pass}}"
 neutron_nova_user: nova
 neutron_nova_user_password: "{{secrets_nova_pass}}"
 
-neutron_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"
+neutron_host: "{{hostvars[groups.network_nodes[0]].ansible_fqdn}}"
+neutron_metadata_host: "{{hostvars[groups.network_nodes[0]].ansible_fqdn}}"

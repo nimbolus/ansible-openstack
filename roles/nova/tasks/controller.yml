@@ -33,6 +33,14 @@
     keystone_service_type: compute
     keystone_service_url: "http://{{ansible_fqdn}}:8774/v2.1"
 
+- name: request certificate
+  include_role:
+    name: ca
+    tasks_from: req_cert.yml
+  vars:
+    req_name: nova novnc
+    req_common_name: "{{ansible_fqdn}}"
+
 - name: install controller
   yum:
     name:

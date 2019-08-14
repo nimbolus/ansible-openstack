@@ -9,6 +9,14 @@
     backup: true
   notify: reload httpd
 
+- name: request certificate
+  include_role:
+    name: ca
+    tasks_from: req_cert.yml
+  vars:
+    req_name: horizon
+    req_common_name: "{{ansible_fqdn}}"
+
 - name: configure httpd
   lineinfile:
     path: /etc/httpd/conf.d/openstack-dashboard.conf
