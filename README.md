@@ -2,24 +2,15 @@
 
 ## Requirements
 
-Create certificate authority at `/etc/openstack-ca` and save the key at `private/ca.key` and the certificate at `certs/ca.crt`.
-To install the certificate authority into the system run:
+Create certificate authority and save the key at `/etc/openstack-ca/private/ca.key` 
+and the certificate at `/etc/openstack-ca/certs/ca.crt` on the ca node.
+To install the certificate authority into the system and start a few initial tasks run:
 
 ```sh
-ansible-playbook main.yml --tags ca --extra-vars ca_install_trust=true
+ansible-playbook main.yml --tags ca,bootstrap --extra-vars ca_install_trust=true
 ```
 
-Next configure the provider network interface on the network nodes. 
-The interface file at `/etc/sysconfig/network-scripts` should contain the following values, but don't remove the existing options.
-
-```
-BOOTPROTO=none
-ONBOOT=yes
-IPV4_FAILURE_FATAL=no
-IPV6INIT=no
-IPV6_AUTOCONF=no
-IPV6_FAILURE_FATAL=no
-```
+Finally restart all nodes.
 
 ## Installation
 

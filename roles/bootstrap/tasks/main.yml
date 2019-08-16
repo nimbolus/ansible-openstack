@@ -3,6 +3,26 @@
     src: hosts.j2
     dest: /etc/hosts
 
+- name: configure provider interface
+  lineinfile:
+    path: "/etc/sysconfig/network-scripts/ifcfg-{{provider_interface}}"
+    line: "{{item.option}}={{item.value}}"
+    regexp: "^{{item.option}}"
+  loop:
+    - option: BOOTPROTO
+      value: "none"
+    - option: ONBOOT
+      value: "yes"
+    - option: IPV4_FAILURE_FATAL
+      value: "no"
+    - option: IPV6INIT
+      value: "no"
+    - option: IPV6_AUTOCONF
+      value: "no"
+    - option: IPV6_FAILURE_FATAL
+      value: "no"
+  when: is_network_node
+
 - name: disable network manager
   systemd:
     name: NetworkManager
