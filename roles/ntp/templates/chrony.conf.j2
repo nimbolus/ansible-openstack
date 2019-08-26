@@ -10,7 +10,7 @@ allow {{chrony_allow_network | ipaddr('net')}}
 {% else %}
 # use controller nodes as ntp source
 {% for s in groups.controller_nodes %}
-server {{hostvars[s].ansible_fqdn}} iburst
+server {{hostvars[s].ansible_nodename}} iburst
 {% endfor %}
 {% endif %}
 

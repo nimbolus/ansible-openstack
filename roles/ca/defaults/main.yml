@@ -10,4 +10,4 @@ ca_organization_name: Example Ltd.
 ca_organization_unit_name: openstack
 ca_email_address: john.doe@example.com
 
-ca_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"
+ca_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"

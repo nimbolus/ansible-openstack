@@ -31,7 +31,7 @@
     keystone_service_name: nova
     keystone_service_description: OpenStack Compute
     keystone_service_type: compute
-    keystone_service_url: "http://{{ansible_fqdn}}:8774/v2.1"
+    keystone_service_url: "http://{{ansible_nodename}}:8774/v2.1"
 
 - name: install controller
   yum:
@@ -47,6 +47,6 @@
     tasks_from: req_cert.yml
   vars:
     req_name: nova novnc
-    req_common_name: "{{ansible_fqdn}}"
+    req_common_name: "{{ansible_nodename}}"
     req_owner: nova
     req_group: nova

@@ -1,8 +1,6 @@
 - name: openstack
-  hosts: nodes
+  hosts: openstack
   become: true
-  vars_files:
-    - vars/secrets.yml
   pre_tasks:
     - name: set management_ipv4
       set_fact:

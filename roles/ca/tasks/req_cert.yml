@@ -10,7 +10,7 @@
 
 - name: "create private key for {{req_name}}"
   openssl_privatekey:
-    path: "{{req_privatekey_path}}"
+    path: "{{ca_dir}}/private/{{req_common_name}}_{{req_name}}.key"
     type: RSA
     size: 4096
     mode: 0600
@@ -19,7 +19,7 @@
 - name: "create certificate signing request for {{req_name}}"
   openssl_csr:
     path: "{{ca_dir}}/csr/{{req_common_name}}_{{req_name}}.csr"
-    privatekey_path: "{{req_privatekey_path}}"
+    privatekey_path: "{{ca_dir}}/private/{{req_common_name}}_{{req_name}}.key"
     common_name: "{{req_common_name}}"
     country_name: "{{ca_country_name}}"
     organization_name: "{{ca_organization_name}}"
@@ -29,7 +29,7 @@
 
 - name: "create certificate for {{req_name}}"
   openssl_certificate:
-    path: "{{req_cert_path}}"
+    path: "{{ca_dir}}/certs/{{req_common_name}}_{{req_name}}.crt"
     csr_path: "{{ca_dir}}/csr/{{req_common_name}}_{{req_name}}.csr"
     provider: ownca
     ownca_path: "{{ca_cert_path}}"
@@ -39,20 +39,20 @@
 
 - name: "fetch private key for {{req_name}}"
   slurp:
-    path: "{{req_privatekey_path}}"
+    path: "{{ca_dir}}/private/{{req_common_name}}_{{req_name}}.key"
   register: req_privatekey
   delegate_to: "{{ca_host}}"
 
 - name: "fetch certificate for {{req_name}}"
   slurp:
-    path: "{{req_cert_path}}"
+    path: "{{ca_dir}}/certs/{{req_common_name}}_{{req_name}}.crt"
   register: req_cert
   delegate_to: "{{ca_host}}"
   
 - name: "upload private key for {{req_name}}"
   copy:
     content: "{{req_privatekey.content | b64decode}}"
-    dest: "{{ca_ssl_dir}}/private/{{req_common_name}}_{{req_name}}.key"
+    dest: "{{req_privatekey_path}}"
     mode: 0600
     owner: "{{req_owner | default(req_name)}}"
     group: "{{req_group | default(req_name)}}"
@@ -60,6 +60,6 @@
 - name: "upload certificate for {{req_name}}"
   copy:
     content: "{{req_cert.content | b64decode}}"
-    dest: "{{ca_ssl_dir}}/certs/{{req_common_name}}_{{req_name}}.crt"
+    dest: "{{req_cert_path}}"
     owner: "{{req_owner | default(req_name)}}"
     group: "{{req_group | default(req_name)}}"

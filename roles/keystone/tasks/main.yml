@@ -34,14 +34,14 @@
     tasks_from: req_cert.yml
   vars:
     req_name: keystone
-    req_common_name: "{{ansible_fqdn}}"
+    req_common_name: "{{ansible_nodename}}"
     req_owner: apache
     req_group: apache
 
 - name: configure httpd
   lineinfile:
     path: /etc/httpd/conf/httpd.conf
-    line: "ServerName {{ansible_fqdn}}"
+    line: "ServerName {{ansible_nodename}}"
     regexp: '^ServerName '
   notify: restart httpd
 

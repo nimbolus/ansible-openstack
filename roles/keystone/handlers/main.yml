@@ -11,9 +11,9 @@
 - name: bootstrap keystone
   shell: |
     keystone-manage bootstrap --bootstrap-password {{keystone_admin_password}} \
-      --bootstrap-admin-url https://{{ansible_fqdn}}:5000/v3/ \
-      --bootstrap-internal-url https://{{ansible_fqdn}}:5000/v3/ \
-      --bootstrap-public-url https://{{ansible_fqdn}}:5000/v3/ \
+      --bootstrap-admin-url https://{{ansible_nodename}}:5000/v3/ \
+      --bootstrap-internal-url https://{{ansible_nodename}}:5000/v3/ \
+      --bootstrap-public-url https://{{ansible_nodename}}:5000/v3/ \
       --bootstrap-region-id RegionOne
 
 - name: restart httpd

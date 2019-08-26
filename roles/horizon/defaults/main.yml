@@ -1,4 +1,4 @@
-horizon_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"
+horizon_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"
 horizon_secret_key: "{{secrets_horizon_secret}}"
 horizon_allowed_hosts:
-  - "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"
+  - "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"

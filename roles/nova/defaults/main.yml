@@ -7,7 +7,7 @@ nova_rabbitmq_user_password: "{{secrets_rabbit_pass}}"
 nova_ip_address: "{{management_ipv4.address}}"
 nova_neutron_user_password: "{{secrets_neutron_pass}}"
 nova_metadata_secret: "{{secrets_metadata_secret}}"
-nova_novnc_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"
+nova_novnc_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"
 
 nova_flavors:
   - name: m1.tiny

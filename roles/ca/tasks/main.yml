@@ -7,7 +7,7 @@
     - "{{ca_dir}}/private"
     - "{{ca_dir}}/certs"
     - "{{ca_dir}}/csr"
-  when: ansible_fqdn == ca_host
+  when: ansible_nodename == ca_host
 
 - name: create ssl directory
   file:

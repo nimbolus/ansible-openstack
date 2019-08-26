@@ -8,5 +8,5 @@ neutron_rabbitmq_user_password: "{{secrets_rabbit_pass}}"
 neutron_nova_user: nova
 neutron_nova_user_password: "{{secrets_nova_pass}}"
 
-neutron_host: "{{hostvars[groups.network_nodes[0]].ansible_fqdn}}"
-neutron_nova_metadata_host: "{{hostvars[groups.controller[0]].ansible_fqdn}}"
+neutron_host: "{{hostvars[groups.network_nodes[0]].ansible_nodename}}"
+neutron_nova_metadata_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"

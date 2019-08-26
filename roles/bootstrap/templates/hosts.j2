@@ -3,6 +3,6 @@
 
 # {{ansible_managed}}
 
-{% for node in groups.nodes %}
-{{hostvars[node].management_ipv4.address}} {{hostvars[node].ansible_fqdn}} {{hostvars[node].ansible_hostname}}
+{% for node in groups.openstack %}
+{{hostvars[node].management_ipv4.address}} {{hostvars[node].ansible_nodename}} {{hostvars[node].ansible_hostname}}
 {% endfor %}

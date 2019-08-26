@@ -25,7 +25,7 @@
     keystone_service_name: neutron
     keystone_service_description: OpenStack Networking
     keystone_service_type: network
-    keystone_service_url: "http://{{ansible_fqdn}}:9696"
+    keystone_service_url: "http://{{ansible_nodename}}:9696"
 
 - name: configure modular layer 2 plugin
   template:

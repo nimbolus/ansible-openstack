@@ -1,9 +1,11 @@
+management_interface: "{{ansible_default_ipv4.interface}}"
+
 db_root_password: "{{secrets_db_root_pass}}"
 
-ca_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"
-db_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"
-keystone_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"
-glance_host: "{{hostvars[groups.controller_nodes[0]].ansible_fqdn}}"
+ca_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"
+db_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"
+keystone_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"
+glance_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"
 
 is_controller_node: "{{'controller_nodes' in group_names}}"
 is_compute_node: "{{'compute_nodes' in group_names}}"
