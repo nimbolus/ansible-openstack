@@ -5,23 +5,18 @@
     - python-rados
     - ceph-common
 
-- name: create ceph directory
+- name: check ceph keyring
   file:
-    path: /etc/ceph
-    state: directory
-
-- name: copy ceph config
-  copy:
-    src: ceph.conf
-    dest: /etc/ceph/ceph.conf
-
-- name: copy ceph keyring
-  template:
-    src: ceph.client.cinder.keyring.j2
-    dest: /etc/ceph/ceph.client.cinder.keyring
+    path: "{{cinder_rbd_keyring_conf}}"
     mode: 0640
     group: cinder
   when: is_block_storage_node
+
+- name: fetch ceph key
+  slurp:
+    path: "{{cinder_rbd_keyring_conf}}"
+  register: cinder_rbd_client_key
+  when: is_compute_node
 
 - name: create libvirt rbd secret
   template:

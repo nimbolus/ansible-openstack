@@ -40,6 +40,9 @@
   notify:
     - restart glance-registry
 
+- name: setup backend
+  include_tasks: "backends/{{glance_backend}}.yml"
+
 - name: stand and enable
   systemd:
     name: "{{item}}"

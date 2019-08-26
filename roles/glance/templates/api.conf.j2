@@ -4,9 +4,17 @@
 connection = mysql+pymysql://glance:{{glance_db_user_password}}@{{db_host}}/glance
 
 [glance_store]
+{% if glance_backend == 'file' %}
 stores = file,http
 default_store = file
 filesystem_store_datadir = /var/lib/glance/images/
+{% elif glance_backend == 'rbd' %}
+stores = glance.store.rbd.Store
+default_store = rbd
+rbd_store_pool = {{glance_rbd_pool}}
+rbd_store_user = {{glance_rbd_user}}
+rbd_store_ceph_conf = {{glance_rbd_ceph_config}}
+{% endif %}
 
 [keystone_authtoken]
 www_authenticate_uri = https://{{keystone_host}}:5000
