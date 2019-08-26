@@ -1,0 +1,25 @@
+all:
+  hosts:
+    controller01:
+      management_interface: eth1
+    compute01:
+      management_interface: eth1
+      provider_interface: eth2
+  children:
+    openstack:
+      children:
+        controller_nodes:
+          hosts:
+            controller01:
+        compute_nodes:
+          hosts:
+            compute01:
+        network_nodes:
+          hosts:
+            compute01:
+        block_storage_nodes:
+          vars:
+            cinder_backend: rbd
+            cinder_rbd_client_key: secret
+          hosts:
+            compute01:
