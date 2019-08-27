@@ -8,7 +8,7 @@
 - name: define ceph secret
   shell: |
     virsh secret-define --file /etc/ceph/libvirt_ceph.xml
-    virsh secret-set-value --secret {{cinder_rbd_secret_uuid}} --base64 {{cinder_rbd_client_key}}
+    virsh secret-set-value --secret {{cinder_rbd_secret_uuid}} --base64 {{cinder_rbd_client_key.content | b64decode | regex_search('[A-Za-z0-9\/+]+==', multiline=True)}}
   args:
     warn: false
 
