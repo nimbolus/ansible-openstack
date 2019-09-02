@@ -36,6 +36,7 @@
     auth: "{{keystone_admin_auth}}"
     name: heat
     description: Stack projects and users
+  register: heat_domain
 
 - name: create admin user
   os_user:
@@ -44,13 +45,12 @@
     password: "{{heat_admin_password}}"
     domain: heat
 
-# heat domain not found ?!
-# - name: add admin role to admin user
-#   os_user_role:
-#     auth: "{{keystone_admin_auth}}"
-#     user: heat_domain_admin
-#     role: admin
-#     domain: heat
+- name: add admin role to heat domain admin in heat domain
+  os_user_role:
+    auth: "{{keystone_admin_auth}}"
+    user: heat_domain_admin
+    role: admin
+    domain: "{{heat_domain.id}}"
 
 - name: create heat stack owner role
   os_keystone_role:
@@ -62,25 +62,18 @@
     auth: "{{keystone_admin_auth}}"
     name: heat_stack_user
 
-# - name: add heat stack owner to project
-#   os_user_role:
-#     auth: "{{keystone_admin_auth}}"
-#     user: admin
-#     role: heat_stack_owner
-#     domain: default
-
 - name: install
   yum:
     name:
-    - heat-api
-    - heat-api-cfn
-    - heat-engine
-    - python-heat-dashboard
+    - openstack-heat-api
+    - openstack-heat-api-cfn
+    - openstack-heat-engine
+    - openstack-heat-ui
   notify: restart httpd
 
 - name: configure
   template:
-    src: conf.j2
+    src: heat.conf.j2
     dest: /etc/heat/heat.conf
     backup: true
   notify:
@@ -88,3 +81,14 @@
     - restart heat-api
     - restart heat-api-cfn
     - restart heat-engine
+
+- name: start and enable
+  systemd:
+    name: "{{item}}"
+  loop:
+    - openstack-heat-api
+    - openstack-heat-api-cfn
+    - openstack-heat-engine
+
+- name: flush handlers
+  meta: flush_handlers

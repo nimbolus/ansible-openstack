@@ -51,9 +51,9 @@
       when: is_controller_node 
             or is_compute_node 
             or is_block_storage_node
-    # - role: heat
-    #   tags: heat
-    #   when: is_controller_node
+    - role: heat
+      tags: heat
+      when: is_controller_node
     - role: horizon
       tags: openstack,horizon
       when: is_controller_node

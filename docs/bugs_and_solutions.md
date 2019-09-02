@@ -6,4 +6,5 @@ run on horizon host:
 ```
 /usr/share/openstack-dashboard/manage.py collectstatic --noinput
 /usr/share/openstack-dashboard/manage.py compress
+systemctl restart httpd
 ```

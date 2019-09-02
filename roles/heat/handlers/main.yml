@@ -5,17 +5,17 @@
 
 - name: restart heat-api
   systemd:
-    name: heat-api
+    name: openstack-heat-api
     state: restarted
 
 - name: restart heat-api-cfn
   systemd:
-    name: heat-api-cfn
+    name: openstack-heat-api-cfn
     state: restarted
 
 - name: restart heat-engine
   systemd:
-    name: heat-engine
+    name: openstack-heat-engine
     state: restarted
 
 - name: restart httpd

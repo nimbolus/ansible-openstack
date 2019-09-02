@@ -8,65 +8,11 @@ stack_domain_admin_password = {{heat_admin_password}}
 stack_user_domain_name = heat
 transport_url = rabbit://{{heat_rabbitmq_user}}:{{heat_rabbitmq_user_password}}@{{rabbitmq_host}}
 
-[auth_password]
-
-[clients]
-
-[clients_aodh]
-
-[clients_barbican]
-
-[clients_cinder]
-
-[clients_designate]
-
-[clients_glance]
-
-[clients_heat]
-
 [clients_keystone]
-auth_uri = http://{{keystone_host}}:5000
-
-[clients_magnum]
-
-[clients_manila]
-
-[clients_mistral]
-
-[clients_monasca]
-
-[clients_neutron]
-
-[clients_nova]
-
-[clients_octavia]
-
-[clients_sahara]
-
-[clients_senlin]
-
-[clients_swift]
-
-[clients_trove]
-
-[clients_zaqar]
-
-[cors]
+auth_uri = https://{{keystone_host}}:5000
 
 [database]
 connection = mysql+pymysql://heat:{{heat_db_user_password}}@{{db_host}}/heat
-
-[ec2authtoken]
-
-[eventlet_opts]
-
-[healthcheck]
-
-[heat_api]
-
-[heat_api_cfn]
-
-[heat_api_cloudwatch]
 
 [keystone_authtoken]
 www_authenticate_uri = https://{{keystone_host}}:5000
@@ -79,37 +25,9 @@ project_name = service
 username = heat
 password = {{heat_user_password}}
 
-[matchmaker_redis]
-
-[noauth]
-
-[oslo_messaging_amqp]
-
-[oslo_messaging_kafka]
-
-[oslo_messaging_notifications]
-
-[oslo_messaging_rabbit]
-
-[oslo_messaging_zmq]
-
-[oslo_middleware]
-
-[oslo_policy]
-
-[paste_deploy]
-
-[profiler]
-
-[revision]
-
-[ssl]
-
 [trustee]
 auth_type = password
-auth_url = http://{{keystone_host}}:35357
+auth_url = https://{{keystone_host}}:5000
 username = heat
 password = {{heat_user_password}}
 user_domain_name = default
-
-[volumes]
