@@ -5,7 +5,6 @@
   args:
     warn: false
   when: is_network_node
-  run_once: true
 
 - name: restart neutron-server
   systemd:

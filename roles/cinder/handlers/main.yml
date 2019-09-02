@@ -3,7 +3,6 @@
   args:
     warn: false
   when: is_controller_node
-  run_once: true
 
 - name: define ceph secret
   shell: |

@@ -43,7 +43,7 @@
 - name: setup backend
   include_tasks: "backends/{{glance_backend}}.yml"
 
-- name: stand and enable
+- name: start and enable
   systemd:
     name: "{{item}}"
     state: started
