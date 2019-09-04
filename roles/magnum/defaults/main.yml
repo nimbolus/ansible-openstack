@@ -1,0 +1,6 @@
+magnum_db_user_password: "{{secrets_magnum_dbpass}}"
+magnum_user_password: "{{secrets_magnum_pass}}"
+magnum_admin_password: "{{secrets_magnum_admin_pass}}"
+magnum_rabbitmq_user: openstack
+magnum_rabbitmq_user_password: "{{secrets_rabbit_pass}}"
+magnum_cinder_volume_type: ssd

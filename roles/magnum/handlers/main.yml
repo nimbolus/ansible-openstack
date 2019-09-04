@@ -1,0 +1,19 @@
+- name: init magnum db
+  shell: su -s /bin/sh -c "magnum-db-manage upgrade" magnum
+  args:
+    warn: false
+
+- name: restart magnum-api
+  systemd:
+    name: openstack-magnum-api
+    state: restarted
+
+- name: restart magnum-conductor
+  systemd:
+    name: openstack-magnum-conductor
+    state: restarted
+
+- name: restart httpd
+  systemd:
+    name: httpd
+    state: restarted

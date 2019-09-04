@@ -1,0 +1,70 @@
+- name: init database
+  include_role:
+    name: mariadb
+    tasks_from: init_db.yml
+  vars:
+    db_name: magnum
+    db_user: magnum
+    db_user_password: "{{magnum_db_user_password}}"
+
+- name: init keystone magnum service
+  include_role:
+    name: keystone
+    tasks_from: init_auth.yml
+  vars:
+    keystone_user: magnum
+    keystone_user_password: "{{magnum_user_password}}"
+    keystone_service_name: magnum
+    keystone_service_description: OpenStack Container Infrastructure Management Service
+    keystone_service_type: container-infra
+    keystone_service_url: "http://{{ansible_nodename}}:9511/v1"
+
+- name: create domain
+  os_keystone_domain:
+    auth: "{{keystone_admin_auth}}"
+    name: magnum
+    description: Owns users and projects created by magnum
+  register: magnum_domain
+
+- name: create admin user
+  os_user:
+    auth: "{{keystone_admin_auth}}"
+    name: magnum_domain_admin
+    password: "{{magnum_admin_password}}"
+    domain: magnum
+
+- name: add admin role to magnum domain admin in magnum domain
+  os_user_role:
+    auth: "{{keystone_admin_auth}}"
+    user: magnum_domain_admin
+    role: admin
+    domain: "{{magnum_domain.id}}"
+
+- name: install
+  yum:
+    name:
+    - openstack-magnum-api
+    - openstack-magnum-conductor
+    - openstack-magnum-ui
+    - python-magnumclient
+  notify: restart httpd
+
+- name: configure
+  template:
+    src: magnum.conf.j2
+    dest: /etc/magnum/magnum.conf
+    backup: true
+  notify:
+    - init magnum db
+    - restart magnum-api
+    - restart magnum-conductor
+
+- name: start and enable
+  systemd:
+    name: "{{item}}"
+  loop:
+    - openstack-magnum-api
+    - openstack-magnum-conductor
+
+- name: flush handlers
+  meta: flush_handlers

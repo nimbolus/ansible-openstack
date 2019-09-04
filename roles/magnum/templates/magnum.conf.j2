@@ -1,0 +1,46 @@
+# {{ansible_managed}}
+
+[DEFAULT]
+transport_url = rabbit://{{magnum_rabbitmq_user}}:{{magnum_rabbitmq_user_password}}@{{rabbitmq_host}}
+
+[api]
+host = {{management_ipv4.address}}
+
+[certificates]
+cert_manager_type = x509keypair
+
+[cinder]
+default_docker_volume_type = {{magnum_cinder_volume_type}}
+
+[cinder_client]
+region_name = RegionOne
+
+[database]
+connection = mysql+pymysql://magnum:{{magnum_db_user_password}}@{{db_host}}/magnum
+
+[keystone_authtoken]
+www_authenticate_uri = https://{{keystone_host}}:5000/v3
+memcached_servers = {{memcached_host}}:11211
+auth_url = https://{{keystone_host}}:5000
+auth_version = v3
+auth_type = password
+project_domain_id = default
+project_name = service
+user_domain_id = default
+username = magnum
+password = {{magnum_user_password}}
+admin_user = magnum
+admin_password = {{magnum_user_password}}
+admin_tenant_name = service
+
+[trust]
+trustee_domain_name = magnum
+trustee_domain_admin_name = magnum_domain_admin
+trustee_domain_admin_password = {{magnum_admin_password}}
+trustee_keystone_interface = public
+
+[oslo_messaging_notifications]
+driver = messaging
+
+[oslo_concurrency]
+lock_path = /var/lib/magnum/tmp
