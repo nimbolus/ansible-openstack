@@ -1,0 +1,10 @@
+# {{ansible_managed}}
+
+[elk-{{efk_version}}.x]
+name=ELK repository for {{efk_version}}.x packages
+baseurl=https://artifacts.elastic.co/packages/{{efk_version}}.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md

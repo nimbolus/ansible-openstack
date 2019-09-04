@@ -1,0 +1,14 @@
+- name: restart elasticsearch
+  systemd:
+    name: elasticsearch
+    state: restarted
+
+- name: restart kibana
+  systemd:
+    name: kibana
+    state: restarted
+
+- name: reload httpd
+  systemd:
+    name: httpd
+    state: reloaded

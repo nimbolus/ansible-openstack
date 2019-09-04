@@ -63,3 +63,10 @@
     - role: horizon
       tags: openstack,horizon
       when: is_controller_node
+
+    # logging services
+    - role: elk
+      tags: logging,elk
+      when: is_controller_node
+    - role: fluentd
+      tags: logging,fluentd

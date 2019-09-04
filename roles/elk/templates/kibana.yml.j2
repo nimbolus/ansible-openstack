@@ -1,0 +1,7 @@
+# {{ansible_managed}}
+
+server.port: 5601
+server.basePath: "/kibana"
+server.rewriteBasePath: true
+
+elasticsearch.hosts: ["http://{{management_ipv4.address}}:9200"]
