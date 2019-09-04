@@ -16,6 +16,7 @@
     backup: true
   notify:
     - init cinder db
+    - restart cinder-api
     - restart cinder-scheduler
     - restart cinder-volume
   when: is_block_storage_node or is_controller_node

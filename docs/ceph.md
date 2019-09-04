@@ -7,3 +7,11 @@ ceph auth get-or-create client.cinder mon 'profile rbd' osd 'profile rbd pool=ci
 ```
 
 Show volumes with: `rbd ls cinder`
+
+## Setup cinder volume type
+
+For example for ceph ssd storage:
+```sh
+openstack volume type create ceph-ssd
+openstack volume type set ceph-ssd --property volume_backend_name=rbd_volumes
+```

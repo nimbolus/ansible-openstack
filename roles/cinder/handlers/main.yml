@@ -11,6 +11,12 @@
   args:
     warn: false
 
+- name: restart cinder-api
+  systemd:
+    name: openstack-cinder-api
+    state: restarted
+  when: is_controller_node
+
 - name: restart cinder-scheduler
   systemd:
     name: openstack-cinder-scheduler

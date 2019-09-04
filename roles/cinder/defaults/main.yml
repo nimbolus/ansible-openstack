@@ -8,8 +8,9 @@ cinder_lvm_pools: []
   # - name: ssd
   #   members:
   #     - /dev/sdb
-cinder_rbd_pools:
-  - volumes
+cinder_rbd_pools: []
+  # - name: volumes
+  #   pool: volumes
 cinder_rbd_ceph_conf: /etc/ceph/ceph.conf
 cinder_rbd_keyring_conf: /etc/ceph/ceph.client.cinder.keyring
 cinder_rbd_user: cinder
