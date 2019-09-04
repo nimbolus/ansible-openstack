@@ -27,6 +27,9 @@
     - role: etcd
       tags: environment,etcd
       when: is_controller_node
+    - role: httpd
+      tags: environment,httpd
+      when: is_controller_node
 
     # openstack services
     - role: keystone

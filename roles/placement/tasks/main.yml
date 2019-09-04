@@ -21,9 +21,7 @@
 
 - name: install
   yum:
-    name:
-      - openstack-placement-api
-      - httpd
+    name: openstack-placement-api
 
 - name: configure
   template:
@@ -39,12 +37,6 @@
     src: httpd_placement-api.conf.j2
     dest: /etc/httpd/conf.d/00-placement-api.conf
   notify: restart httpd
-
-- name: start and enable
-  systemd:
-    name: httpd
-    state: started
-    enabled: true
 
 - name: flush handlers
   meta: flush_handlers

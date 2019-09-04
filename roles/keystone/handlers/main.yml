@@ -15,8 +15,3 @@
       --bootstrap-internal-url https://{{ansible_nodename}}:5000/v3/ \
       --bootstrap-public-url https://{{ansible_nodename}}:5000/v3/ \
       --bootstrap-region-id RegionOne
-
-- name: restart httpd
-  systemd:
-    name: httpd
-    state: restarted

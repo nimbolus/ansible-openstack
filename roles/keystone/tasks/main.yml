@@ -38,24 +38,11 @@
     req_owner: apache
     req_group: apache
 
-- name: configure httpd
-  lineinfile:
-    path: /etc/httpd/conf/httpd.conf
-    line: "ServerName {{ansible_nodename}}"
-    regexp: '^ServerName '
-  notify: restart httpd
-
 - name: configure httpd virtual host
   template:
     src: wsgi-keystone.conf.j2
     dest: /etc/httpd/conf.d/wsgi-keystone.conf
   notify: restart httpd
-
-- name: start and enable httpd
-  systemd:
-    name: httpd
-    state: started
-    enabled: true
 
 - name: flush handlers
   meta: flush_handlers

@@ -1,0 +1,41 @@
+- name: install
+  yum:
+    name: httpd
+
+- name: request certificate
+  include_role:
+    name: ca
+    tasks_from: req_cert.yml
+  vars:
+    req_name: "{{ansible_nodename}}"
+    req_common_name: "{{ansible_nodename}}"
+    req_owner: apache
+    req_group: apache
+
+- name: configure
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    line: "ServerName {{ansible_nodename}}"
+    regexp: '^ServerName '
+  notify: reload httpd
+
+- name: configure ssl
+  lineinfile:
+    path: /etc/httpd/conf.d/ssl.conf
+    regexp: "^{{item.regexp}}"
+    line: "{{item.line}}"
+  loop:
+    - regexp: SSLCertificateFile 
+      line: "SSLCertificateFile {{req_cert_path}}"
+    - regexp: SSLCertificateKeyFile 
+      line: "SSLCertificateKeyFile {{req_privatekey_path}}"
+  notify: reload httpd
+
+- name: start and enable
+  systemd:
+    name: httpd
+    state: started
+    enabled: true
+
+- name: flush handlers
+  meta: flush_handlers
