@@ -1,21 +1,5 @@
 # {{ansible_managed}}
 
-{# {% if is_controller_node %}
-<source>
-  @type forward
-  port 4000
-  bind 0.0.0.0
-</source>
-
-<match **>
-  @type elasticsearch
-  host localhost
-  port 9200
-  logstash_format true
-  flush_interval 1
-</match>
-{% endif %} #}
-
 # Nova compute
 <source>
   @type tail
@@ -337,15 +321,62 @@
   </pair>
 </match>
 
-{# <match greped.**>
-  @type forward
-  heartbeat_type tcp
-  <server>
-    name {{logging_host}}
-    host {{logging_host}}
-    port 4000
-  </server>
-</match> #}
+# Heat API
+<source>
+  @type tail
+  path /var/log/heat/heat-api.log
+  tag heat.api
+  format multiline
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  time_format %F %T.%L
+</source>
+
+<match heat.api>
+  @type add
+  <pair>
+    service heat.api
+    hostname "#{Socket.gethostname}"
+  </pair>
+</match>
+
+# Heat API cfn
+<source>
+  @type tail
+  path /var/log/heat/heat-api-cfn.log
+  tag heat.api-cfn
+  format multiline
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  time_format %F %T.%L
+</source>
+
+<match heat.api-cfn>
+  @type add
+  <pair>
+    service heat.api-cfn
+    hostname "#{Socket.gethostname}"
+  </pair>
+</match>
+
+# Heat Engine
+<source>
+  @type tail
+  path /var/log/heat/heat-engine.log
+  tag heat.engine
+  format multiline
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  time_format %F %T.%L
+</source>
+
+<match heat.engine>
+  @type add
+  <pair>
+    service heat.engine
+    hostname "#{Socket.gethostname}"
+  </pair>
+</match>
 
 <match greped.**>
   @type elasticsearch
