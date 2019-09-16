@@ -5,6 +5,12 @@
       - python-keystone
   when: is_block_storage_node or is_controller_node
 
+- name: install nfs-utils for backup service
+  yum:
+    name: nfs-utils
+  when: is_block_storage_node
+        and cinder_backup_driver == 'nfs'
+
 - name: configure controller
   import_tasks: controller.yml
   when: is_controller_node
@@ -19,6 +25,7 @@
     - restart cinder-api
     - restart cinder-scheduler
     - restart cinder-volume
+    - restart cinder-backup
   when: is_block_storage_node or is_controller_node
 
 - name: configure lvm backend
@@ -50,3 +57,11 @@
     enabled: true
     state: started
   when: is_block_storage_node
+
+- name: start and enable backup service
+  systemd:
+    name: openstack-cinder-backup
+    enabled: true
+    state: started
+  when: is_block_storage_node
+        and cinder_backup_driver != ''

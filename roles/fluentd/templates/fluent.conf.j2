@@ -321,6 +321,25 @@
   </pair>
 </match>
 
+# Cinder Backup
+<source>
+  @type tail
+  path /var/log/cinder/backup.log
+  tag cinder.backup
+  format multiline
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  time_format %F %T.%L
+</source>
+
+<match cinder.backup>
+  @type add
+  <pair>
+    service cinder.backup
+    hostname "#{Socket.gethostname}"
+  </pair>
+</match>
+
 # Heat API
 <source>
   @type tail

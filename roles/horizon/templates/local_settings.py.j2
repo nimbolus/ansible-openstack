@@ -19,12 +19,12 @@ CACHES = {
          'LOCATION': '{{memcached_host}}:11211',
     }
 }
-OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = False
 OPENSTACK_API_VERSIONS = {
     "identity": 3,
     "image": 2,
     "volume": 3,
 }
+OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = False
 OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = "Default"
 OPENSTACK_KEYSTONE_DEFAULT_ROLE = "member"
 OPENSTACK_KEYSTONE_URL = "https://%s:5000/v3" % OPENSTACK_HOST
@@ -43,7 +43,7 @@ OPENSTACK_HYPERVISOR_FEATURES = {
     'enable_quotas': True
 }
 OPENSTACK_CINDER_FEATURES = {
-    'enable_backup': False,
+    'enable_backup': True,
 }
 OPENSTACK_NEUTRON_NETWORK = {
     'enable_router': True,
@@ -52,7 +52,7 @@ OPENSTACK_NEUTRON_NETWORK = {
     'enable_distributed_router': False,
     'enable_ha_router': False,
     'enable_fip_topology_check': True,
-    'physical_networks': [],
+    'physical_networks': ['provider'],
 }
 OPENSTACK_HEAT_STACK = {
     'enable_user_pass': True,

@@ -13,6 +13,13 @@ enabled_backends = {% for p in cinder_rbd_pools %}rbd_{{p.pool}}{% if not loop.l
 {% endif %}
 {% endif %}
 
+{% if cinder_backup_driver == 'nfs' %}
+backup_driver = cinder.backup.drivers.nfs.NFSBackupDriver
+backup_share = {{cinder_backup_nfs_share}}
+{% if cinder_backup_nfs_options != '' %}
+backup_mount_options = {{cinder_backup_nfs_options}}
+{% endif %}
+{% endif %}
 
 [database]
 connection = mysql+pymysql://cinder:{{cinder_db_user_password}}@{{db_host}}/cinder
