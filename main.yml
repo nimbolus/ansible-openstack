@@ -57,9 +57,10 @@
     - role: heat
       tags: heat
       when: is_controller_node
-    - role: magnum
-      tags: openstack,magnum
-      when: is_controller_node
+    # magnum heat templates are too old
+    # - role: magnum
+    #   tags: openstack,magnum
+    #   when: is_controller_node
     - role: horizon
       tags: openstack,horizon
       when: is_controller_node
