@@ -1,3 +1,5 @@
+rabbitmq_management_user: admin
+rabbitmq_management_password: "{{secrets_rabbit_admin_pass}}"
 rabbitmq_user: openstack
 rabbitmq_user_password: "{{secrets_rabbit_pass}}"
 

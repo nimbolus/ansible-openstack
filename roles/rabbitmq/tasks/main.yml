@@ -2,11 +2,45 @@
   yum:
     name: rabbitmq-server
 
+- name: configure
+  blockinfile:
+    path: /etc/rabbitmq/rabbitmq.config
+    insertafter: '%% \{rates_mode, basic\},'
+    marker: "%% {mark} ANSIBLE MANAGED BLOCK"
+    block: |
+      {listener, [{port, 15672},
+                  {ip,   "127.0.0.1"},
+                  {ssl,  false}]},
+      {path_prefix, "/rabbitmq"}
+  notify: restart rabbitmq
+
+- name: configure rabbitmq httpd
+  template:
+    src: rabbitmq.conf.j2
+    dest: /etc/httpd/conf.d/rabbitmq.conf
+  notify: reload httpd
+
 - name: start and enable
   systemd:
     name: rabbitmq-server
     state: started
     enabled: true
+
+- name: enable management plugin
+  rabbitmq_plugin:
+    names: rabbitmq_management
+    state: enabled
+
+- name: add management user
+  rabbitmq_user:
+    user: "{{rabbitmq_management_user}}"
+    password: "{{rabbitmq_management_password}}"
+    tags: administrator
+    permissions:
+      - vhost: /
+        configure_priv: .*
+        read_priv: .*
+        write_priv: .*
 
 - name: add user
   rabbitmq_user:

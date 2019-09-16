@@ -1,0 +1,9 @@
+- name: restart rabbitmq
+  systemd:
+    name: rabbitmq-server
+    state: restarted
+
+- name: reload httpd
+  systemd:
+    name: httpd
+    state: reloaded
