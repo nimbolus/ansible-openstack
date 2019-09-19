@@ -1,0 +1,25 @@
+- name: check for version
+  shell: /usr/local/bin/node_exporter --version
+  register: node_exporter_current_version
+  failed_when: false
+  check_mode: false
+  changed_when: node_exporter_version not in node_exporter_current_version.stderr
+
+- name: install
+  include_tasks: install.yml
+  when: node_exporter_current_version.changed
+
+- name: create systemd service
+  copy:
+    src: node_exporter.service
+    dest: /etc/systemd/system/node_exporter.service
+  notify: restart node_exporter
+
+- name: flush handlers
+  meta: flush_handlers
+
+- name: start and enable
+  systemd:
+    name: node_exporter
+    state: started
+    enabled: true

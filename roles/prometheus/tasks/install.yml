@@ -1,0 +1,21 @@
+- name: download
+  unarchive:
+    src: "https://github.com/prometheus/prometheus/releases/download/v{{prometheus_version}}/prometheus-{{prometheus_version}}.linux-amd64.tar.gz"
+    remote_src: true
+    dest: /tmp
+
+- name: copy binaries
+  copy:
+    src: "/tmp/prometheus-{{prometheus_version}}.linux-amd64/{{item}}"
+    remote_src: true
+    dest: "/usr/local/bin/{{item}}"
+    mode: 755
+  loop:
+    - prometheus
+    - promtool
+  notify: restart prometheus
+
+- name: cleanup
+  file:
+    path: /tmp/prometheus-{{prometheus_version}}.linux-amd64
+    state: absent

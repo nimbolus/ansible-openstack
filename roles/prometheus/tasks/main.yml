@@ -1,0 +1,54 @@
+- name: check for version
+  shell: /usr/local/bin/prometheus --version
+  register: prometheus_current_version
+  failed_when: false
+  check_mode: false
+  changed_when: prometheus_version not in prometheus_current_version.stderr
+
+- name: install
+  include_tasks: install.yml
+  when: prometheus_current_version.changed
+
+- name: create prometheus user
+  user:
+    name: prometheus
+    system: true
+    comment: Prometheus service user
+    create_home: false
+
+- name: create config directory
+  file:
+    path: /etc/prometheus
+    state: directory
+
+- name: create data directory
+  file:
+    path: "{{item}}"
+    owner: prometheus
+    group: prometheus
+    mode: 0750
+    state: directory
+  loop:
+    - /var/lib/prometheus
+    - /var/lib/prometheus/data
+
+- name: create systemd service
+  copy:
+    src: prometheus.service
+    dest: /etc/systemd/system/prometheus.service
+  notify: restart prometheus
+
+- name: configure
+  template:
+    src: prometheus.yml.j2
+    dest: /etc/prometheus/prometheus.yml
+  notify: restart prometheus
+
+- name: flush handlers
+  meta: flush_handlers
+
+- name: start and enable
+  systemd:
+    name: prometheus
+    state: started
+    enabled: true

@@ -1,0 +1,33 @@
+- name: install rpm key
+  rpm_key:
+    key: https://packages.grafana.com/gpg.key
+
+- name: add repo
+  copy:
+    src: grafana.repo
+    dest: /etc/yum.repos.d/grafana.repo
+
+- name: install
+  yum:
+    name: grafana
+
+- name: configure
+  template:
+    src: grafana.ini.j2
+    dest: /etc/grafana/grafana.ini
+  notify: restart grafana
+
+- name: configure grafana httpd
+  template:
+    src: grafana.conf.j2
+    dest: /etc/httpd/conf.d/grafana.conf
+  notify: reload httpd
+
+- name: flush handlers
+  meta: flush_handlers
+
+- name: start and enable
+  systemd:
+    name: grafana-server
+    state: started
+    enabled: true

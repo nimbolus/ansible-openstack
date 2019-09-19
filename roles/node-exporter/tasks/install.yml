@@ -1,0 +1,18 @@
+- name: download
+  unarchive:
+    src: "https://github.com/prometheus/node_exporter/releases/download/v{{node_exporter_version}}/node_exporter-{{node_exporter_version}}.linux-amd64.tar.gz"
+    remote_src: true
+    dest: /tmp
+
+- name: copy binaries
+  copy:
+    src: "/tmp/node_exporter-{{node_exporter_version}}.linux-amd64/node_exporter"
+    remote_src: true
+    dest: /usr/local/bin/node_exporter
+    mode: 0755
+  notify: restart node_exporter
+
+- name: cleanup
+  file:
+    path: /tmp/node_exporter-{{node_exporter_version}}.linux-amd64
+    state: absent
