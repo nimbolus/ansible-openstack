@@ -66,8 +66,8 @@
       when: is_controller_node
 
     # logging services
-    - role: elk
-      tags: logging,elk
+    - role: ek-stack
+      tags: logging,ek-stack,ek
       when: is_controller_node
     - role: fluentd
       tags: logging,fluentd
