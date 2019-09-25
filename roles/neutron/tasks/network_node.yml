@@ -27,37 +27,3 @@
     keystone_service_description: OpenStack Networking
     keystone_service_type: network
     keystone_service_url: "http://{{ansible_nodename}}:9696"
-
-- name: configure modular layer 2 plugin
-  template:
-    src: network_node/ml2_conf.ini.j2
-    dest: /etc/neutron/plugins/ml2/ml2_conf.ini
-    backup: true
-  notify: restart neutron-server
-
-- name: configure layer 3 agent
-  template:
-    src: network_node/l3_agent.ini.j2
-    dest: /etc/neutron/l3_agent.ini
-    backup: true
-  notify: restart neutron-l3-agent
-
-- name: configure dhcp agent
-  template:
-    src: network_node/dhcp_agent.ini.j2
-    dest: /etc/neutron/dhcp_agent.ini
-    backup: true
-  notify: restart neutron-dhcp-agent
-
-- name: configure metadata agent
-  template:
-    src: network_node/metadata_agent.ini.j2
-    dest: /etc/neutron/metadata_agent.ini
-    backup: true
-  notify: restart neutron-metadata-agent
-
-- name: link ml2 plugin
-  file:
-    src: /etc/neutron/plugins/ml2/ml2_conf.ini
-    dest: /etc/neutron/plugin.ini
-    state: link
