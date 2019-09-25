@@ -7,6 +7,7 @@ my_ip = {{nova_ip_address}}
 use_neutron = true
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
 allow_resize_to_same_host = True
+block_device_allocate_retries = 150
 {% if is_controller_node %}
 ssl_only = true
 cert = {{ req_cert_path }}
