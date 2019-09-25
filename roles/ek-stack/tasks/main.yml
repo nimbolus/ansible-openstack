@@ -26,6 +26,14 @@
     dest: /etc/kibana/kibana.yml
   notify: restart kibana
 
+- name: configure kibana htpasswd
+  htpasswd:
+    path: /etc/httpd/kibana.htpasswd
+    name: "{{ kibana_user }}"
+    password: "{{ secrets_kibana_pass }}"
+    owner: apache
+    mode: 0640
+
 - name: configure kibana httpd
   template:
     src: kibana3.conf.j2
