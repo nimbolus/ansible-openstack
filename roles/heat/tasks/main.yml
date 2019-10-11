@@ -85,6 +85,8 @@
 - name: start and enable
   systemd:
     name: "{{item}}"
+    state: started
+    enabled: true
   loop:
     - openstack-heat-api
     - openstack-heat-api-cfn
