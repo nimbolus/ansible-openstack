@@ -31,6 +31,11 @@
       line: "SSLCertificateKeyFile {{req_privatekey_path}}"
   notify: reload httpd
 
+- name: create landing page
+  copy:
+    src: index.html
+    dest: /usr/share/httpd/noindex/index.html
+
 - name: start and enable
   systemd:
     name: httpd
