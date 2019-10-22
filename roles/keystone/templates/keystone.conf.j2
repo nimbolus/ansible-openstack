@@ -5,3 +5,7 @@ connection = mysql+pymysql://keystone:{{keystone_db_user_password}}@{{db_host}}/
 
 [token]
 provider = fernet
+
+[identity]
+domain_specific_drivers_enabled = True
+domain_config_dir = /etc/keystone/domains

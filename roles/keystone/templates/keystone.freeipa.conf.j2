@@ -1,0 +1,24 @@
+[identity]
+driver = ldap
+
+[ldap]
+url = {{keystone_freeipa.url}}
+use_tls = true
+tls_cacertfile = /etc/ipa/ca.crt
+user = uid={{keystone_freeipa.user}},cn=users,cn=accounts,{{keystone_freeipa.suffix}}
+password = {{keystone_freeipa.password}}
+suffix = {{keystone_freeipa.suffix}}
+user_tree_dn = cn=users,cn=accounts,{{keystone_freeipa.suffix}}
+user_objectclass = inetOrgPerson
+user_filter = {{keystone_freeipa.user_filter}}
+user_id_attribute = uid
+user_name_attribute = cn
+user_mail_attribute = mail
+user_pass_attribute = userPassword
+group_tree_dn = cn=groups,cn=accounts,{{keystone_freeipa.suffix}}
+group_objectclass = groupOfNames
+group_filter = {{keystone_freeipa.group_filter}}
+group_id_attribute = ipaUniqueID
+group_name_attribute = cn
+group_member_attribute = member
+debug_level = 4095

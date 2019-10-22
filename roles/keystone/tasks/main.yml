@@ -20,10 +20,22 @@
     src: keystone.conf.j2
     dest: /etc/keystone/keystone.conf
     backup: true
-  notify: 
+  notify:
     - init keystone db
     - init keystone token provider
     - bootstrap keystone
+  
+- name: create directory for domain configurations
+  file:
+    path: /etc/keystone/domains
+    state: directory
+
+- name: configure freeipa domain
+  template:
+    src: keystone.freeipa.conf.j2
+    dest: /etc/keystone/domains/keystone.{{keystone_freeipa.domain}}.conf
+  when: keystone_freeipa.enabled
+  notify: bootstrap keystone
 
 - name: flush handlers
   meta: flush_handlers
@@ -60,3 +72,10 @@
     name: service
     description: Service Project
     domain: default
+
+- name: create freeipa domain
+  os_keystone_domain:
+    auth: "{{keystone_admin_auth}}"
+    name: "{{keystone_freeipa.domain}}"
+    description: "FreeIPA {{keystone_freeipa.domain}}"
+  when: keystone_freeipa.enabled
