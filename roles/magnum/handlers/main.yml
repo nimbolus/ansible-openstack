@@ -12,8 +12,3 @@
   systemd:
     name: openstack-magnum-conductor
     state: restarted
-
-- name: restart httpd
-  systemd:
-    name: httpd
-    state: restarted

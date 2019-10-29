@@ -17,8 +17,3 @@
   systemd:
     name: openstack-heat-engine
     state: restarted
-
-- name: restart httpd
-  systemd:
-    name: httpd
-    state: restarted
