@@ -29,11 +29,15 @@
   file:
     path: /etc/keystone/domains
     state: directory
+    group: keystone
+    mode: 0750
 
 - name: configure freeipa domain
   template:
     src: keystone.freeipa.conf.j2
     dest: /etc/keystone/domains/keystone.{{keystone_freeipa.domain}}.conf
+    group: keystone
+    mode: 0640
   when: keystone_freeipa.enabled
   notify: bootstrap keystone
 
