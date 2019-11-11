@@ -53,6 +53,7 @@
     req_common_name: "{{ansible_nodename}}"
     req_owner: apache
     req_group: apache
+    req_post_command: systemctl reload httpd
 
 - name: configure httpd virtual host
   template:

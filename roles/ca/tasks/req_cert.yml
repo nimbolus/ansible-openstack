@@ -1,5 +1,5 @@
 # this can be called by other roles to create their certificates
-# following variables must be defined to do that: req_name, req_common_name, req_owner (defaults to req_name), req_group (defaults to req_name)
+# following variables must be defined to do that: req_name, req_common_name, req_owner (defaults to req_name), req_group (defaults to req_name), req_post_command (defaults to /bin/true)
 # returns: req_privatekey_path, req_cert_path
 
 - name: "set facts for {{req_name}}"
@@ -8,58 +8,94 @@
     req_cert_path: "{{ca_ssl_dir}}/certs/{{req_common_name}}_{{req_name}}.crt"
     req_ca_cert_path: "{{ca_cert_path}}"
 
-- name: "create private key for {{req_name}}"
-  openssl_privatekey:
-    path: "{{ca_dir}}/private/{{req_common_name}}_{{req_name}}.key"
-    type: RSA
-    size: 4096
-    mode: 0600
-  delegate_to: "{{ca_host}}"
+- block:
+  - name: "create private key for {{req_name}}"
+    openssl_privatekey:
+      path: "{{ca_dir}}/private/{{req_common_name}}_{{req_name}}.key"
+      type: RSA
+      size: 4096
+      mode: 0600
+    delegate_to: "{{ca_host}}"
 
-- name: "create certificate signing request for {{req_name}}"
-  openssl_csr:
-    path: "{{ca_dir}}/csr/{{req_common_name}}_{{req_name}}.csr"
-    privatekey_path: "{{ca_dir}}/private/{{req_common_name}}_{{req_name}}.key"
-    common_name: "{{req_common_name}}"
-    country_name: "{{ca_country_name}}"
-    organization_name: "{{ca_organization_name}}"
-    organizational_unit_name: "{{ca_organization_unit_name}} {{req_name}}"
-    email_address: "{{ca_email_address}}"
-  delegate_to: "{{ca_host}}"
+  - name: "create certificate signing request for {{req_name}}"
+    openssl_csr:
+      path: "{{ca_dir}}/csr/{{req_common_name}}_{{req_name}}.csr"
+      privatekey_path: "{{ca_dir}}/private/{{req_common_name}}_{{req_name}}.key"
+      common_name: "{{req_common_name}}"
+      country_name: "{{ca_country_name}}"
+      organization_name: "{{ca_organization_name}}"
+      organizational_unit_name: "{{ca_organization_unit_name}} {{req_name}}"
+      email_address: "{{ca_email_address}}"
+    delegate_to: "{{ca_host}}"
 
-- name: "create certificate for {{req_name}}"
-  openssl_certificate:
-    path: "{{ca_dir}}/certs/{{req_common_name}}_{{req_name}}.crt"
-    csr_path: "{{ca_dir}}/csr/{{req_common_name}}_{{req_name}}.csr"
-    provider: ownca
-    ownca_path: "{{ca_cert_path}}"
-    ownca_privatekey_passphrase: "{{ca_key_password}}"
-    ownca_privatekey_path: "{{ca_key_path}}"
-  delegate_to: "{{ca_host}}"
+  - name: "create certificate for {{req_name}}"
+    openssl_certificate:
+      path: "{{ca_dir}}/certs/{{req_common_name}}_{{req_name}}.crt"
+      csr_path: "{{ca_dir}}/csr/{{req_common_name}}_{{req_name}}.csr"
+      provider: ownca
+      ownca_path: "{{ca_cert_path}}"
+      ownca_privatekey_passphrase: "{{ca_key_password}}"
+      ownca_privatekey_path: "{{ca_key_path}}"
+    delegate_to: "{{ca_host}}"
 
-- name: "fetch private key for {{req_name}}"
-  slurp:
-    path: "{{ca_dir}}/private/{{req_common_name}}_{{req_name}}.key"
-  register: req_privatekey
-  delegate_to: "{{ca_host}}"
+  - name: "fetch private key for {{req_name}}"
+    slurp:
+      path: "{{ca_dir}}/private/{{req_common_name}}_{{req_name}}.key"
+    register: req_privatekey
+    delegate_to: "{{ca_host}}"
 
-- name: "fetch certificate for {{req_name}}"
-  slurp:
-    path: "{{ca_dir}}/certs/{{req_common_name}}_{{req_name}}.crt"
-  register: req_cert
-  delegate_to: "{{ca_host}}"
-  
-- name: "upload private key for {{req_name}}"
-  copy:
-    content: "{{req_privatekey.content | b64decode}}"
-    dest: "{{req_privatekey_path}}"
-    mode: 0600
-    owner: "{{req_owner | default(req_name)}}"
-    group: "{{req_group | default(req_name)}}"
+  - name: "fetch certificate for {{req_name}}"
+    slurp:
+      path: "{{ca_dir}}/certs/{{req_common_name}}_{{req_name}}.crt"
+    register: req_cert
+    delegate_to: "{{ca_host}}"
+    
+  - name: "upload private key for {{req_name}}"
+    copy:
+      content: "{{req_privatekey.content | b64decode}}"
+      dest: "{{req_privatekey_path}}"
+      mode: 0600
+      owner: "{{req_owner | default(req_name)}}"
+      group: "{{req_group | default(req_name)}}"
 
-- name: "upload certificate for {{req_name}}"
-  copy:
-    content: "{{req_cert.content | b64decode}}"
-    dest: "{{req_cert_path}}"
-    owner: "{{req_owner | default(req_name)}}"
-    group: "{{req_group | default(req_name)}}"
+  - name: "upload certificate for {{req_name}}"
+    copy:
+      content: "{{req_cert.content | b64decode}}"
+      dest: "{{req_cert_path}}"
+      owner: "{{req_owner | default(req_name)}}"
+      group: "{{req_group | default(req_name)}}"
+
+  when: not ca_freeipa_backend
+
+- block:
+  - name: "check for {{req_name}} certificate"
+    stat:
+      path: "{{req_cert_path}}"
+    register: stat_cert
+
+  - name: "request certificate for {{req_name}} from freeipa server"
+    shell: "ipa-getcert request -r -f {{req_cert_path}} -k {{req_privatekey_path}} -D {{req_common_name}} -K HTTP/{{req_common_name}} -C '{{req_post_command | default('/bin/true')}}'"
+    when: stat_cert.stat.exists == False
+
+  - name: "wait for {{req_name}} private key"
+    wait_for:
+      path: "{{req_privatekey_path}}"
+
+  - name: "set file permissions for {{req_name}}"
+    file:
+      dest: "{{req_privatekey_path}}"
+      mode: 0600
+      owner: "{{req_owner | default(req_name)}}"
+      group: "{{req_group | default(req_name)}}"
+
+  - name: "wait for {{req_name}} certificate"
+    wait_for:
+      path: "{{req_cert_path}}"
+
+  - name: "set file permissions for {{req_name}}"
+    file:
+      dest: "{{req_cert_path}}"
+      owner: "{{req_owner | default(req_name)}}"
+      group: "{{req_group | default(req_name)}}"
+
+  when: ca_freeipa_backend

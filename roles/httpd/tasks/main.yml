@@ -7,10 +7,11 @@
     name: ca
     tasks_from: req_cert.yml
   vars:
-    req_name: "{{ansible_nodename}}"
+    req_name: httpd
     req_common_name: "{{ansible_nodename}}"
     req_owner: apache
     req_group: apache
+    req_post_command: systemctl reload httpd
 
 - name: configure
   lineinfile:

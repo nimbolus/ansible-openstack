@@ -4,6 +4,7 @@ ca_key_password: "{{secrets_ca_key_pass}}"
 ca_cert_path: "{{ca_dir}}/certs/ca.crt"
 ca_ssl_dir: /etc/ssl
 ca_install_trust: false
+ca_freeipa_backend: false
 
 ca_country_name: DE
 ca_organization_name: Example Ltd.
