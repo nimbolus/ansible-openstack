@@ -8,6 +8,12 @@ nova_ip_address: "{{management_ipv4.address}}"
 nova_neutron_user_password: "{{secrets_neutron_pass}}"
 nova_metadata_secret: "{{secrets_metadata_secret}}"
 nova_novnc_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"
+nova_ephemeral_storage_backend: local # local and rbd are supported 
+nova_rbd_ceph_conf: /etc/ceph/ceph.conf
+nova_rbd_keyring_conf: /etc/ceph/ceph.client.nova.keyring
+nova_rbd_user: nova
+nova_rbd_secret_uuid: D618BD91-40DF-4AC3-9EDE-076786714761
+nova_rbd_pool: vms
 
 nova_flavors:
   - name: m1.tiny

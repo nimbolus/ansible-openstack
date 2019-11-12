@@ -20,7 +20,7 @@
 
 - name: create libvirt rbd secret
   template:
-    src: libvirt_ceph.xml.j2
-    dest: /etc/ceph/libvirt_ceph.xml
-  notify: define ceph secret
+    src: libvirt_cinder_ceph.xml.j2
+    dest: /etc/ceph/libvirt_cinder_ceph.xml
+  notify: define cinder ceph secret
   when: is_compute_node

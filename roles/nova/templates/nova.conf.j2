@@ -8,6 +8,7 @@ use_neutron = true
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
 allow_resize_to_same_host = True
 block_device_allocate_retries = 150
+max_local_block_devices = -1
 {% if is_controller_node %}
 ssl_only = true
 cert = {{ req_cert_path }}
@@ -77,4 +78,13 @@ server_listen = $my_ip
 {% elif is_compute_node %}
 novncproxy_base_url = https://{{nova_novnc_host}}:6080/vnc_auto.html
 server_listen = 0.0.0.0
+
+{% if nova_ephemeral_storage_backend == 'rbd' %}
+[libvirt]
+images_type = rbd
+images_rbd_pool = {{nova_rbd_pool}}
+images_rbd_ceph_conf = {{nova_rbd_ceph_conf}}
+rbd_user = {{nova_rbd_user}}
+rbd_secret_uuid = {{nova_rbd_secret_uuid}}
+{% endif %}
 {% endif %}

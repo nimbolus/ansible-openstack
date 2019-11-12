@@ -1,0 +1,23 @@
+- name: install rbd requirements
+  yum:
+    name:
+    - python-rbd
+    - python-rados
+    - ceph-common
+
+- name: check ceph keyring
+  file:
+    path: "{{nova_rbd_keyring_conf}}"
+    mode: 0640
+    group: nova
+
+- name: fetch ceph key
+  slurp:
+    path: "{{nova_rbd_keyring_conf}}"
+  register: nova_rbd_client_key
+
+- name: create libvirt rbd secret
+  template:
+    src: libvirt_nova_ceph.xml.j2
+    dest: /etc/ceph/libvirt_nova_ceph.xml
+  notify: define nova ceph secret

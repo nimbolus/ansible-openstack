@@ -20,6 +20,11 @@
     - restart nova-novncproxy
     - restart nova-compute
 
+- name: configure rbd ephemeral storage backend
+  include_tasks: rbd.yml
+  when: "is_compute_node
+        and nova_ephemeral_storage_backend == 'rbd'"
+
 - name: flush handlers
   meta: flush_handlers
 
