@@ -1,9 +1,0 @@
-# {{ansible_managed}}
-
-<Location /kibana>
-  AuthType Basic
-  AuthName "kibana"
-  AuthUserFile "/etc/httpd/kibana.htpasswd"
-  Require valid-user
-  ProxyPass http://localhost:5601/kibana
-</Location>

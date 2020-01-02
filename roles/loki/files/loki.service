@@ -1,0 +1,13 @@
+[Unit]
+Description=Loki Server
+Documentation=https://github.com/grafana/loki/tree/master/docs
+After=network-online.target
+
+[Service]
+User=loki
+Restart=on-failure
+ExecStart=/usr/local/bin/loki \
+    --config.file=/etc/loki/loki.yml
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,23 @@
+- name: install dependencies
+  yum:
+    name: unzip
+
+- name: create loki user
+  user:
+    name: loki
+    system: true
+    comment: loki service user
+    create_home: false
+
+- name: create config directory
+  file:
+    path: /etc/loki
+    state: directory
+
+- name: install loki
+  include_tasks: loki.yml
+  when: is_controller_node
+
+- name: install promtail
+  include_tasks: promtail.yml
+  when: loki_promtail|bool

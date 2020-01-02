@@ -1,0 +1,13 @@
+[Unit]
+Description=Promtail Server
+Documentation=https://github.com/grafana/promtail/tree/master/docs
+After=network-online.target
+
+[Service]
+User=loki
+Restart=on-failure
+ExecStart=/usr/local/bin/promtail \
+    --config.file=/etc/loki/promtail.yml
+
+[Install]
+WantedBy=multi-user.target

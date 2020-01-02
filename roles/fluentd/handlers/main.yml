@@ -1,7 +1,7 @@
 - name: install fluent plugins
   shell: |
-    /usr/sbin/td-agent-gem install fluent-plugin-elasticsearch
     /usr/sbin/td-agent-gem install fluent-plugin-add
+    /usr/sbin/td-agent-gem install fluent-plugin-grafana-loki
 
 - name: restart fluentd
   systemd:
