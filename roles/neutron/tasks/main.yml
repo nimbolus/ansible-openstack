@@ -77,6 +77,13 @@
     - net.bridge.bridge-nf-call-iptables
     - net.bridge.bridge-nf-call-ip6tables
 
+- name: copy selinux ha check script fix
+  copy:
+    src: fix_neutron_ha_check_script.te
+    dest: /root/fix_neutron_ha_check_script.te
+  notify: install selinux ha check script fix
+  when: neutron_l3_ha
+
 - name: flush handlers
   meta: flush_handlers
 
@@ -89,14 +96,17 @@
     - neutron-server
     - neutron-dhcp-agent
     - neutron-metadata-agent
-    - neutron-l3-agent
   when: is_network_node
 
-- name: start and enable agents
+- name: start and enable l3 agent
   systemd:
-    name: "{{item}}"
+    name: neutron-l3-agent
     enabled: true
     state: started
-  loop:
-    - neutron-linuxbridge-agent
-    # - neutron-l3-agent
+  when: is_network_node or neutron_l3_ha
+
+- name: start and enable linuxbridge agent
+  systemd:
+    name: neutron-linuxbridge-agent
+    enabled: true
+    state: started
