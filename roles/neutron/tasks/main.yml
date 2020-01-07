@@ -8,6 +8,7 @@
       - openstack-neutron-linuxbridge
       - ebtables
       - ipset
+      - net-tools
   when: is_compute_node
 
 - name: configure

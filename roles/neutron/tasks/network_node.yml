@@ -5,6 +5,7 @@
     - openstack-neutron-ml2
     - openstack-neutron-linuxbridge
     - ebtables
+    - net-tools
 
 - name: init database
   include_role:
