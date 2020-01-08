@@ -1,15 +1,22 @@
-- name: setup network node
-  include: network_node.yml
+- name: setup server
+  include: server.yml
+  when: is_network_node and neutron_server
+
+- name: install
+  yum:
+    name:
+    - openstack-neutron
+    - openstack-neutron-ml2
+    - net-tools
   when: is_network_node
 
-- name: install compute
+- name: install linuxbridge agent
   yum:
     name:
       - openstack-neutron-linuxbridge
       - ebtables
       - ipset
-      - net-tools
-  when: is_compute_node
+  when: is_network_node or is_compute_node
 
 - name: configure
   template:
@@ -77,33 +84,43 @@
     - net.bridge.bridge-nf-call-iptables
     - net.bridge.bridge-nf-call-ip6tables
 
-- name: copy selinux ha check script fix
-  copy:
-    src: fix_neutron_ha_check_script.te
-    dest: /root/fix_neutron_ha_check_script.te
-  notify: install selinux ha check script fix
-  when: neutron_l3_ha
+# - name: copy selinux ha check script fix
+#   copy:
+#     src: fix_neutron_ha_check_script.te
+#     dest: /root/fix_neutron_ha_check_script.te
+#   notify: install selinux ha check script fix
+#   when: neutron_l3_ha
 
 - name: flush handlers
   meta: flush_handlers
 
 - name: start and enable server
   systemd:
-    name: "{{item}}"
+    name: neutron-server
     enabled: true
     state: started
-  loop:
-    - neutron-server
-    - neutron-dhcp-agent
-    - neutron-metadata-agent
-  when: is_network_node
+  when: is_network_node and neutron_server
 
 - name: start and enable l3 agent
   systemd:
     name: neutron-l3-agent
     enabled: true
     state: started
-  when: is_network_node or neutron_l3_ha
+  when: is_network_node and neutron_l3_agent
+
+- name: start and enable metadata agent
+  systemd:
+    name: neutron-metadata-agent
+    enabled: true
+    state: started
+  when: is_network_node and neutron_metadata_agent
+
+- name: start and enable dhcp agent
+  systemd:
+    name: neutron-dhcp-agent
+    enabled: true
+    state: started
+  when: is_network_node and neutron_dhcp_agent
 
 - name: start and enable linuxbridge agent
   systemd:

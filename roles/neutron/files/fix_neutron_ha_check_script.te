@@ -1,12 +1,11 @@
 module fix_neutron_ha_check_script 1.0;
 
 require {
-	type ping_exec_t;
 	type keepalived_t;
     class process setcap;
-	class file { execute getattr read open execute_no_trans };
 }
 
 #============= keepalived_t ==============
-allow keepalived_t ping_exec_t:file { execute getattr read open execute_no_trans };
+# Bugzilla 1789068
+netutils_exec_ping(keepalived_t)
 allow keepalived_t self:process setcap;

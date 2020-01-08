@@ -4,17 +4,17 @@
 core_plugin = ml2
 auth_strategy = keystone
 transport_url = rabbit://{{neutron_rabbitmq_user}}:{{neutron_rabbitmq_user_password}}@{{rabbitmq_host}}
+{% if is_network_node %}
+service_plugins = router
+allow_overlapping_ips = true
+notify_nova_on_port_status_changes = true
+notify_nova_on_port_data_changes = true
 {% if neutron_l3_ha %}
 l3_ha = true
 max_l3_agents_per_router = 2
 min_l3_agents_per_router = 2
 ha_vrrp_health_check_interval = 5
 {% endif %}
-{% if is_network_node %}
-service_plugins = router
-allow_overlapping_ips = true
-notify_nova_on_port_status_changes = true
-notify_nova_on_port_data_changes = true
 
 [database]
 connection = mysql+pymysql://neutron:{{neutron_db_user_password}}@{{db_host}}/neutron
