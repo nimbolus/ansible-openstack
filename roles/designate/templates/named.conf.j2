@@ -1,0 +1,46 @@
+# {{ansible_managed}}
+
+include "/etc/designate/rndc.key";
+include "/etc/named.rfc1912.zones";
+include "/etc/named.root.key";
+
+options {
+    listen-on    port 53 { 127.0.0.1; {{ansible_default_ipv4.address}}; };
+    listen-on-v6 port 53 { ::1; {% if ansible_default_ipv6 %}{{ansible_default_ipv6.address}};{% endif %}};
+    directory    "/var/named";
+
+    dump-file          "/var/named/data/cache_dump.db";
+    statistics-file    "/var/named/data/named_stats.txt";
+    memstatistics-file "/var/named/data/named_mem_stats.txt";
+    recursing-file     "/var/named/data/named.recursing";
+    secroots-file      "/var/named/data/named.secroots";
+
+    allow-query       { any; };
+    recursion         no;
+    dnssec-enable     yes;
+    dnssec-validation yes;
+    allow-new-zones   yes;
+    request-ixfr      no;
+
+    bindkeys-file          "/etc/named.root.key";
+    managed-keys-directory "/var/named/dynamic";
+    pid-file               "/run/named/named.pid";
+    session-keyfile        "/run/named/session.key";
+};
+
+logging {
+    channel default_debug {
+        file "data/named.run";
+        severity dynamic;
+    };
+};
+
+zone "." IN {
+    type hint;
+    file "named.ca";
+};
+
+controls {
+    inet 127.0.0.1 port 953
+    allow { 127.0.0.1; } keys { "designate"; };
+};

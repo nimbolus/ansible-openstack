@@ -1,0 +1,101 @@
+- name: init database
+  include_role:
+    name: mariadb
+    tasks_from: init_db.yml
+  vars:
+    db_name: designate
+    db_user: designate
+    db_user_password: "{{designate_db_user_password}}"
+
+- name: init keystone designate service
+  include_role:
+    name: keystone
+    tasks_from: init_auth.yml
+  vars:
+    keystone_user: designate
+    keystone_user_password: "{{designate_user_password}}"
+    keystone_service_name: designate
+    keystone_service_description: DNS
+    keystone_service_type: dns
+    keystone_service_url: "http://{{ansible_nodename}}:9001/"
+    keystone_service_endpoint_interfaces:
+      - public
+
+- name: install
+  yum:
+    name:
+      - openstack-designate-api
+      - openstack-designate-central
+      - openstack-designate-worker
+      - openstack-designate-producer
+      - openstack-designate-mdns
+      - openstack-designate-ui
+      - bind
+      - bind-utils
+  notify: restart httpd
+
+- name: configure
+  template:
+    src: designate.conf.j2
+    dest: /etc/designate/designate.conf
+    backup: true
+  notify:
+    - init designate db
+    - restart designate-central
+    - restart designate-api
+
+- name: configure pools
+  template:
+    src: pools.yaml.j2
+    dest: /etc/designate/pools.yaml
+    group: designate
+    backup: true
+  notify:
+    - init designate pools
+    - restart designate-worker
+    - restart designate-producer
+    - restart designate-mdns
+
+- name: configure named
+  template:
+    src: named.conf.j2
+    dest: /etc/named.conf 
+    backup: true
+  notify: restart named
+
+- name: create rndc key
+  shell:
+    cmd: rndc-confgen -a -k designate -c /etc/designate/rndc.key -r /dev/urandom
+    creates: /etc/designate/rndc.key
+
+- name: set rndc key permissions
+  file:
+    path: /etc/designate/rndc.key
+    owner: named
+    group: designate
+    mode: 0640
+
+- name: start and enable named
+  systemd:
+    name: named
+    state: started
+    enabled: true
+
+- name: start and enable api
+  systemd:
+    name: "{{item}}"
+    state: started
+    enabled: true
+  loop:
+    - designate-central
+    - designate-api
+
+- name: start and enable worker
+  systemd:
+    name: "{{item}}"
+    state: started
+    enabled: true
+  loop:
+    - designate-worker
+    - designate-producer
+    - designate-mdns

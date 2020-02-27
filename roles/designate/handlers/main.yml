@@ -1,0 +1,39 @@
+- name: init designate db
+  shell: su -s /bin/sh -c "designate-manage database sync" designate
+  args:
+    warn: false
+
+- name: init designate pools
+  shell: su -s /bin/sh -c "designate-manage pool update" designate
+  args:
+    warn: false
+
+- name: restart named
+  systemd:
+    name: named
+    state: restarted
+
+- name: restart designate-api
+  systemd:
+    name: designate-api
+    state: restarted
+
+- name: restart designate-central
+  systemd:
+    name: designate-central
+    state: restarted
+
+- name: restart designate-worker
+  systemd:
+    name: designate-worker
+    state: restarted
+
+- name: restart designate-producer
+  systemd:
+    name: designate-producer
+    state: restarted
+
+- name: restart designate-mdns
+  systemd:
+    name: designate-mdns
+    state: restarted

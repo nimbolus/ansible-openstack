@@ -26,7 +26,4 @@
     service: "{{keystone_service_name}}"
     endpoint_interface: "{{item}}"
     url: "{{keystone_service_url}}"
-  loop:
-    - public
-    - internal
-    - admin
+  loop: "{{keystone_service_endpoint_interfaces}}"

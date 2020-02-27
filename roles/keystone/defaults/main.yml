@@ -19,3 +19,8 @@ keystone_admin_auth:
   user_domain_name: Default
   project_domain_name: Default
   project_name: admin
+
+keystone_service_endpoint_interfaces:
+  - public
+  - internal
+  - admin
