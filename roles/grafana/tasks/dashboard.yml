@@ -1,0 +1,12 @@
+- name: "downlaod dashboard '{{item.name}}'"
+  get_url:
+    url: "{{item.url}}"
+    dest: "/var/lib/grafana/dashboards/{{item.name}}.json"
+  notify: restart grafana
+  
+- name: "rename dashboard '{{item.name}}'"
+  lineinfile:
+    path: "/var/lib/grafana/dashboards/{{item.name}}.json"
+    regexp: '^  "title": '
+    line: "  \"title\": \"{{item.name}}\","
+  notify: restart grafana

@@ -13,8 +13,15 @@
 
 - name: configure
   template:
-    src: grafana.ini.j2
-    dest: /etc/grafana/grafana.ini
+    src:  "{{item.src}}.j2"
+    dest: "{{item.dest}}"
+  loop:
+    - src: grafana.ini
+      dest: /etc/grafana/grafana.ini
+    - src: datasources.yml
+      dest: /etc/grafana/provisioning/datasources/openstack.yml
+    - src: dashboards.yml
+      dest: /etc/grafana/provisioning/dashboards/openstack.yml
   notify: restart grafana
 
 - name: configure grafana httpd
@@ -22,6 +29,15 @@
     src: grafana.conf.j2
     dest: /etc/httpd/conf.d/grafana.conf
   notify: reload httpd
+
+- name: create dashboards folder
+  file:
+    path: /var/lib/grafana/dashboards
+    state: directory
+
+- name: get dashboards
+  include_tasks: dashboard.yml
+  loop: "{{grafana_dashboards}}"
 
 - name: flush handlers
   meta: flush_handlers
