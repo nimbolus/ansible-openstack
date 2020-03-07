@@ -74,7 +74,7 @@
     register: stat_cert
 
   - name: "request certificate for {{req_name}} from freeipa server"
-    shell: "ipa-getcert request -r -f {{req_cert_path}} -k {{req_privatekey_path}} -D {{req_common_name}} -K HTTP/{{req_common_name}} -C '{{req_post_command | default('/bin/true')}}'"
+    shell: "ipa-getcert request -r -f {{req_cert_path}} -k {{req_privatekey_path}} -D {{req_common_name}} -K {{req_name}}/{{req_common_name}} -C '{{req_post_command | default('/bin/true')}}'"
     when: stat_cert.stat.exists == False
 
   - name: "wait for {{req_name}} private key"

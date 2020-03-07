@@ -46,7 +46,7 @@
     name: ca
     tasks_from: req_cert.yml
   vars:
-    req_name: nova_novnc
+    req_name: nova-novnc
     req_common_name: "{{ansible_nodename}}"
     req_owner: nova
     req_group: nova

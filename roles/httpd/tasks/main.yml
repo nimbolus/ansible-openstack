@@ -7,7 +7,7 @@
     name: ca
     tasks_from: req_cert.yml
   vars:
-    req_name: httpd
+    req_name: HTTP
     req_common_name: "{{ansible_nodename}}"
     req_owner: apache
     req_group: apache
