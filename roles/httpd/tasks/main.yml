@@ -1,6 +1,8 @@
 - name: install
   yum:
-    name: httpd
+    name:
+      - httpd
+      - mod_ssl
 
 - name: request certificate
   include_role:
@@ -30,6 +32,12 @@
       line: "SSLCertificateFile {{req_cert_path}}"
     - regexp: SSLCertificateKeyFile 
       line: "SSLCertificateKeyFile {{req_privatekey_path}}"
+    - regexp: "RewriteEngine"
+      line: "RewriteEngine On"
+    - regexp: "RewriteCond"
+      line: 'RewriteCond %{HTTPS} !=on'
+    - regexp: "RewriteRule"
+      line: 'RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]'
   notify: reload httpd
 
 - name: create landing page
