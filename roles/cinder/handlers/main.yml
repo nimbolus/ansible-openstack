@@ -34,7 +34,7 @@
     name: openstack-cinder-backup
     state: restarted
   when: is_block_storage_node
-        and cinder_backup_driver != ''
+        and cinder_backup_driver
 
 - name: restart target
   systemd:

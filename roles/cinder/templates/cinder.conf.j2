@@ -10,13 +10,15 @@ glance_api_servers = http://{{glance_host}}:9292
 enabled_backends = {% for p in cinder_lvm_pools %}lvm_{{p.name}}{% if not loop.last %},{% endif %}{% endfor %}
 {% elif cinder_backend == 'rbd' %}
 enabled_backends = {% for p in cinder_rbd_pools %}rbd_{{p.pool}}{% if not loop.last %},{% endif %}{% endfor %}
+{% elif cinder_backend == 'nfs' %}
+enabled_backends = nfs
 {% endif %}
 {% endif %}
 
 {% if cinder_backup_driver == 'nfs' %}
 backup_driver = cinder.backup.drivers.nfs.NFSBackupDriver
 backup_share = {{cinder_backup_nfs_share}}
-{% if cinder_backup_nfs_options != '' %}
+{% if cinder_backup_nfs_options %}
 backup_mount_options = {{cinder_backup_nfs_options}}
 {% endif %}
 {% endif %}
@@ -62,6 +64,18 @@ rbd_keyring_conf = {{cinder_rbd_keyring_conf}}
 rbd_user = {{cinder_rbd_user}}
 rbd_secret_uuid = {{cinder_rbd_secret_uuid}}
 glance_api_version = 2
+
 {% endfor %}
+{% elif cinder_backend == 'nfs' %}
+# nfs backends
+[nfs]
+volume_driver = cinder.volume.drivers.nfs.NfsDriver
+volume_backend_name = nfs
+nas_host = {{cinder_nfs_nas_host}}
+nas_share_path = {{cinder_nfs_nas_share_path}}
+{% if cinder_nfs_mount_options %}
+nfs_mount_options = {{cinder_nfs_mount_options}}
+{% endif %}
+nfs_qcow2_volumes = True
 {% endif %}
 {% endif %}
