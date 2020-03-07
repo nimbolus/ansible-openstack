@@ -40,10 +40,21 @@
       line: 'RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]'
   notify: reload httpd
 
-- name: create landing page
-  copy:
-    src: index.html
-    dest: /usr/share/httpd/noindex/index.html
+- name: check for homer landing page
+  stat:
+    path: /var/www/html/README.md
+  register: httpd_landing_page
+
+- name: download homer landing page
+  git:
+    repo: https://github.com/bastienwirtz/homer.git
+    dest: /var/www/html
+  when: not httpd_landing_page.stat.exists
+
+- name: configure homer landing page
+  template:
+    src: config.yml.j2
+    dest: /var/www/html/config.yml
 
 - name: flush handlers
   meta: flush_handlers
