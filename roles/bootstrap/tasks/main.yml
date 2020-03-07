@@ -21,7 +21,7 @@
       value: "no"
     - option: IPV6_FAILURE_FATAL
       value: "no"
-  when: is_network_node
+  when: is_network_node or is_compute_node
 
 - name: disable network manager
   systemd:

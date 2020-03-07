@@ -18,17 +18,17 @@
     - role: mariadb
       tags: environment,db,mariadb,mysql
       when: is_controller_node
-    - role: rabbitmq
-      tags: environment,rabbit,rabbitmq
-      when: is_controller_node
     - role: memcached
       tags: environment,memcached
       when: is_controller_node
-    - role: etcd
-      tags: environment,etcd
-      when: is_controller_node
+    # - role: etcd
+    #   tags: environment,etcd
+    #   when: is_controller_node
     - role: httpd
       tags: environment,httpd
+      when: is_controller_node
+    - role: rabbitmq
+      tags: environment,rabbit,rabbitmq
       when: is_controller_node
 
     # openstack services
