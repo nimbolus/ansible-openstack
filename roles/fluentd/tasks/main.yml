@@ -20,33 +20,27 @@
     - install fluent plugins
     - restart fluentd
 
-- name: add user to groups (controller node)
-  user:
-    name: td-agent
-    groups: root,keystone,nova,neutron,cinder,glance,magnum,placement
-    append: true
-  when: is_controller_node
+- name: get available groups
+  getent:
+    database: group
 
-- name: add user to groups (compute node)
+- name: add user to service groups
   user:
     name: td-agent
-    groups: root,nova,neutron
+    groups: "{{item}}"
     append: true
-  when: is_compute_node
-
-- name: add user to groups (block storage node)
-  user:
-    name: td-agent
-    groups: root,cinder
-    append: true
-  when: is_block_storage_node
-
-- name: add user to groups (network node)
-  user:
-    name: td-agent
-    groups: root,neutron
-    append: true
-  when: is_network_node
+  when: item in ansible_facts.getent_group
+  loop:
+    - root
+    - keystone
+    - nova
+    - neutron
+    - cinder
+    - glance
+    - placement
+    - magnum
+    - designate
+    - heat
 
 - name: flush handlers
   meta: flush_handlers
