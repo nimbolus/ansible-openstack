@@ -37,11 +37,13 @@
     src: registry.conf.j2
     dest: /etc/glance/glance-registry.conf
     backup: true
-  notify:
-    - restart glance-registry
+  notify: restart glance-registry
 
 - name: setup backend
   include_tasks: "backends/{{glance_backend}}.yml"
+
+- name: flush handlers
+  meta: flush_handlers
 
 - name: start and enable
   systemd:
@@ -51,6 +53,3 @@
   loop:
     - openstack-glance-registry
     - openstack-glance-api
-
-- name: flush handlers
-  meta: flush_handlers

@@ -82,6 +82,9 @@
     - restart heat-api-cfn
     - restart heat-engine
 
+- name: flush handlers
+  meta: flush_handlers
+
 - name: start and enable
   systemd:
     name: "{{item}}"
@@ -91,6 +94,3 @@
     - openstack-heat-api
     - openstack-heat-api-cfn
     - openstack-heat-engine
-
-- name: flush handlers
-  meta: flush_handlers
