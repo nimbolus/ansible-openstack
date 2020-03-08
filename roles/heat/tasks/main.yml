@@ -65,11 +65,17 @@
 - name: install
   yum:
     name:
-    - openstack-heat-api
-    - openstack-heat-api-cfn
-    - openstack-heat-engine
-    - openstack-heat-ui
-  notify: restart httpd
+      - openstack-heat-api
+      - openstack-heat-api-cfn
+      - openstack-heat-engine
+      - openstack-heat-ui
+    state: "{{package_state | default('present')}}"
+  notify:
+    - init heat db
+    - restart httpd
+    - restart heat-api
+    - restart heat-api-cfn
+    - restart heat-engine
 
 - name: configure
   template:

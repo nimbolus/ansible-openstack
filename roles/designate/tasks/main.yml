@@ -32,7 +32,15 @@
       - openstack-designate-ui
       - bind
       - bind-utils
-  notify: restart httpd
+    state: "{{package_state | default('present')}}"
+  notify:
+    - init designate db
+    - restart designate-central
+    - restart designate-api
+    - restart designate-worker
+    - restart designate-producer
+    - restart designate-mdns
+    - restart httpd
 
 - name: configure
   template:

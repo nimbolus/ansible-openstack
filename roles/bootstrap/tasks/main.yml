@@ -46,10 +46,11 @@
   yum:
     name: "centos-release-openstack-{{bootstrap_openstack_release}}"
 
-# - name: upgrade system
-#   yum:
-#     name: '*'
-#     state: latest
+- name: upgrade system
+  package:
+    name: '*'
+    state: latest
+  when: bootstrap_system_upgrade | bool
 
 - name: "{{ 'enable' if bootstrap_selinux else 'disable' }} selinux"
   selinux:

@@ -22,6 +22,11 @@
 - name: install
   yum:
     name: openstack-glance
+    state: "{{package_state | default('present')}}"
+  notify:
+    - init glance db
+    - restart glance-api
+    - restart glance-registry
 
 - name: configure api
   template:

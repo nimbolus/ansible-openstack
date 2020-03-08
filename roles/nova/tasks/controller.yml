@@ -36,10 +36,17 @@
 - name: install controller
   yum:
     name:
-    - openstack-nova-api
-    - openstack-nova-conductor
-    - openstack-nova-novncproxy
-    - openstack-nova-scheduler
+      - openstack-nova-api
+      - openstack-nova-conductor
+      - openstack-nova-novncproxy
+      - openstack-nova-scheduler
+    state: "{{package_state | default('present')}}"
+  notify:
+    - init nova db
+    - restart nova-api
+    - restart nova-scheduler
+    - restart nova-conductor
+    - restart nova-novncproxy
 
 - name: request certificate
   include_role:

@@ -31,3 +31,11 @@ ansible-playbook main.yml
 ansible controller1 -m shell -b -a 'su -s /bin/sh -c "nova-manage cell_v2 discover_hosts" nova'
 ```
 
+## Upgrade
+
+Set `bootstrap_openstack_release` to new release and run:
+```sh
+ansible-playbook main.yml --tags bootstrap
+ansible-playbook main.yml --extra-vars "package_state=latest" --tags openstack
+ansible-playbook main.yml --tags bootstrap --extra-vars "bootstrap_system_upgrade=true"
+```

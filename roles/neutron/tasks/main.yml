@@ -8,7 +8,14 @@
       - openstack-neutron
       - openstack-neutron-ml2
       - net-tools
+    state: "{{package_state | default('present')}}"
   when: is_controller_node or is_network_node
+  notify:
+    - init neutron db
+    - restart neutron-server
+    - restart neutron-dhcp-agent
+    - restart neutron-metadata-agent
+    - restart neutron-l3-agent
 
 - name: install linuxbridge agent
   yum:
@@ -16,6 +23,8 @@
       - openstack-neutron-linuxbridge
       - ebtables
       - ipset
+    state: "{{package_state | default('present')}}"
+  notify: restart neutron-linuxbridge-agent
   when: is_network_node or is_compute_node
 
 - name: configure

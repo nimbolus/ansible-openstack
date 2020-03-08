@@ -5,7 +5,9 @@
 - name: install compute
   yum:
     name: openstack-nova-compute
+    state: "{{package_state | default('present')}}"
   when: is_compute_node
+  notify: restart nova-compute
 
 - name: configure
   template:

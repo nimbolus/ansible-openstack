@@ -1,6 +1,8 @@
 - name: install
   yum:
     name: openstack-dashboard
+    state: "{{package_state | default('present')}}"
+  notify: restart httpd
 
 - name: configure
   template:

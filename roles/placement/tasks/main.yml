@@ -22,6 +22,10 @@
 - name: install
   yum:
     name: openstack-placement-api
+    state: "{{package_state | default('present')}}"
+  notify:
+    - init placement db
+    - restart httpd
 
 - name: configure
   template:

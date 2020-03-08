@@ -18,3 +18,5 @@ is_controller_node: "{{'controller_nodes' in group_names}}"
 is_compute_node: "{{'compute_nodes' in group_names}}"
 is_block_storage_node: "{{'block_storage_nodes' in group_names}}"
 is_network_node: "{{'network_nodes' in group_names}}"
+
+package_state: present

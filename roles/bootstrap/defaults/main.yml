@@ -1,3 +1,4 @@
 bootstrap_openstack_release: stein
 bootstrap_selinux: true 
 bootstrap_disable_firewalld: true
+bootstrap_system_upgrade: false

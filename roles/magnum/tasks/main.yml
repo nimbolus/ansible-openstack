@@ -47,7 +47,12 @@
       - openstack-magnum-conductor
       - openstack-magnum-ui
       - python-magnumclient
-  notify: restart httpd
+    state: "{{package_state | default('present')}}"
+  notify:
+    - init magnum db
+    - restart magnum-api
+    - restart magnum-conductor
+    - restart httpd
 
 - name: configure
   template:
