@@ -14,7 +14,7 @@ the password from `secrets_ca_key_pass` to encrypt the key.
 To install the certificate authority into the system and start a few initial tasks run:
 
 ```sh
-ansible-playbook main.yml --tags ca,bootstrap --extra-vars "ca_install_trust=true bootstrap_system_upgrade=true"
+ansible-playbook main.yml --tags ca,bootstrap --extra-vars "ca_install_trust=true"
 ```
 
 Finally restart all nodes.
@@ -22,12 +22,12 @@ Finally restart all nodes.
 ## Installation
 
 ```sh
-    ansible-playbook main.yml
+ansible-playbook main.yml
 ```
 
 ## Discover new compute nodes
 
 ```sh
-    ansible controller1 -m shell -b -a 'su -s /bin/sh -c "nova-manage cell_v2 discover_hosts" nova'
+ansible controller1 -m shell -b -a 'su -s /bin/sh -c "nova-manage cell_v2 discover_hosts" nova'
 ```
 

@@ -47,8 +47,8 @@
             or is_compute_node
     - role: neutron
       tags: openstack,neutron
-      when: "is_network_node 
-            or is_compute_node"
+      when: is_network_node 
+            or is_compute_node
     - role: cinder
       tags: openstack,cinder
       when: is_controller_node 
