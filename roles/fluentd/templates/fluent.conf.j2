@@ -5,7 +5,7 @@
   @type tail
   path /var/log/nova/nova-compute.log
   tag nova.compute
-  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
   time_format %F %T.%L
 </source>
 
@@ -13,7 +13,6 @@
   @type add
   <pair>
     service nova.compute
-    hostname "#{Socket.gethostname}"
   </pair>
 </match>
 
@@ -23,8 +22,8 @@
   path /var/log/nova/nova-api.log
   tag nova.api
   format multiline
-  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
-  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
   time_format %F %T.%L
 </source>
 
@@ -32,7 +31,6 @@
   @type add
   <pair>
     service nova.api
-    hostname "#{Socket.gethostname}"
   </pair>
 </match>
 
@@ -42,8 +40,8 @@
   path /var/log/nova/nova-conductor.log
   tag nova.conductor
   format multiline
-  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
-  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
   time_format %F %T.%L
 </source>
 
@@ -51,7 +49,6 @@
   @type add
   <pair>
     service nova.conductor
-    hostname "#{Socket.gethostname}"
   </pair>
 </match>
 
@@ -61,8 +58,8 @@
   path /var/log/nova/nova-novncproxy.log
   tag nova.novncproxy
   format multiline
-  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
-  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
   time_format %F %T.%L
 </source>
 
@@ -70,7 +67,6 @@
   @type add
   <pair>
     service nova.novncproxy
-    hostname "#{Socket.gethostname}"
   </pair>
 </match>
 
@@ -80,8 +76,8 @@
   path /var/log/nova/nova-scheduler.log
   tag nova.scheduler
   format multiline
-  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
-  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
   time_format %F %T.%L
 </source>
 
@@ -89,7 +85,6 @@
   @type add
   <pair>
     service nova.scheduler
-    hostname "#{Socket.gethostname}"
   </pair>
 </match>
 
@@ -99,8 +94,8 @@
   path /var/log/neutron/server.log
   tag neutron.server
   format multiline
-  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
-  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
   time_format %F %T.%L
 </source>
 
@@ -108,7 +103,6 @@
   @type add
   <pair>
     service neutron.server
-    hostname "#{Socket.gethostname}"
   </pair>
 </match>
 
@@ -118,8 +112,8 @@
   path /var/log/neutron/dhcp-agent.log
   tag neutron.dhcp
   format multiline
-  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
-  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
   time_format %F %T.%L
 </source>
 
@@ -127,7 +121,6 @@
   @type add
   <pair>
     service neutron.dhcp
-    hostname "#{Socket.gethostname}"
   </pair>
 </match>
 
@@ -137,8 +130,8 @@
   path /var/log/neutron/l3-agent.log
   tag neutron.l3
   format multiline
-  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
-  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
   time_format %F %T.%L
 </source>
 
@@ -146,7 +139,6 @@
   @type add
   <pair>
     service neutron.l3
-    hostname "#{Socket.gethostname}"
   </pair>
 </match>
 
@@ -156,8 +148,8 @@
   path /var/log/neutron/metadata-agent.log
   tag neutron.metadata
   format multiline
-  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
-  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
   time_format %F %T.%L
 </source>
 
@@ -165,7 +157,6 @@
   @type add
   <pair>
     service neutron.metadata
-    hostname "#{Socket.gethostname}"
   </pair>
 </match>
 
@@ -175,8 +166,8 @@
   path /var/log/neutron/linuxbridge-agent.log
   tag neutron.linuxbridge
   format multiline
-  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
-  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
   time_format %F %T.%L
 </source>
 
@@ -184,7 +175,6 @@
   @type add
   <pair>
     service neutron.linuxbridge
-    hostname "#{Socket.gethostname}"
   </pair>
 </match>
 
@@ -194,8 +184,8 @@
   path /var/log/keystone/keystone.log
   tag keystone
   format multiline
-  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
-  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
   time_format %F %T.%L
 </source>
 
@@ -203,7 +193,6 @@
   @type add
   <pair>
     service keystone
-    hostname "#{Socket.gethostname}"
   </pair>
 </match>
 
@@ -213,8 +202,8 @@
   path /var/log/glance/api.log
   tag glance.api
   format multiline
-  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
-  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
   time_format %F %T.%L
 </source>
 
@@ -222,7 +211,6 @@
   @type add
   <pair>
     service glance.api
-    hostname "#{Socket.gethostname}"
   </pair>
 </match>
 
@@ -232,8 +220,8 @@
   path /var/log/glance/registry.log
   tag glance.registry
   format multiline
-  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
-  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
   time_format %F %T.%L
 </source>
 
@@ -241,7 +229,6 @@
   @type add
   <pair>
     service glance.registry
-    hostname "#{Socket.gethostname}"
   </pair>
 </match>
 
@@ -251,8 +238,8 @@
   path /var/log/cinder/api.log
   tag cinder.api
   format multiline
-  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
-  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
   time_format %F %T.%L
 </source>
 
@@ -260,7 +247,6 @@
   @type add
   <pair>
     service cinder.api
-    hostname "#{Socket.gethostname}"
   </pair>
 </match>
 
@@ -270,8 +256,8 @@
   path /var/log/cinder/scheduler.log
   tag cinder.scheduler
   format multiline
-  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
-  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
   time_format %F %T.%L
 </source>
 
@@ -279,7 +265,6 @@
   @type add
   <pair>
     service cinder.scheduler
-    hostname "#{Socket.gethostname}"
   </pair>
 </match>
 
@@ -289,8 +274,8 @@
   path /var/log/cinder/volume.log
   tag cinder.volume
   format multiline
-  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
-  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
   time_format %F %T.%L
 </source>
 
@@ -298,7 +283,6 @@
   @type add
   <pair>
     service cinder.volume
-    hostname "#{Socket.gethostname}"
   </pair>
 </match>
 
@@ -308,8 +292,8 @@
   path /var/log/cinder/cinder-manage.log
   tag cinder.manage
   format multiline
-  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
-  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
   time_format %F %T.%L
 </source>
 
@@ -317,7 +301,6 @@
   @type add
   <pair>
     service cinder.manage
-    hostname "#{Socket.gethostname}"
   </pair>
 </match>
 
@@ -327,8 +310,8 @@
   path /var/log/cinder/backup.log
   tag cinder.backup
   format multiline
-  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
-  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
   time_format %F %T.%L
 </source>
 
@@ -336,7 +319,6 @@
   @type add
   <pair>
     service cinder.backup
-    hostname "#{Socket.gethostname}"
   </pair>
 </match>
 
@@ -346,8 +328,8 @@
   path /var/log/heat/heat-api.log
   tag heat.api
   format multiline
-  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
-  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
   time_format %F %T.%L
 </source>
 
@@ -355,7 +337,6 @@
   @type add
   <pair>
     service heat.api
-    hostname "#{Socket.gethostname}"
   </pair>
 </match>
 
@@ -365,8 +346,8 @@
   path /var/log/heat/heat-api-cfn.log
   tag heat.api-cfn
   format multiline
-  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
-  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
   time_format %F %T.%L
 </source>
 
@@ -374,7 +355,6 @@
   @type add
   <pair>
     service heat.api-cfn
-    hostname "#{Socket.gethostname}"
   </pair>
 </match>
 
@@ -384,8 +364,8 @@
   path /var/log/heat/heat-engine.log
   tag heat.engine
   format multiline
-  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
-  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<loglevel>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
   time_format %F %T.%L
 </source>
 
@@ -393,18 +373,18 @@
   @type add
   <pair>
     service heat.engine
-    hostname "#{Socket.gethostname}"
   </pair>
 </match>
 
 <match greped.**>
   @type loki
   url http://{{logging_host}}:3100
-  extra_labels {"node":"{{ansible_hostname}}"}
+  extra_labels {"hostname":"{{ansible_nodename}}"}
   flush_interval 10s
   flush_at_shutdown true
   buffer_chunk_limit 1m
   <label>
     service
+    level
   </label>
 </match>
