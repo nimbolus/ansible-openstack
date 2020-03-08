@@ -376,6 +376,96 @@
   </pair>
 </match>
 
+# Designate API
+<source>
+  @type tail
+  path /var/log/designate/api.log
+  tag designate.api
+  format multiline
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  time_format %F %T.%L
+</source>
+
+<match designate.api>
+  @type add
+  <pair>
+    service designate.api
+  </pair>
+</match>
+
+# Designate Central
+<source>
+  @type tail
+  path /var/log/designate/central.log
+  tag designate.central
+  format multiline
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  time_format %F %T.%L
+</source>
+
+<match designate.central>
+  @type add
+  <pair>
+    service designate.central
+  </pair>
+</match>
+
+# Designate Mdns
+<source>
+  @type tail
+  path /var/log/designate/mdns.log
+  tag designate.mdns
+  format multiline
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  time_format %F %T.%L
+</source>
+
+<match designate.mdns>
+  @type add
+  <pair>
+    service designate.mdns
+  </pair>
+</match>
+
+# Designate Producer
+<source>
+  @type tail
+  path /var/log/designate/producer.log
+  tag designate.producer
+  format multiline
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  time_format %F %T.%L
+</source>
+
+<match designate.producer>
+  @type add
+  <pair>
+    service designate.producer
+  </pair>
+</match>
+
+# Designate Worker
+<source>
+  @type tail
+  path /var/log/designate/worker.log
+  tag designate.worker
+  format multiline
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  time_format %F %T.%L
+</source>
+
+<match designate.worker>
+  @type add
+  <pair>
+    service designate.worker
+  </pair>
+</match>
+
 <match greped.**>
   @type loki
   url http://{{logging_host}}:3100
