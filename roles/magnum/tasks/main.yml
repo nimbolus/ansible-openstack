@@ -43,10 +43,10 @@
 - name: install
   yum:
     name:
-    - openstack-magnum-api
-    - openstack-magnum-conductor
-    - openstack-magnum-ui
-    - python-magnumclient
+      - openstack-magnum-api
+      - openstack-magnum-conductor
+      - openstack-magnum-ui
+      - python-magnumclient
   notify: restart httpd
 
 - name: configure
@@ -59,12 +59,12 @@
     - restart magnum-api
     - restart magnum-conductor
 
+- name: flush handlers
+  meta: flush_handlers
+
 - name: start and enable
   systemd:
     name: "{{item}}"
   loop:
     - openstack-magnum-api
     - openstack-magnum-conductor
-
-- name: flush handlers
-  meta: flush_handlers
