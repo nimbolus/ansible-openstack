@@ -4,3 +4,4 @@ magnum_admin_password: "{{secrets_magnum_admin_pass}}"
 magnum_rabbitmq_user: openstack
 magnum_rabbitmq_user_password: "{{secrets_rabbit_pass}}"
 magnum_cinder_volume_type: ssd
+magnum_openstack_ca_file: null # required if openstack APIs have self-signed certificates (for freeipa: /etc/ipa/ca.crt)

@@ -2,16 +2,17 @@
 
 Set `magnum_cinder_volume_type` to an existing cinder volume type first. 
 
-## Upload fedora atomic image
+## Upload Fedora CoreOS image
 
-Download and create a Fedora Atomic image:
+Download and create a Fedora CoreOS image:
 ```sh
-wget https://ftp-stud.hs-esslingen.de/pub/Mirrors/alt.fedoraproject.org/atomic/stable/Fedora-29-updates-20190820.0/AtomicHost/x86_64/images/Fedora-AtomicHost-29-20190820.0.x86_64.qcow2
+wget https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/31.20200210.3.0/x86_64/fedora-coreos-31.20200210.3.0-openstack.x86_64.qcow2.xz
+xz -d fedora-coreos-31.20200210.3.0-openstack.x86_64.qcow2.xz
 openstack image create \
     --disk-format=qcow2 \
-    --file=Fedora-AtomicHost-29-20190820.0.x86_64.qcow2 \
-    --property os_distro='fedora-atomic' \
-    fedora-atomic-29
+    --file=fedora-coreos-31.20200210.3.0-openstack.x86_64.qcow2 \
+    --property os_distro='fedora-coreos' \
+    fedora-coreos-31
 ```
 
 ## Create template for kubernetes cluster
@@ -19,14 +20,13 @@ openstack image create \
 Create a template based on Fedora Atomic:
 ```sh
 openstack coe cluster template create kubernetes-example \
-    --image fedora-atomic-29 \
-    --external-network siticom_corp \
-    --dns-nameserver 10.120.11.10 \
-    --master-flavor m1.small \
-    --flavor m1.small \
+    --image fedora-coreos-31 \
+    --external-network cloud \
+    --dns-nameserver 10.64.1.1 \
+    --master-flavor m1.medium \
+    --flavor m1.medium \
     --docker-volume-size 30 \
     --docker-storage-driver overlay \
-    --volume-driver cinder \
     --coe kubernetes
 ```
 

@@ -55,14 +55,15 @@
             or is_compute_node 
             or is_block_storage_node
     - role: heat
-      tags: heat
+      tags: openstack,heat
       when: is_controller_node
-    # magnum heat templates are too old
-    # - role: magnum
-    #   tags: openstack,magnum
-    #   when: is_controller_node
     - role: horizon
       tags: openstack,horizon
+      when: is_controller_node
+
+    # optional openstack services
+    - role: magnum
+      tags: magnum
       when: is_controller_node
 
     # logging services

@@ -18,6 +18,11 @@ region_name = RegionOne
 [database]
 connection = mysql+pymysql://magnum:{{magnum_db_user_password}}@{{db_host}}/magnum
 
+[drivers]
+{% if magnum_openstack_ca_file %}
+openstack_ca_file = {{magnum_openstack_ca_file}}
+{% endif %}
+
 [keystone_authtoken]
 www_authenticate_uri = https://{{keystone_host}}:5000/v3
 memcached_servers = {{memcached_host}}:11211
