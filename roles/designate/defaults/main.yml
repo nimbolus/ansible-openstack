@@ -4,3 +4,6 @@ designate_rabbitmq_user: openstack
 designate_rabbitmq_user_password: "{{secrets_rabbit_pass}}"
 designate_default_ns_record: ns1-1.example.org.
 designate_recursion: false 
+designate_forwarders:
+  - 8.8.8.8
+  - 8.8.4.4

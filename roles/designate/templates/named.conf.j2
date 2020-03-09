@@ -22,6 +22,14 @@ options {
     allow-new-zones   yes;
     request-ixfr      no;
 
+{% if designate_forwarders | length > 0 %}
+    forwarders {
+{% for forwarder in designate_forwarders %}
+        {{forwarder}};
+{% endfor %}
+    };
+{% endif %}
+
     bindkeys-file          "/etc/named.root.key";
     managed-keys-directory "/var/named/dynamic";
     pid-file               "/run/named/named.pid";
