@@ -16,7 +16,7 @@ options {
     secroots-file      "/var/named/data/named.secroots";
 
     allow-query       { any; };
-    recursion         no;
+    recursion         {% if designate_recursion %}yes{% else %}no{% endif %};
     dnssec-enable     yes;
     dnssec-validation yes;
     allow-new-zones   yes;

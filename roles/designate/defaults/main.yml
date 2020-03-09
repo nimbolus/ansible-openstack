@@ -3,3 +3,4 @@ designate_user_password: "{{secrets_designate_pass}}"
 designate_rabbitmq_user: openstack
 designate_rabbitmq_user_password: "{{secrets_rabbit_pass}}"
 designate_default_ns_record: ns1-1.example.org.
+designate_recursion: false 
