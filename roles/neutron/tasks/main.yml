@@ -5,9 +5,9 @@
 - name: install
   yum:
     name:
-    - openstack-neutron
-    - openstack-neutron-ml2
-    - net-tools
+      - openstack-neutron
+      - openstack-neutron-ml2
+      - net-tools
   when: is_network_node
 
 - name: install linuxbridge agent
