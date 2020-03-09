@@ -45,10 +45,10 @@
   yum:
     name: "centos-release-openstack-{{bootstrap_openstack_release}}"
 
-- name: upgrade system
-  yum:
-    name: '*'
-    state: latest
+# - name: upgrade system
+#   yum:
+#     name: '*'
+#     state: latest
 
 - name: install openstack client and selinux support
   yum:
