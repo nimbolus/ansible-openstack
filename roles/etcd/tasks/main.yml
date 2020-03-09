@@ -8,10 +8,11 @@
     dest: /etc/etcd/etcd.conf
   notify: restart etcd
 
+- name: flush handlers
+  meta: flush_handlers
+
 - name: start and enable
   systemd:
     name: etcd
+    state: started
     enabled: true
-
-- name: flush handlers
-  meta: flush_handlers

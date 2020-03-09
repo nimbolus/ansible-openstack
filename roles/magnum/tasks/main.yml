@@ -65,6 +65,8 @@
 - name: start and enable
   systemd:
     name: "{{item}}"
+    state: started
+    enabled: true
   loop:
     - openstack-magnum-api
     - openstack-magnum-conductor

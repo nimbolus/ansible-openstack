@@ -8,11 +8,11 @@
     dest: /etc/chrony.conf
   notify: restart chrony
 
+- name: flush handlers
+  meta: flush_handlers
+
 - name: start and enable
   systemd:
     name: chronyd
     state: started
     enabled: true
-
-- name: flush handlers
-  meta: flush_handlers

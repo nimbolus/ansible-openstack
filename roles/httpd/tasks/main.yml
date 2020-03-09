@@ -45,11 +45,11 @@
     src: index.html
     dest: /usr/share/httpd/noindex/index.html
 
+- name: flush handlers
+  meta: flush_handlers
+
 - name: start and enable
   systemd:
     name: httpd
     state: started
     enabled: true
-
-- name: flush handlers
-  meta: flush_handlers

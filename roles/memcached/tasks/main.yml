@@ -11,10 +11,11 @@
     regexp: '^OPTIONS='
   notify: restart memcached
 
+- name: flush handlers
+  meta: flush_handlers
+
 - name: start and enable
   systemd:
     name: memcached
+    state: started
     enabled: true
-
-- name: flush handlers
-  meta: flush_handlers
