@@ -14,6 +14,8 @@ nova_rbd_keyring_conf: /etc/ceph/ceph.client.nova.keyring
 nova_rbd_user: nova
 nova_rbd_secret_uuid: D618BD91-40DF-4AC3-9EDE-076786714761
 nova_rbd_pool: vms
+nova_libvirt_cpu_mode: host-model
+nova_nested_guest_support: false
 
 nova_flavors:
   - name: m1.tiny
