@@ -21,6 +21,11 @@ backup_share = {{cinder_backup_nfs_share}}
 {% if cinder_backup_nfs_options %}
 backup_mount_options = {{cinder_backup_nfs_options}}
 {% endif %}
+{% elif cinder_backup_driver == 'rbd' %}
+backup_driver = cinder.backup.drivers.ceph.CephBackupDriver
+backup_ceph_conf = {{cinder_backup_rbd_ceph_conf}}
+backup_ceph_user = {{cinder_backup_rbd_user}}
+backup_ceph_pool = {{cinder_backup_rbd_pool}}
 {% endif %}
 
 [database]
@@ -60,7 +65,6 @@ volume_driver = cinder.volume.drivers.rbd.RBDDriver
 volume_backend_name = {{p.name}}
 rbd_pool = {{p.pool}}
 rbd_ceph_conf = {{cinder_rbd_ceph_conf}}
-rbd_keyring_conf = {{cinder_rbd_keyring_conf}}
 rbd_user = {{cinder_rbd_user}}
 rbd_secret_uuid = {{cinder_rbd_secret_uuid}}
 glance_api_version = 2

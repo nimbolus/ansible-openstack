@@ -38,6 +38,11 @@
   when: "(is_block_storage_node or is_compute_node)
         and cinder_backend == 'rbd'"
 
+- name: configure rbd backup
+  include_tasks: backup/rbd.yml
+  when: "is_block_storage_node
+        and cinder_backup_driver == 'rbd'"
+
 - name: flush handlers
   meta: flush_handlers
 

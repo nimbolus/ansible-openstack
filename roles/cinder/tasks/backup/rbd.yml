@@ -1,0 +1,13 @@
+- name: check ceph backup keyring
+  file:
+    path: "{{cinder_backup_rbd_keyring}}"
+    mode: 0640
+    group: cinder
+
+- name: set backup keyring in ceph config
+  blockinfile:
+    path: /etc/ceph/ceph.conf
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - cinder-backup"
+    block: |
+      [client.cinder-backup]
+      keyring = {{cinder_backup_rbd_keyring}}
