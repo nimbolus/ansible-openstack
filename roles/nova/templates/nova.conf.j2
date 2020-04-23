@@ -81,6 +81,9 @@ server_listen = 0.0.0.0
 
 [libvirt]
 cpu_mode = {{nova_libvirt_cpu_mode}}
+{% if nova_libvirt_cpu_model_extra_flags %}
+cpu_model_extra_flags = {{nova_libvirt_cpu_model_extra_flags}}
+{% endif %}
 {% if nova_ephemeral_storage_backend == 'rbd' %}
 images_type = rbd
 images_rbd_pool = {{nova_rbd_pool}}
