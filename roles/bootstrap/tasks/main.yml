@@ -50,6 +50,11 @@
 #     name: '*'
 #     state: latest
 
+- name: "{{ 'enable' if bootstrap_selinux else 'disable' }} selinux"
+  selinux:
+    state: "{{ 'enforcing' if bootstrap_selinux else 'permissive' }}"
+    policy: targeted
+
 - name: install openstack client and selinux support
   yum:
     name: 
