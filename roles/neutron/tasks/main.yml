@@ -84,13 +84,6 @@
     - net.bridge.bridge-nf-call-iptables
     - net.bridge.bridge-nf-call-ip6tables
 
-# - name: copy selinux ha check script fix
-#   copy:
-#     src: fix_neutron_ha_check_script.te
-#     dest: /root/fix_neutron_ha_check_script.te
-#   notify: install selinux ha check script fix
-#   when: neutron_l3_ha
-
 - name: flush handlers
   meta: flush_handlers
 

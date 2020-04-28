@@ -34,9 +34,3 @@
   systemd:
     name: neutron-linuxbridge-agent
     state: restarted
-
-- name: install selinux ha check script fix
-  shell: |
-    checkmodule -M -m -o /root/fix_neutron_ha_check_script.mod /root/fix_neutron_ha_check_script.te
-    semodule_package -o /root/fix_neutron_ha_check_script.pp -m /root/fix_neutron_ha_check_script.mod
-    semodule -i /root/fix_neutron_ha_check_script.pp
