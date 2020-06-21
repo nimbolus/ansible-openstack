@@ -2,7 +2,7 @@
   package:
     name:
       - memcached
-      - python-memcached
+      - "{{'python' if ansible_distribution_major_version|int < 8 else 'python3'}}-memcached"
 
 - name: configure
   lineinfile:

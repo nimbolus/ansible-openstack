@@ -1,9 +1,9 @@
 - name: install rbd requirements
   package:
     name:
-    - python-rbd
-    - python-rados
-    - ceph-common
+      - "{{'python' if ansible_distribution_major_version|int < 8 else 'python3'}}-rbd"
+      - "{{'python' if ansible_distribution_major_version|int < 8 else 'python3'}}-rados"
+      - ceph-common
 
 - name: check ceph keyring
   file:

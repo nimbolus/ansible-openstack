@@ -37,24 +37,30 @@
     - init glance db
     - restart glance-api
 
+- name: setup backend
+  include_tasks: "backends/{{glance_backend}}.yml"
+
+- name: start and enable glance-api
+  systemd:
+    name: openstack-glance-api
+    state: started
+    enabled: true
+
+# glance-registry is deprecated
 - name: configure registry
   template:
     src: registry.conf.j2
     dest: /etc/glance/glance-registry.conf
     backup: true
   notify: restart glance-registry
+  when: ansible_distribution_major_version|int < 8
 
-- name: setup backend
-  include_tasks: "backends/{{glance_backend}}.yml"
+- name: start and enable glance-registry
+  systemd:
+    name: openstack-glance-registry
+    state: started
+    enabled: true
+  when: ansible_distribution_major_version|int < 8
 
 - name: flush handlers
   meta: flush_handlers
-
-- name: start and enable
-  systemd:
-    name: "{{item}}"
-    state: started
-    enabled: true
-  loop:
-    - openstack-glance-registry
-    - openstack-glance-api

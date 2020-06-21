@@ -1,13 +1,27 @@
 - name: set root password
-  mysql_user:
-    user: root
-    password: "{{mariadb_root_password}}"
-    host_all: true
-  no_log: true
+  block:
+    - name: set root password (try login with password, will fail on initial setup)
+      mysql_user:
+        login_password: "{{mariadb_root_password}}"
+        login_unix_socket: /var/lib/mysql/mysql.sock
+        user: root
+        password: "{{mariadb_root_password}}"
+        host_all: true
+      no_log: true
+
+  rescue:
+    - name: set root password (try password less login)
+      mysql_user:
+        login_unix_socket: /var/lib/mysql/mysql.sock
+        user: root
+        password: "{{mariadb_root_password}}"
+        host_all: true
+      no_log: true
 
 - name: delete anonymous users
   mysql_user:
     login_password: "{{mariadb_root_password}}"
+    login_unix_socket: /var/lib/mysql/mysql.sock
     user: ""
     state: absent
     host_all: true
@@ -16,6 +30,7 @@
 - name: remove test database
   mysql_db:
     login_password: "{{mariadb_root_password}}"
+    login_unix_socket: /var/lib/mysql/mysql.sock
     db: test
     state: absent
   no_log: true

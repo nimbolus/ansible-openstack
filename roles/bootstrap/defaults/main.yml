@@ -1,4 +1,6 @@
-bootstrap_openstack_release: stein
-bootstrap_selinux: true 
+bootstrap_openstack_release: ussuri
+bootstrap_selinux: true
 bootstrap_disable_firewalld: true
+# on CentOS 7 the NetworkManager needs to be disabled
+bootstrap_disable_networkmanager: false
 bootstrap_system_upgrade: false

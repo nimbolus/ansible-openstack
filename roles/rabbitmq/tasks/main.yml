@@ -2,26 +2,11 @@
   package:
     name: rabbitmq-server
 
-- name: configure
-  blockinfile:
-    path: /etc/rabbitmq/rabbitmq.config
-    insertafter: '%% \{rates_mode, basic\},'
-    marker: "%% {mark} ANSIBLE MANAGED BLOCK"
-    block: |
-      {listener, [{port, 15672},
-                  {ip,   "127.0.0.1"},
-                  {ssl,  false}]},
-      {path_prefix, "/rabbitmq"}
-  notify: restart rabbitmq
-
 - name: configure rabbitmq httpd
   template:
     src: rabbitmq.conf.j2
     dest: /etc/httpd/conf.d/rabbitmq.conf
   notify: reload httpd
-
-- name: flush handlers
-  meta: flush_handlers
 
 - name: start and enable
   systemd:
@@ -34,23 +19,55 @@
     names: rabbitmq_management
     state: enabled
 
+- name: configure (version 3.6 or older)
+  blockinfile:
+    path: /etc/rabbitmq/rabbitmq.config
+    insertafter: '%% \{rates_mode, basic\},'
+    marker: "%% {mark} ANSIBLE MANAGED BLOCK"
+    block: |
+      {listener, [{port, 15672},
+                  {ip,   "127.0.0.1"},
+                  {ssl,  false}]},
+      {path_prefix, "/rabbitmq"}
+  notify: restart rabbitmq
+  when: ansible_distribution_major_version|int < 8
+
+- name: configure (version 3.7 or newer)
+  lineinfile:
+    path: /etc/rabbitmq/rabbitmq.conf
+    insertafter: '^# {{item.option}} = '
+    regexp: '^{{item.option}} = '
+    line: '{{item.option}} = {{item.value}}'
+  loop:
+    - option: management.tcp.ip
+      value: 127.0.0.1
+    - option: management.path_prefix
+      value: /rabbitmq
+  notify: restart rabbitmq
+  when: ansible_distribution_major_version|int >= 8
+
+- name: flush handlers
+  meta: flush_handlers
+
 - name: add management user
   rabbitmq_user:
     user: "{{rabbitmq_management_user}}"
     password: "{{rabbitmq_management_password}}"
+    update_password: always
     tags: administrator
-    permissions:
-      - vhost: /
-        configure_priv: .*
-        read_priv: .*
-        write_priv: .*
+    vhost: "/"
+    configure_priv: ".*"
+    read_priv: ".*"
+    write_priv: ".*"
+  no_log: true
 
 - name: add user
   rabbitmq_user:
     user: "{{rabbitmq_user}}"
     password: "{{rabbitmq_user_password}}"
-    permissions:
-      - vhost: /
-        configure_priv: .*
-        read_priv: .*
-        write_priv: .*
+    update_password: always
+    vhost: "/"
+    configure_priv: ".*"
+    read_priv: ".*"
+    write_priv: ".*"
+  no_log: true

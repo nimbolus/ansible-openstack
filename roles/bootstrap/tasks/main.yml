@@ -28,12 +28,14 @@
     name: NetworkManager
     state: stopped
     enabled: false
+  when: bootstrap_disable_networkmanager | bool
 
 - name: enable network
   systemd:
     name: network
     state: started
     enabled: true
+  when: bootstrap_disable_networkmanager | bool
 
 - name: disable firewalld
   systemd:
@@ -45,6 +47,13 @@
 - name: add openstack repository
   package:
     name: "centos-release-openstack-{{bootstrap_openstack_release}}"
+
+- name: enable power tools repository
+  lineinfile:
+    path: /etc/yum.repos.d/CentOS-PowerTools.repo
+    regexp: '^enabled='
+    line: 'enabled=1'
+  when: ansible_distribution_major_version|int >= 8
 
 - name: upgrade system
   package:
@@ -60,5 +69,5 @@
 - name: install openstack client and selinux support
   package:
     name: 
-      - python-openstackclient
+      - "{{'python' if ansible_distribution_major_version|int < 8 else 'python3'}}-openstackclient"
       - openstack-selinux
