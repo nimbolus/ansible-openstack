@@ -40,16 +40,11 @@
       line: 'RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]'
   notify: reload httpd
 
-- name: check for homer landing page
-  stat:
-    path: /var/www/html/README.md
-  register: httpd_landing_page
-
 - name: download homer landing page
-  git:
-    repo: https://github.com/bastienwirtz/homer.git
+  unarchive:
+    src: https://github.com/bastienwirtz/homer/releases/latest/download/homer.zip
+    remote_src: true
     dest: /var/www/html
-  when: not httpd_landing_page.stat.exists
 
 - name: configure homer landing page
   template:
