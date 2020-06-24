@@ -75,6 +75,9 @@
     group: designate
     mode: 0640
 
+- name: flush handlers
+  meta: flush_handlers
+
 - name: start and enable named
   systemd:
     name: named
