@@ -1,0 +1,19 @@
+[DEFAULT]
+log_file = trove-guestagent.log
+log_dir = /var/log/trove/
+ignore_users = os_admin
+control_exchange = trove
+transport_url = rabbit://{{trove_rabbitmq_user}}:{{trove_rabbitmq_user_password}}@{{rabbitmq_host}}
+rpc_backend = rabbit
+command_process_timeout = 60
+use_syslog = False
+debug = True
+
+[service_credentials]
+auth_url = https://{{keystone_host}}:5000/v3
+region_name = RegionOne
+project_name = service
+password = {{trove_user_password}}
+project_domain_name = Default
+user_domain_name = Default
+username = trove

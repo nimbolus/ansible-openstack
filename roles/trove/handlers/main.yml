@@ -1,0 +1,19 @@
+- name: init trove db
+  shell: su -s /bin/sh -c "trove-manage db_sync" trove
+  args:
+    warn: false
+
+- name: restart trove-api
+  systemd:
+    name: openstack-trove-api
+    state: restarted
+
+- name: restart trove-taskmanager
+  systemd:
+    name: openstack-trove-taskmanager
+    state: restarted
+
+- name: restart trove-conductor
+  systemd:
+    name: openstack-trove-conductor
+    state: restarted

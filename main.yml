@@ -75,6 +75,10 @@
       tags: designate
       when: is_controller_node
             and designate_enabled | default(false)
+    - role: trove
+      tags: trove
+      when: is_controller_node
+            and trove_enabled | default(false)
 
     # logging services
     - role: loki

@@ -1,0 +1,50 @@
+# {{ansible_managed}}
+
+[DEFAULT]
+network_driver = trove.network.neutron.NeutronDriver
+management_networks = {{trove_management_networks}}
+management_security_groups = {{trove_management_security_groups}}
+cinder_volume_type = {{trove_cinder_volume_type}}
+nova_keypair = {{trove_nova_keypair}}
+default_datastore = mysql
+taskmanager_manager = trove.taskmanager.manager.Manager
+trove_api_workers = 5
+transport_url = rabbit://{{trove_rabbitmq_user}}:{{trove_rabbitmq_user_password}}@{{rabbitmq_host}}
+control_exchange = trove
+rpc_backend = rabbit
+reboot_time_out = 300
+usage_timeout = 900
+agent_call_high_timeout = 1200
+use_syslog = False
+debug = True
+
+[keystone_authtoken]
+memcached_servers = {{memcached_host}}:11211
+project_domain_name = Default
+project_name = service
+user_domain_name = Default
+password = password
+username = trove
+auth_url = https://{{keystone_host}}:5000
+auth_type = password
+
+[service_credentials]
+auth_url = https://{{keystone_host}}:5000/v3
+region_name = RegionOne
+project_name = service
+password = {{trove_user_password}}
+project_domain_name = Default
+user_domain_name = Default
+username = trove
+
+[database]
+connection = mysql+pymysql://trove:{{trove_db_user_password}}@{{db_host}}/trove?charset=utf8
+
+[mariadb]
+tcp_ports = 3306,4444,4567,4568
+
+[mysql]
+tcp_ports = 3306
+
+[postgresql]
+tcp_ports = 5432

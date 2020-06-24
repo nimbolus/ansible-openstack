@@ -1,0 +1,69 @@
+- name: init database
+  include_role:
+    name: mariadb
+    tasks_from: init_db.yml
+  vars:
+    db_name: trove
+    db_user: trove
+    db_user_password: "{{trove_db_user_password}}"
+
+- name: init keystone
+  include_role:
+    name: keystone
+    tasks_from: init_auth.yml
+  vars:
+    keystone_user: trove
+    keystone_user_password: "{{trove_user_password}}"
+    keystone_service_name: trove
+    keystone_service_description: Database
+    keystone_service_type: database
+    keystone_service_url: "http://{{ansible_nodename}}:8779/v1.0/%(tenant_id)s"
+
+- name: install
+  package:
+    name:
+      - openstack-trove
+      - openstack-trove-ui
+      - "{{'python' if ansible_distribution_major_version|int < 8 else 'python3'}}-troveclient"
+    state: "{{package_state | default('present')}}"
+  notify:
+    - init trove db
+    - restart trove-api
+    - restart trove-taskmanager
+    - restart trove-conductor
+    - restart httpd
+
+- name: configure
+  template:
+    src: trove.conf.j2
+    dest: /etc/trove/trove.conf
+  notify:
+    - init trove db
+    - restart trove-api
+    - restart trove-taskmanager
+    - restart trove-conductor
+
+- name: configure guestagent
+  template:
+    src: trove-guestagent.conf.j2
+    dest: /etc/trove/trove-guestagent.conf
+  notify:
+    - init trove db
+    - restart trove-api
+    - restart trove-taskmanager
+    - restart trove-conductor
+
+# remove other files
+
+- name: flush handlers
+  meta: flush_handlers
+
+- name: start and enable
+  systemd:
+    name: "{{item}}"
+    state: started
+    enabled: true
+  loop:
+    - openstack-trove-api
+    - openstack-trove-taskmanager
+    - openstack-trove-conductor

@@ -1,0 +1,9 @@
+trove_db_user_password: "{{secrets_trove_dbpass}}"
+trove_user_password: "{{secrets_trove_pass}}"
+trove_admin_password: "{{secrets_trove_admin_pass}}"
+trove_rabbitmq_user: openstack
+trove_rabbitmq_user_password: "{{secrets_rabbit_pass}}"
+trove_management_networks: ef7541ad-9599-4285-878a-e0ab62032b03
+trove_management_security_groups: d0d797f7-11d4-436e-89a3-ac8bca829f81
+trove_cinder_volume_type: ssd
+trove_nova_keypair: trove-mgmt
