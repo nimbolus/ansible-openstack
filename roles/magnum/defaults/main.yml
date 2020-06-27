@@ -4,4 +4,7 @@ magnum_admin_password: "{{secrets_magnum_admin_pass}}"
 magnum_rabbitmq_user: openstack
 magnum_rabbitmq_user_password: "{{secrets_rabbit_pass}}"
 magnum_cinder_volume_type: ssd
-magnum_openstack_ca_file: null # required if openstack APIs have self-signed certificates (for freeipa: /etc/ipa/ca.crt)
+# required if openstack APIs have self-signed certificates (for freeipa: /etc/ipa/ca.crt)
+magnum_openstack_ca_file: null
+# needs to be true to use cinder as volume driver
+magnum_cluster_user_trust: false
