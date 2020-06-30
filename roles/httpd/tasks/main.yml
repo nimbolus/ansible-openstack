@@ -49,7 +49,7 @@
 - name: configure homer landing page
   template:
     src: config.yml.j2
-    dest: /var/www/html/config.yml
+    dest: /var/www/html/assets/config.yml
 
 - name: flush handlers
   meta: flush_handlers

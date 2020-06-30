@@ -65,9 +65,11 @@
     - role: magnum
       tags: magnum
       when: is_controller_node
+            and magnum_enabled | default(false)
     - role: designate
       tags: designate
       when: is_controller_node
+            and designate_enabled | default(false)
 
     # logging services
     - role: loki

@@ -20,4 +20,4 @@
 
 - name: install promtail
   include_tasks: promtail.yml
-  when: loki_promtail|bool
+  when: loki_promtail | bool

@@ -25,7 +25,7 @@
     src: kvm.conf
     dest: /etc/modprobe.d/kvm.conf
   when: "is_compute_node
-        and nova_nested_guest_support|bool"
+        and nova_nested_guest_support | bool"
 
 - name: configure rbd ephemeral storage backend
   include_tasks: rbd.yml
