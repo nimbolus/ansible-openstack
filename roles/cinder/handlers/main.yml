@@ -10,6 +10,7 @@
     virsh secret-set-value --secret {{cinder_rbd_secret_uuid}} --base64 {{cinder_rbd_client_key.content | b64decode | regex_search('[A-Za-z0-9\/+]+==', multiline=True)}}
   args:
     warn: false
+  when: is_compute_node
 
 - name: restart cinder-api
   systemd:

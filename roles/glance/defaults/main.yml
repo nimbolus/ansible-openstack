@@ -1,6 +1,6 @@
 glance_user_password: "{{secrets_glance_pass}}"
 glance_db_user_password: "{{secrets_glance_dbpass}}"
-glance_backend: file
+glance_backend: file # file and rbd are supported
 glance_rbd_pool: images
 glance_rbd_user: glance
 glance_rbd_ceph_config: /etc/ceph/ceph.conf

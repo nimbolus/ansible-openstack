@@ -1,0 +1,3 @@
+- name: install nfs-utils
+  package:
+    name: nfs-utils

@@ -51,7 +51,7 @@ lock_path = /var/lib/cinder/tmp
 {% for p in cinder_lvm_pools %}
 [lvm_{{p.name}}]
 volume_driver = cinder.volume.drivers.lvm.LVMVolumeDriver
-volume_group = cinder-{{p.name}}
+volume_group = {{p.vg}}
 volume_backend_name = {{p.name}}
 target_protocol = iscsi
 target_helper = lioadm

@@ -4,30 +4,14 @@
     - lvm2
     - device-mapper-persistent-data
     - targetcli
-
-- name: prepare vg
-  include_tasks: prepare_vg.yml
-  loop: "{{cinder_lvm_pools}}"
-  loop_control:
-    loop_var: pool
-
-- name: create filesystem
-  filesystem:
-    device: "{{item}}"
-    fstype: lvm
-  loop: "{{pool.members}}"
-
-- name: create volume group
-  lvg:
-    vg: "cinder-{{pool.type}}"
-    pvs: "{{pool.members | join(',')}}"
+  when: is_block_storage_node
 
 - name: configure lvm filter
   lineinfile:
     path: /etc/lvm/lvm.conf
     insertafter: '# filter ='
     regexp: "^\tfilter ="
-    line: "\tfilter = [ \"a|^/dev/sd[a-z][0-9]$|\", \"r/.*/\" ]"
+    line: "\tfilter = [ {{cinder_lvm_filter}} ]"
   when: "is_block_storage_node 
           or is_compute_node"
 
@@ -39,3 +23,4 @@
   loop:
     - lvm2-lvmetad
     - target
+  when: is_block_storage_node

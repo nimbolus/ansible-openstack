@@ -4,10 +4,11 @@ cinder_rabbitmq_user: openstack
 cinder_rabbitmq_user_password: "{{secrets_rabbit_pass}}"
 cinder_ip_address: "{{management_ipv4.address}}"
 cinder_backend: lvm # lvm, rbd and nfs are supported
+# see https://docs.openstack.org/cinder/ussuri/install/cinder-storage-install-rdo.html for how to use the filter
+cinder_lvm_filter: '"a|^/dev/sd[a-z][0-9]$|", "r/.*/"'
 cinder_lvm_pools: []
-  # - name: ssd
-  #   members:
-  #     - /dev/sdb
+  # - name: local-ssd
+  #   vg: cinder-volumes
 cinder_rbd_pools: []
   # - name: volumes
   #   pool: volumes
