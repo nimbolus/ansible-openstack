@@ -1,6 +1,6 @@
 - name: setup server
   include: server.yml
-  when: is_network_node and neutron_server
+  when: is_controller_node
 
 - name: install
   yum:
@@ -8,7 +8,7 @@
       - openstack-neutron
       - openstack-neutron-ml2
       - net-tools
-  when: is_network_node
+  when: is_controller_node or is_network_node
 
 - name: install linuxbridge agent
   yum:
@@ -75,6 +75,7 @@
 - name: add br_netfilter kernel module
   modprobe:
     name: br_netfilter
+  when: is_network_node or is_compute_node
 
 - name: allow bridge filters
   sysctl:
@@ -83,6 +84,7 @@
   loop:
     - net.bridge.bridge-nf-call-iptables
     - net.bridge.bridge-nf-call-ip6tables
+  when: is_network_node or is_compute_node
 
 - name: flush handlers
   meta: flush_handlers
@@ -92,7 +94,7 @@
     name: neutron-server
     enabled: true
     state: started
-  when: is_network_node and neutron_server
+  when: is_controller_node
 
 - name: start and enable l3 agent
   systemd:
@@ -120,3 +122,4 @@
     name: neutron-linuxbridge-agent
     enabled: true
     state: started
+  when: is_network_node or is_compute_node

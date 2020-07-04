@@ -4,13 +4,13 @@
       --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head" neutron
   args:
     warn: false
-  when: is_network_node and neutron_server
+  when: is_controller_node
 
 - name: restart neutron-server
   systemd:
     name: neutron-server
     state: restarted
-  when: is_network_node and neutron_server
+  when: is_controller_node
 
 - name: restart neutron-dhcp-agent
   systemd:
@@ -34,3 +34,4 @@
   systemd:
     name: neutron-linuxbridge-agent
     state: restarted
+  when: is_network_node or is_compute_node

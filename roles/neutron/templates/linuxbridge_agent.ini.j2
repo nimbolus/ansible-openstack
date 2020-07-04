@@ -1,7 +1,9 @@
 # {{ansible_managed}}
 
+{% if is_network_node %}
 [linux_bridge]
 physical_interface_mappings = provider:{{neutron_provider_interface}}
+{% endif %}
 
 [securitygroup]
 firewall_driver = neutron.agent.linux.iptables_firewall.IptablesFirewallDriver
