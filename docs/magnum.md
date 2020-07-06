@@ -6,13 +6,13 @@ Set `magnum_cinder_volume_type` to an existing cinder volume type first.
 
 Download and create a Fedora CoreOS image:
 ```sh
-wget https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/31.20200210.3.0/x86_64/fedora-coreos-31.20200210.3.0-openstack.x86_64.qcow2.xz
-xz -d fedora-coreos-31.20200210.3.0-openstack.x86_64.qcow2.xz
+wget https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/32.20200615.3.0/x86_64/fedora-coreos-32.20200615.3.0-openstack.x86_64.qcow2.xz
+xz -d fedora-coreos-32.20200615.3.0-openstack.x86_64.qcow2.xz
 openstack image create \
     --disk-format=qcow2 \
-    --file=fedora-coreos-31.20200210.3.0-openstack.x86_64.qcow2 \
+    --file=fedora-coreos-32.20200615.3.0-openstack.x86_64.qcow2 \
     --property os_distro='fedora-coreos' \
-    fedora-coreos-31
+    fedora-coreos-32
 ```
 
 ## Create template for kubernetes cluster
@@ -20,7 +20,7 @@ openstack image create \
 Create a template based on Fedora Atomic:
 ```sh
 openstack coe cluster template create kubernetes-example \
-    --image fedora-coreos-31 \
+    --image fedora-coreos-32 \
     --external-network cloud \
     --dns-nameserver 10.64.1.1 \
     --master-flavor m1.medium \

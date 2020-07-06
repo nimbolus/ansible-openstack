@@ -1,8 +1,14 @@
+- name: "check for dashboard '{{item.name}}'"
+  stat:
+    path: "/var/lib/grafana/dashboards/{{item.name}}.json"
+  register: grafana_dashboard
+
 - name: "downlaod dashboard '{{item.name}}'"
   get_url:
     url: "{{item.url}}"
     dest: "/var/lib/grafana/dashboards/{{item.name}}.json"
   notify: restart grafana
+  when: not grafana_dashboard.stat.exists
   
 - name: "rename dashboard '{{item.name}}'"
   lineinfile:
