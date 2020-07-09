@@ -3,6 +3,7 @@
     name:
       - httpd
       - mod_ssl
+      - unzip
 
 - name: request certificate
   include_role:
@@ -18,8 +19,13 @@
 - name: configure
   lineinfile:
     path: /etc/httpd/conf/httpd.conf
-    line: "ServerName {{ansible_nodename}}"
-    regexp: '^ServerName '
+    regexp: "^{{item.regexp}}"
+    line: "{{item.line}}"
+  loop:
+    - regexp: '^Listen'
+      line: "Listen {{httpd_listen}}"
+    - regexp: '^ServerName '
+      line: "ServerName {{ansible_nodename}}"
   notify: reload httpd
 
 - name: configure ssl
@@ -28,16 +34,29 @@
     regexp: "^{{item.regexp}}"
     line: "{{item.line}}"
   loop:
+    - regexp: '^Listen'
+      line: "Listen {{httpd_ssl_listen_port}} https"
+    - regexp: '^<VirtualHost _default_'
+      line: "<VirtualHost _default_:{{httpd_ssl_listen_port}}>"
     - regexp: SSLCertificateFile 
       line: "SSLCertificateFile {{req_cert_path}}"
     - regexp: SSLCertificateKeyFile 
       line: "SSLCertificateKeyFile {{req_privatekey_path}}"
+  notify: reload httpd
+
+- name: configure ssl redirect
+  lineinfile:
+    path: /etc/httpd/conf.d/ssl.conf
+    regexp: "^{{item.regexp}}"
+    line: "{{item.line}}"
+  loop:
     - regexp: "RewriteEngine"
       line: "RewriteEngine On"
     - regexp: "RewriteCond"
       line: 'RewriteCond %{HTTPS} !=on'
     - regexp: "RewriteRule"
       line: 'RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]'
+  when: httpd_ssl_redirect | bool
   notify: reload httpd
 
 - name: download homer landing page

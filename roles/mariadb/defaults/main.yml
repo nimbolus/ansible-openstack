@@ -1,4 +1,4 @@
 mariadb_root_password: "{{secrets_db_root_pass}}"
 mariadb_bind_address: "{{management_ipv4.address}}"
 
-db_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"
+db_host: "{{ansible_nodename}}"

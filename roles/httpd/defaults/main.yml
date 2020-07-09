@@ -1,1 +1,9 @@
+httpd_listen: 80
+httpd_ssl_listen_port: 443
+httpd_ssl_redirect: true
 httpd_landing_page_title: OpenStack
+httpd_landing_page_horizon_url: /dashboard/
+httpd_landing_page_rabbitmq_url: /rabbitmq/
+httpd_landing_page_grafana_url: /grafana/
+httpd_traefik_enabled: "{{traefik_enabled | default(false)}}"
+httpd_landing_page_traefik_url: /traefik/

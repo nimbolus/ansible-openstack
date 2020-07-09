@@ -17,7 +17,7 @@
     keystone_service_name: glance
     keystone_service_description: OpenStack Image
     keystone_service_type: image
-    keystone_service_url: "http://{{ansible_nodename}}:9292"
+    keystone_service_url: "{{glance_url}}"
 
 - name: install
   yum:

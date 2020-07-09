@@ -27,4 +27,4 @@ cinder_backup_rbd_keyring: /etc/ceph/ceph.client.cinder-backup.keyring
 cinder_backup_rbd_user: cinder-backup
 cinder_backup_rbd_pool: backups
 
-cinder_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"
+cinder_url: "http://{{ansible_nodename}}:8776"

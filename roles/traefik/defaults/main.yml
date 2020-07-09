@@ -1,0 +1,37 @@
+traefik_version: 2.2.1
+# log level can be DEBUG, PANIC, FATAL, ERROR, WARN or INFO
+traefik_log_level: ERROR
+traefik_domain: example.com
+traefik_controller_domain: controller.{{traefik_domain}}
+traefik_horizon_domain: horizon.{{traefik_domain}}
+traefik_httpd_url: http://localhost:8081
+# default is admin / admin
+traefik_dashboard_users:
+  - admin:$apr1$bpcAEgIt$jdv/yN9/LyKWZwxbbmyA2/
+traefik_acme: false
+traefik_acme_email: admin@example.com
+# for production change this to https://acme-v02.api.letsencrypt.org/directory
+traefik_acme_ca_server: https://acme-staging-v02.api.letsencrypt.org/directory
+traefik_acme_dns_challenge_provider: cloudflare
+traefik_acme_dns_challenge_disable_propagation_check: false
+traefik_acme_dns_challenge_resolvers: []
+traefik_secrets: []
+  # - CF_DNS_API_TOKEN=secret
+
+traefik_services:
+  - name: keystone
+    url: "{{keystone_url}}"
+  - name: glance
+    url: "{{glance_url}}"
+  - name: placement
+    url: "{{placement_url}}"
+  - name: nova
+    url: "{{nova_url}}"
+  - name: neutron
+    url: "{{neutron_url}}"
+  - name: cinder
+    url: "{{cinder_url}}"
+  - name: heat
+    url: "{{heat_url}}"
+  - name: heat-cfn
+    url: "{{heat_cfn_url}}"

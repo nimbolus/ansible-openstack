@@ -30,6 +30,10 @@
     - role: rabbitmq
       tags: environment,rabbit,rabbitmq
       when: is_controller_node
+    - role: traefik
+      tags: environment,traefik,lb
+      when: is_controller_node
+            and traefik_enabled | default(false)
 
     # openstack services
     - role: keystone

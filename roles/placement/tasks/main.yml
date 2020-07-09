@@ -17,7 +17,7 @@
     keystone_service_name: placement
     keystone_service_description: Placement API
     keystone_service_type: placement
-    keystone_service_url: "http://{{ansible_nodename}}:8778"
+    keystone_service_url: "{{placement_url}}"
 
 - name: install
   yum:

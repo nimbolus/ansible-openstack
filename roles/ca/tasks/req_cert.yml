@@ -1,5 +1,11 @@
 # this can be called by other roles to create their certificates
-# following variables must be defined to do that: req_name, req_common_name, req_owner (defaults to req_name), req_group (defaults to req_name), req_post_command (defaults to /bin/true)
+# following variables must be defined:
+#   req_name
+#   req_common_name
+#   req_owner (defaults to req_name)
+#   req_group (defaults to req_name)
+#   req_post_command (defaults to null)
+#   req_subject_alt_name (defaults to null)
 # returns: req_privatekey_path, req_cert_path
 
 - name: "set facts for {{req_name}}"
@@ -26,6 +32,7 @@
       organization_name: "{{ca_organization_name}}"
       organizational_unit_name: "{{ca_organization_unit_name}} {{req_name}}"
       email_address: "{{ca_email_address}}"
+      subject_alt_name: "{{req_subject_alt_name | default([])}}"
     delegate_to: "{{ca_host}}"
 
   - name: "create certificate for {{req_name}}"
@@ -74,7 +81,17 @@
     register: stat_cert
 
   - name: "request certificate for {{req_name}} from freeipa server"
-    shell: "ipa-getcert request -r -f {{req_cert_path}} -k {{req_privatekey_path}} -D {{req_common_name}} -K {{req_name}}/{{req_common_name}} -C '{{req_post_command | default('/bin/true')}}'"
+    shell: |
+      ipa-getcert request -r -f {{req_cert_path}} \
+        -D {{req_common_name}} \
+      {% for name in req_subject_alt_name %}
+        -D {{name}} \
+      {% endfor %}
+      {% if req_post_command is defined %}
+        -C '{{req_post_command}}' \
+      {% endif %}
+        -k {{req_privatekey_path}} \
+        -K {{req_name}}/{{req_common_name}}
     when: stat_cert.stat.exists == False
 
   - name: "wait for {{req_name}} private key"

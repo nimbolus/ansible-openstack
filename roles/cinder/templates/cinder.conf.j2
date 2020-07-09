@@ -5,7 +5,7 @@ transport_url = rabbit://{{cinder_rabbitmq_user}}:{{cinder_rabbitmq_user_passwor
 auth_strategy = keystone
 my_ip = {{cinder_ip_address}}
 {% if is_block_storage_node %}
-glance_api_servers = http://{{glance_host}}:9292
+glance_api_servers = {{glance_url}}
 {% if cinder_backend == 'lvm' %}
 enabled_backends = {% for p in cinder_lvm_pools %}lvm_{{p.name}}{% if not loop.last %},{% endif %}{% endfor %}
 {% elif cinder_backend == 'rbd' %}
@@ -32,8 +32,8 @@ backup_ceph_pool = {{cinder_backup_rbd_pool}}
 connection = mysql+pymysql://cinder:{{cinder_db_user_password}}@{{db_host}}/cinder
 
 [keystone_authtoken]
-www_authenticate_uri = https://{{keystone_host}}:5000
-auth_url = https://{{keystone_host}}:5000
+www_authenticate_uri = {{keystone_url}}
+auth_url = {{keystone_url}}
 memcached_servers = {{memcached_host}}:11211
 auth_type = password
 project_domain_id = default

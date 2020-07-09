@@ -1,0 +1,5 @@
+- "DNS:{{traefik_controller_domain}}"
+- "DNS:{{traefik_horizon_domain}}"
+{% for s in traefik_services %}
+- "DNS:{{s.name}}.{{traefik_domain}}"
+{% endfor %}

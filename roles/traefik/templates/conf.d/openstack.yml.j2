@@ -1,0 +1,22 @@
+# {{ansible_managed}}
+
+http:
+  services:
+{% for s in traefik_services %}
+    {{s.name}}:
+      loadBalancer:
+        servers:
+          - url: "{{s.url}}"
+{% endfor %}
+
+  routers:
+{% for s in traefik_services %}
+    {{s.name}}:
+      rule: "Host(`{{s.name}}.{{traefik_domain}}`)"
+      service: {{s.name}}
+      entryPoints:
+        - web-secure
+{% if not traefik_acme %}
+      tls: {}
+{% endif %}
+{% endfor %}

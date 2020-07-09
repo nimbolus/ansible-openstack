@@ -1,22 +1,22 @@
 # {{ansible_managed}}
 
 [DEFAULT]
-heat_metadata_server_url = http://{{heat_metadata_host}}:8000
-heat_waitcondition_server_url = http://{{heat_metadata_host}}:8000/v1/waitcondition
+heat_metadata_server_url = {{heat_cfn_url}}
+heat_waitcondition_server_url = {{heat_cfn_url}}/v1/waitcondition
 stack_domain_admin = heat_domain_admin
 stack_domain_admin_password = {{heat_admin_password}}
 stack_user_domain_name = heat
 transport_url = rabbit://{{heat_rabbitmq_user}}:{{heat_rabbitmq_user_password}}@{{rabbitmq_host}}
 
 [clients_keystone]
-auth_uri = https://{{keystone_host}}:5000
+auth_uri = {{keystone_url}}
 
 [database]
 connection = mysql+pymysql://heat:{{heat_db_user_password}}@{{db_host}}/heat
 
 [keystone_authtoken]
-www_authenticate_uri = https://{{keystone_host}}:5000
-auth_url = https://{{keystone_host}}:5000
+www_authenticate_uri = {{keystone_url}}
+auth_url = {{keystone_url}}
 memcached_servers = {{memcached_host}}:11211
 auth_type = password
 project_domain_id = default
@@ -27,7 +27,7 @@ password = {{heat_user_password}}
 
 [trustee]
 auth_type = password
-auth_url = https://{{keystone_host}}:5000
+auth_url = {{keystone_url}}
 username = heat
 password = {{heat_user_password}}
 user_domain_name = default

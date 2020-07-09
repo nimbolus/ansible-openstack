@@ -1,0 +1,45 @@
+# {{ansible_managed}}
+
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
+
+api:
+  dashboard: true
+
+accessLog: {}
+
+entrypoints:
+  web:
+    address: ":80"
+  web-secure:
+    address: ":443"
+{% if traefik_acme %}
+    http:
+      tls:
+        certResolver: lets-encrypt
+
+certificatesResolvers:
+  lets-encrypt:
+    acme:
+      email: {{traefik_acme_email}}
+      storage: /etc/traefik/acme.json
+      caServer: {{traefik_acme_ca_server}}
+      keyType: EC384
+      dnsChallenge:
+        provider: {{traefik_acme_dns_challenge_provider}}
+        disablePropagationCheck: {{traefik_acme_dns_challenge_disable_propagation_check | lower}}
+{% if traefik_acme_dns_challenge_resolvers | length > 0 %}
+        resolvers:
+{% for resolver in traefik_acme_dns_challenge_resolvers %}
+          - {{resolver}}
+{% endfor %}
+{% endif %}
+{% endif %}
+
+providers:
+  file:
+    directory: /etc/traefik/conf.d
+
+log:
+  level: {{traefik_log_level}}

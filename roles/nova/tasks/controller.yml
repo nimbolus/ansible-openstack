@@ -31,7 +31,7 @@
     keystone_service_name: nova
     keystone_service_description: OpenStack Compute
     keystone_service_type: compute
-    keystone_service_url: "http://{{ansible_nodename}}:8774/v2.1"
+    keystone_service_url: "{{nova_url}}/v2.1"
 
 - name: install controller
   yum:

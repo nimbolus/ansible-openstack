@@ -7,3 +7,5 @@ designate_recursion: false
 designate_forwarders:
   - 8.8.8.8
   - 8.8.4.4
+
+designate_url: "http://{{ansible_nodename}}:9001"

@@ -1,0 +1,17 @@
+# {{ansible_managed}}
+
+http:
+  middlewares:
+    redirect-to-https:
+      redirectScheme:
+        scheme: https
+        permanent: true
+
+  routers:
+    https-redirect:
+      entryPoints:
+        - web
+      rule: hostregexp(`{host:[a-z-.]+}`)
+      middlewares:
+        - redirect-to-https
+      service: noop@internal

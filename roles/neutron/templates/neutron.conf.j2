@@ -21,7 +21,7 @@ connection = mysql+pymysql://neutron:{{neutron_db_user_password}}@{{db_host}}/ne
 
 [nova]
 region_name = RegionOne
-auth_url = https://{{keystone_host}}:5000
+auth_url = {{keystone_url}}
 auth_type = password
 username = {{neutron_nova_user}}
 password = {{neutron_nova_user_password}}
@@ -31,7 +31,7 @@ user_domain_name = default
 {% endif %}
 
 [keystone_authtoken]
-auth_url = https://{{keystone_host}}:5000/v3
+auth_url = {{keystone_url}}/v3
 memcached_servers = {{memcached_host}}:11211
 auth_type = password
 project_domain_name = default

@@ -6,4 +6,4 @@ glance_rbd_user: glance
 glance_rbd_ceph_config: /etc/ceph/ceph.conf
 glance_rbd_keyring_conf: /etc/ceph/ceph.client.glance.keyring
 
-glance_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"
+glance_url: "http://{{ansible_nodename}}:9292"

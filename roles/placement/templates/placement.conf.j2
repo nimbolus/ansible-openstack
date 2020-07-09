@@ -4,8 +4,8 @@
 connection = mysql+pymysql://placement:{{placement_db_user_password}}@{{db_host}}/placement
 
 [keystone_authtoken]
-www_authenticate_uri = https://{{keystone_host}}:5000
-auth_url = https://{{keystone_host}}:5000
+www_authenticate_uri = {{keystone_url}}
+auth_url = {{keystone_url}}
 memcached_servers = {{memcached_host}}:11211
 auth_type = password
 project_domain_name = Default

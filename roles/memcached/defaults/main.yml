@@ -1,2 +1,2 @@
 memcached_listen_ip: "{{management_ipv4.address}}"
-memcached_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"
+memcached_host: "{{ansible_nodename}}"

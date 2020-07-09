@@ -1,0 +1,55 @@
+# {{ansible_managed}}
+
+http:
+  services:
+    controller:
+      loadBalancer:
+        servers:
+          - url: "{{traefik_httpd_url}}"
+
+  routers:
+    horizon:
+      rule: "Host(`{{traefik_horizon_domain}}`)"
+      service: controller
+      entryPoints:
+        - web-secure
+      middlewares:
+        - horizon-path
+{% if not traefik_acme %}
+      tls: {}
+{% endif %}
+    controller:
+      rule: "Host(`{{traefik_controller_domain}}`)"
+      service: controller
+      entryPoints:
+        - web-secure
+{% if not traefik_acme %}
+      tls: {}
+{% endif %}
+    traefik:
+      rule: "Host(`{{traefik_controller_domain}}`) && (PathPrefix(`/traefik`) || PathPrefix(`/api`))"
+      service: api@internal
+      entryPoints:
+        - web-secure
+      middlewares:
+        - traefik-dashboard-auth
+        - traefik-dashboard-path
+{% if not traefik_acme %}
+      tls: {}
+{% endif %}
+
+  middlewares:
+    horizon-path:
+      replacePathRegex:
+        regex: ^/(dashboard/)?(.*)
+        replacement: /dashboard/$2
+    traefik-dashboard-auth:
+      basicAuth:
+        users:
+{% for u in traefik_dashboard_users %}
+          - "{{u}}"
+{% endfor %}
+    traefik-dashboard-path:
+      replacePathRegex:
+        regex: ^/traefik/?(.*)
+        replacement: /dashboard/$1

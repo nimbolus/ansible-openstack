@@ -1,0 +1,22 @@
+- name: download
+  unarchive:
+    src: "https://github.com/containous/traefik/releases/download/v{{traefik_version}}/traefik_v{{traefik_version}}_linux_amd64.tar.gz"
+    remote_src: true
+    dest: /tmp
+
+- name: copy binaries
+  copy:
+    src: /tmp/traefik
+    remote_src: true
+    dest: /usr/local/bin/traefik
+    mode: 0755
+  notify: restart traefik
+
+- name: cleanup
+  file:
+    path: "/tmp/{{item}}"
+    state: absent
+  loop:
+    - traefik
+    - CHANGELOG.md
+    - LICENSE.md

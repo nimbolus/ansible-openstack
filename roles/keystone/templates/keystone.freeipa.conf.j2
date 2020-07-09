@@ -4,7 +4,7 @@ driver = ldap
 [ldap]
 url = {{keystone_freeipa.url}}
 use_tls = true
-user = uid={{keystone_freeipa.user}},cn=users,cn=accounts,{{keystone_freeipa.suffix}}
+user = uid={{keystone_freeipa.uid}},cn=users,cn=accounts,{{keystone_freeipa.suffix}}
 password = {{keystone_freeipa.password}}
 suffix = {{keystone_freeipa.suffix}}
 query_scope = sub

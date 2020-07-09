@@ -1,0 +1,81 @@
+- name: check for version
+  shell: /usr/local/bin/traefik version
+  register: traefik_current_version
+  failed_when: false
+  check_mode: false
+  changed_when: traefik_version not in traefik_current_version.stdout
+
+- name: install
+  include_tasks: install.yml
+  when: traefik_current_version.changed
+
+- name: create systemd service
+  copy:
+    src: traefik.service
+    dest: /etc/systemd/system/traefik.service
+  notify: restart traefik
+
+- name: set cap_net_bind_service capabilities
+  capabilities:
+    path: /usr/local/bin/traefik
+    capability: cap_net_bind_service+eip
+
+- name: create user
+  user:
+    name: traefik
+    system: true
+
+- name: create config directories
+  file:
+    path: "{{item}}"
+    state: directory
+    owner: traefik
+  loop:
+    - /etc/traefik
+    - /etc/traefik/conf.d
+
+- name: request certificate
+  include_role:
+    name: ca
+    tasks_from: req_cert.yml
+  vars:
+    req_name: traefik
+    req_common_name: "{{traefik_controller_domain}}"
+    req_owner: traefik
+    req_group: root
+    req_post_command: systemctl restart traefik
+    req_subject_alt_name: "{{lookup('template', 'subject_alt_name.j2') | from_yaml}}"
+  when: not traefik_acme | bool
+
+- name: configure
+  template:
+    src: "{{item}}.j2"
+    dest: "/etc/traefik/{{item}}"
+    owner: traefik
+  loop:
+    - traefik.yml
+    - conf.d/ssl.yml
+    - conf.d/redirect.yml
+    - conf.d/controller.yml
+    - conf.d/openstack.yml
+  notify: restart traefik
+
+- name: configure secrets
+  copy:
+    content: |
+      {% for s in traefik_secrets %}
+      {{s}}
+      {% endfor %}
+    dest: /etc/traefik/secrets
+    owner: traefik
+    mode: 0600
+
+- name: flush handlers
+  meta: flush_handlers
+
+- name: start and enable
+  systemd:
+    name: traefik
+    state: started
+    enabled: true
+

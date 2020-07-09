@@ -1,0 +1,13 @@
+[Unit]
+Description=Traefik Cloud Native Edge Router
+Documentation=https://containo.us/traefik
+After=network-online.target
+
+[Service]
+User=traefik
+Restart=on-failure
+EnvironmentFile=/etc/traefik/secrets
+ExecStart=/usr/local/bin/traefik --configfile /etc/traefik/traefik.yml
+
+[Install]
+WantedBy=multi-user.target

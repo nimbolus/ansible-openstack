@@ -8,3 +8,5 @@ magnum_cinder_volume_type: ssd
 magnum_openstack_ca_file: null
 # needs to be true to use cinder as volume driver
 magnum_cluster_user_trust: false
+
+magnum_url: "http://{{ansible_nodename}}:9511"

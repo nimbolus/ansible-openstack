@@ -15,5 +15,5 @@ neutron_l3_agent: true
 neutron_metadata_agent: true
 neutron_dhcp_agent: true
 
-neutron_host: "{{hostvars[groups.network_nodes[0]].ansible_nodename}}"
-neutron_nova_metadata_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"
+neutron_url: "http://{{ansible_nodename}}:9696"
+neutron_nova_metadata_host: "{{ansible_nodename}}"

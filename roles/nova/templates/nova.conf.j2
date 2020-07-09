@@ -30,10 +30,10 @@ os_region_name = RegionOne
 {% endif %}
 
 [glance]
-api_servers = http://{{glance_host}}:9292
+api_servers = {{glance_url}}
 
 [keystone_authtoken]
-auth_url = https://{{keystone_host}}:5000/v3
+auth_url = {{keystone_url}}/v3
 memcached_servers = {{memcached_host}}:11211
 auth_type = password
 project_domain_name = Default
@@ -43,9 +43,9 @@ username = nova
 password = {{nova_user_password}}
 
 [neutron]
-url = http://{{neutron_host}}:9696
+url = {{neutron_url}}
 auth_type = password
-auth_url = https://{{keystone_host}}:5000
+auth_url = {{keystone_url}}
 project_name = service
 project_domain_name = default
 username = neutron
@@ -62,7 +62,7 @@ lock_path = /var/lib/nova/tmp
 
 [placement]
 auth_type = password
-auth_url = https://{{keystone_host}}:5000/v3
+auth_url = {{keystone_url}}/v3
 project_name = service
 project_domain_name = Default
 user_domain_name = Default

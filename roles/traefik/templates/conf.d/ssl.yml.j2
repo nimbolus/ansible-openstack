@@ -1,0 +1,12 @@
+# {{ansible_managed}}
+
+{% if not traefik_acme %}
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: {{req_cert_path}}
+        keyFile: {{req_privatekey_path}}
+{% else %}
+# automated by let's encrypt
+{% endif %}

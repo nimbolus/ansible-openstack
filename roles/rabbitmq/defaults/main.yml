@@ -3,4 +3,4 @@ rabbitmq_management_password: "{{secrets_rabbit_admin_pass}}"
 rabbitmq_user: openstack
 rabbitmq_user_password: "{{secrets_rabbit_pass}}"
 
-rabbitmq_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"
+rabbitmq_host: "{{ansible_nodename}}"

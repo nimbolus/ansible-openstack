@@ -1,6 +1,6 @@
 keystone_admin_password: "{{secrets_admin_pass}}"
 keystone_db_user_password: "{{secrets_keystone_dbpass}}"
-keystone_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"
+keystone_url: "https://{{ansible_nodename}}:5000"
 keystone_freeipa:
   enabled: false
   domain: freeipa
@@ -13,7 +13,7 @@ keystone_freeipa:
   group_filter: ""
 
 keystone_admin_auth:
-  auth_url: https://{{keystone_host}}:5000/v3
+  auth_url: "{{keystone_url}}/v3"
   username: admin
   password: "{{keystone_admin_password}}"
   user_domain_name: Default
