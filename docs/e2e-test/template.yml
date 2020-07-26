@@ -1,0 +1,142 @@
+heat_template_version: 2018-08-31
+
+description: basic openstack e2e test for network, compute and storage
+
+parameters:
+  public_network_id:
+    type: string
+  private_network:
+    type: string
+    default: "192.168.1.0/24"
+  private_network_dhcp_start:
+    type: string
+    default: "192.168.1.100"
+  private_network_dhcp_end:
+    type: string
+    default: "192.168.1.254"
+  dns_nameservers:
+    type: comma_delimited_list
+    default: "9.9.9.9,8.8.8.8"
+  flavor:
+    type: string
+    default: m1.small
+  image:
+    type: string
+    default: fedora-cloud-32
+  volume_type:
+    type: string
+    default: __DEFAULT__
+  ssh_keys:
+    type: comma_delimited_list
+  hostname:
+    type: string
+    default: test.example.com
+  timezone:
+    type: string
+    default: Europe/Berlin
+  availability_zone:
+    type: string
+    default: nova
+
+resources:
+  allow_ssh:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      description: allow incoming SSH and ICMP traffic from anywhere.
+      name:
+        list_join: ["-", [{ get_param: "OS::stack_name" }, "ssh"]]
+      rules:
+        - {
+            direction: ingress,
+            remote_ip_prefix: 0.0.0.0/0,
+            port_range_min: 22,
+            port_range_max: 22,
+            protocol: tcp,
+          }
+        - { direction: ingress, remote_ip_prefix: 0.0.0.0/0, protocol: icmp }
+
+  net:
+    type: OS::Neutron::Net
+    properties:
+      name:
+        list_join: ["-", [{ get_param: "OS::stack_name" }, "net"]]
+
+  subnet:
+    type: OS::Neutron::Subnet
+    depends_on: [net]
+    properties:
+      name:
+        list_join: ["-", [{ get_param: "OS::stack_name" }, "subnet"]]
+      dns_nameservers: { get_param: dns_nameservers }
+      network: { get_resource: net }
+      ip_version: 4
+      cidr: { get_param: private_network }
+      allocation_pools:
+        - {
+            start: { get_param: private_network_dhcp_start },
+            end: { get_param: private_network_dhcp_end },
+          }
+
+  router:
+    type: OS::Neutron::Router
+    properties:
+      external_gateway_info: { "network": { get_param: public_network_id } }
+      name:
+        list_join: ["-", [{ get_param: "OS::stack_name" }, "router"]]
+
+  router_subnet_bridge:
+    type: OS::Neutron::RouterInterface
+    depends_on: [router, subnet]
+    properties:
+      router: { get_resource: router }
+      subnet: { get_resource: subnet }
+
+  root_disk:
+    type: OS::Cinder::Volume
+    properties:
+      name:
+        list_join: ["-", [{ get_param: "OS::stack_name" }, "root-disk"]]
+      size: 20
+      volume_type: { get_param: volume_type }
+      image: { get_param: image }
+      availability_zone: { get_param: availability_zone }
+
+  host:
+    type: OS::Nova::Server
+    depends_on: [port, root_disk, cloud-init-config]
+    properties:
+      name:
+        list_join: ["-", [{ get_param: "OS::stack_name" }, "server"]]
+      user_data_format: RAW
+      user_data: { get_resource: cloud-init-config }
+      block_device_mapping_v2:
+        - device_name: vda
+          volume_id: { get_resource: root_disk }
+          device_type: disk
+      flavor: { get_param: flavor }
+      networks:
+        - port: { get_resource: port }
+      availability_zone: { get_param: availability_zone }
+
+  cloud-init-config:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        hostname: { get_param: hostname }
+        timezone: { get_param: timezone }
+        ssh_authorized_keys: { get_param: ssh_keys }
+
+  port:
+    type: OS::Neutron::Port
+    depends_on: [net, allow_ssh]
+    properties:
+      network: { get_resource: net }
+      security_groups:
+        - { get_resource: allow_ssh }
+
+  floating_ip:
+    type: OS::Neutron::FloatingIP
+    depends_on: [port, router_subnet_bridge]
+    properties:
+      floating_network: { get_param: public_network_id }
+      port_id: { get_resource: port }

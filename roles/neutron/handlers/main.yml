@@ -16,19 +16,19 @@
   systemd:
     name: neutron-dhcp-agent
     state: restarted
-  when: is_network_node and neutron_dhcp_agent
+  when: is_network_node
 
 - name: restart neutron-metadata-agent
   systemd:
     name: neutron-metadata-agent
     state: restarted
-  when: is_network_node and neutron_metadata_agent
+  when: is_network_node
 
 - name: restart neutron-l3-agent
   systemd:
     name: neutron-l3-agent
     state: restarted
-  when: is_network_node and neutron_l3_agent
+  when: is_network_node
 
 - name: restart neutron-linuxbridge-agent
   systemd:

@@ -16,6 +16,7 @@ cinder_rbd_ceph_conf: /etc/ceph/ceph.conf
 cinder_rbd_keyring: /etc/ceph/ceph.client.cinder.keyring
 cinder_rbd_user: cinder
 cinder_rbd_secret_uuid: 095B52A9-EAA7-4472-AF32-99F75F1F3A90
+cinder_nfs_backend_name: nas
 cinder_nfs_nas_host: nas.example.com
 cinder_nfs_nas_share_path: /mnt/tank/cinder
 cinder_nfs_mount_options: null

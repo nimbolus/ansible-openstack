@@ -11,7 +11,7 @@ enabled_backends = {% for p in cinder_lvm_pools %}lvm_{{p.name}}{% if not loop.l
 {% elif cinder_backend == 'rbd' %}
 enabled_backends = {% for p in cinder_rbd_pools %}rbd_{{p.pool}}{% if not loop.last %},{% endif %}{% endfor %}
 {% elif cinder_backend == 'nfs' %}
-enabled_backends = nfs
+enabled_backends = nfs_{{cinder_nfs_backend_name}}
 {% endif %}
 {% endif %}
 
@@ -72,9 +72,9 @@ glance_api_version = 2
 {% endfor %}
 {% elif cinder_backend == 'nfs' %}
 # nfs backends
-[nfs]
+[nfs_{{cinder_nfs_backend_name}}]
 volume_driver = cinder.volume.drivers.nfs.NfsDriver
-volume_backend_name = nfs
+volume_backend_name = {{cinder_nfs_backend_name}}
 nas_host = {{cinder_nfs_nas_host}}
 nas_share_path = {{cinder_nfs_nas_share_path}}
 {% if cinder_nfs_mount_options %}

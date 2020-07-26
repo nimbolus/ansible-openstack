@@ -9,11 +9,7 @@ neutron_nova_user: nova
 neutron_nova_user_password: "{{secrets_nova_pass}}"
 # selinux needs to be disabled for l3 ha, until openstack-selinux-0.8.20 is released
 neutron_l3_ha: false
-
-# enable or disable agents on network nodes
-neutron_l3_agent: true
-neutron_metadata_agent: true
-neutron_dhcp_agent: true
+neutron_path_mtu: null
 
 neutron_url: "http://{{ansible_nodename}}:9696"
 neutron_nova_metadata_host: "{{ansible_nodename}}"

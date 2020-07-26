@@ -1,3 +1,7 @@
+- name: install requirements
+  package:
+    name: tar
+
 - name: download
   unarchive:
     src: "https://github.com/containous/traefik/releases/download/v{{traefik_version}}/traefik_v{{traefik_version}}_linux_amd64.tar.gz"

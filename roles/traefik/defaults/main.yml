@@ -20,18 +20,18 @@ traefik_secrets: []
 
 traefik_services:
   - name: keystone
-    url: "{{keystone_url}}"
+    url: https://controller1:5000
   - name: glance
-    url: "{{glance_url}}"
+    url: http://controller1:9292
   - name: placement
-    url: "{{placement_url}}"
+    url: http://controller1:8778
   - name: nova
-    url: "{{nova_url}}"
+    url: http://controller1:8774
   - name: neutron
-    url: "{{neutron_url}}"
+    url: http://controller1:9696
   - name: cinder
-    url: "{{cinder_url}}"
+    url: http://controller1:8776
   - name: heat
-    url: "{{heat_url}}"
+    url: http://controller1:8004
   - name: heat-cfn
-    url: "{{heat_cfn_url}}"
+    url: http://controller1:8000

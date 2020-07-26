@@ -40,6 +40,7 @@
     name: firewalld
     state: stopped
     enabled: false
+  when: bootstrap_disable_firewalld | bool
 
 - name: add openstack repository
   yum:

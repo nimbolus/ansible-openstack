@@ -1,0 +1,20 @@
+- name: configure layer 3 agent
+  template:
+    src: network_node/l3_agent.ini.j2
+    dest: /etc/neutron/l3_agent.ini
+    backup: true
+  notify: restart neutron-l3-agent
+
+- name: configure dhcp agent
+  template:
+    src: network_node/dhcp_agent.ini.j2
+    dest: /etc/neutron/dhcp_agent.ini
+    backup: true
+  notify: restart neutron-dhcp-agent
+
+- name: configure metadata agent
+  template:
+    src: network_node/metadata_agent.ini.j2
+    dest: /etc/neutron/metadata_agent.ini
+    backup: true
+  notify: restart neutron-metadata-agent
