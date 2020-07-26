@@ -4,6 +4,7 @@
     name: "{{keystone_user}}"
     password: "{{keystone_user_password}}"
     domain: default
+  no_log: true
 
 - name: "add admin role to user {{keystone_user}}"
   os_user_role:

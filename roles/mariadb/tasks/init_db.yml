@@ -15,10 +15,13 @@
     name: "{{db_user}}"
     password: "{{db_user_password}}"
     host: "%"
-    priv: "{{db_user}}.*:ALL"
+    priv: "{{db_name}}.*:ALL"
     login_user: root
     login_password: "{{mariadb_root_password}}"
     login_host: "{{db_host}}"
   delegate_to: "{{db_host}}"
   run_once: true
-  when: db_user is defined and db_user_password is defined
+  no_log: true
+  when: "db_name is defined
+        and db_user is defined
+        and db_user_password is defined"
