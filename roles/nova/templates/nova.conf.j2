@@ -26,7 +26,7 @@ connection = mysql+pymysql://nova:{{nova_db_user_password}}@{{db_host}}/nova_api
 connection = mysql+pymysql://nova:{{nova_db_user_password}}@{{db_host}}/nova
 
 [cinder]
-os_region_name = RegionOne
+os_region_name = {{os_region}}
 {% endif %}
 
 [glance]
@@ -51,7 +51,7 @@ project_domain_name = default
 username = neutron
 user_domain_name = default
 password = {{nova_neutron_user_password}}
-region_name = RegionOne
+region_name = {{os_region}}
 {% if is_controller_node %}
 service_metadata_proxy = true
 metadata_proxy_shared_secret = {{nova_metadata_secret}}
@@ -68,7 +68,7 @@ project_domain_name = Default
 user_domain_name = Default
 username = placement
 password = {{nova_placement_user_password}}
-region_name = RegionOne
+region_name = {{os_region}}
 
 [vnc]
 enabled = true

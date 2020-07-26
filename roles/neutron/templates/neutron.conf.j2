@@ -20,7 +20,7 @@ ha_vrrp_health_check_interval = 5
 connection = mysql+pymysql://neutron:{{neutron_db_user_password}}@{{db_host}}/neutron
 
 [nova]
-region_name = RegionOne
+region_name = {{os_region}}
 auth_url = {{keystone_url}}
 auth_type = password
 username = {{neutron_nova_user}}
@@ -45,3 +45,8 @@ lock_path = /var/lib/neutron/tmp
 
 [privsep]
 thread_pool_size = 1
+
+{% if is_network_node %}
+[agent]
+availability_zone = {{neutron_availability_zone}}
+{% endif %}

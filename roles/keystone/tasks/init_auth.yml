@@ -23,7 +23,7 @@
 - name: "create api endpoints for service {{keystone_service_name}}"
   os_keystone_endpoint:
     auth: "{{keystone_admin_auth}}"
-    region: RegionOne
+    region: "{{os_region}}"
     service: "{{keystone_service_name}}"
     endpoint_interface: "{{item}}"
     url: "{{keystone_service_url}}"

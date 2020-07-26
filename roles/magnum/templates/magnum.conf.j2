@@ -13,7 +13,7 @@ cert_manager_type = x509keypair
 default_docker_volume_type = {{magnum_cinder_volume_type}}
 
 [cinder_client]
-region_name = RegionOne
+region_name = {{os_region}}
 
 [database]
 connection = mysql+pymysql://magnum:{{magnum_db_user_password}}@{{db_host}}/magnum

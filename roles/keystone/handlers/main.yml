@@ -14,4 +14,4 @@
       --bootstrap-admin-url {{keystone_url}}/v3/ \
       --bootstrap-internal-url {{keystone_url}}/v3/ \
       --bootstrap-public-url {{keystone_url}}/v3/ \
-      --bootstrap-region-id RegionOne
+      --bootstrap-region-id {{keystone_bootstrap_region}}

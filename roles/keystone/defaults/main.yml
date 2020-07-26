@@ -1,6 +1,7 @@
 keystone_admin_password: "{{secrets_admin_pass}}"
 keystone_db_user_password: "{{secrets_keystone_dbpass}}"
 keystone_url: "https://{{ansible_nodename}}:5000"
+keystone_bootstrap_region: "{{os_region}}"
 keystone_freeipa:
   enabled: false
   domain: freeipa

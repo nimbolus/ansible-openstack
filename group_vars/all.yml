@@ -2,6 +2,9 @@ management_interface: "{{ansible_default_ipv4.interface}}"
 
 db_root_password: "{{secrets_db_root_pass}}"
 
+os_region: RegionOne
+os_availability_zone: nova
+
 ca_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"
 db_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"
 memcached_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"
