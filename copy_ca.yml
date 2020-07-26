@@ -1,0 +1,27 @@
+- name: copy ca certificate and key to main controller node
+  hosts: controller1
+  become: true
+  vars:
+    ca_dir: /etc/pki/openstack
+    ca_cert_path: ./ca.crt
+    ca_key_path: ./ca.key
+  tasks:
+    - name: create ca directory
+      file:
+        name: "{{item}}"
+        state: directory
+      loop:
+        - "{{ca_dir}}"
+        - "{{ca_dir}}/private"
+        - "{{ca_dir}}/certs"
+
+    - name: copy ca.crt
+      copy:
+        src: "{{ ca_cert_path }}"
+        dest: "{{ ca_dir }}/certs/ca.crt"
+
+    - name: copy ca.key
+      copy:
+        src: "{{ ca_key_path }}"
+        dest: "{{ ca_dir }}/private/ca.key"
+        mode: 0600
