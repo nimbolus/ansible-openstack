@@ -3,7 +3,7 @@
   when: is_controller_node
 
 - name: install
-  yum:
+  package:
     name:
       - openstack-neutron
       - openstack-neutron-ml2
@@ -18,7 +18,7 @@
     - restart neutron-l3-agent
 
 - name: install linuxbridge agent
-  yum:
+  package:
     name:
       - openstack-neutron-linuxbridge
       - ebtables

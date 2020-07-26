@@ -8,7 +8,7 @@
     dest: /etc/yum.repos.d/fluentd.repo
 
 - name: install
-  yum:
+  package:
     update_cache: true
     name: td-agent
 

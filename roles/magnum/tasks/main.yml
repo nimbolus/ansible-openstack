@@ -41,7 +41,7 @@
     domain: "{{magnum_domain.id}}"
 
 - name: install
-  yum:
+  package:
     name:
       - openstack-magnum-api
       - openstack-magnum-conductor

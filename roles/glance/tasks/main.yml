@@ -20,7 +20,7 @@
     keystone_service_url: "{{glance_url}}"
 
 - name: install
-  yum:
+  package:
     name: openstack-glance
     state: "{{package_state | default('present')}}"
   notify:

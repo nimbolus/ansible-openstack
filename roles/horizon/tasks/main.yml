@@ -1,5 +1,5 @@
 - name: install
-  yum:
+  package:
     name: openstack-dashboard
     state: "{{package_state | default('present')}}"
   notify: restart httpd

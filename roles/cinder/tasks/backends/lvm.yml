@@ -1,5 +1,5 @@
 - name: install lvm requirements
-  yum:
+  package:
     name:
     - lvm2
     - device-mapper-persistent-data

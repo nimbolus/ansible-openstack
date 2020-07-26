@@ -1,5 +1,5 @@
 - name: install dependencies
-  yum:
+  package:
     name: unzip
 
 - name: create loki user

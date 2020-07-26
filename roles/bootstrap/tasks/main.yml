@@ -43,7 +43,7 @@
   when: bootstrap_disable_firewalld | bool
 
 - name: add openstack repository
-  yum:
+  package:
     name: "centos-release-openstack-{{bootstrap_openstack_release}}"
 
 - name: upgrade system
@@ -58,7 +58,7 @@
     policy: targeted
 
 - name: install openstack client and selinux support
-  yum:
+  package:
     name: 
       - python-openstackclient
       - openstack-selinux

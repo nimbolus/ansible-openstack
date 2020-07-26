@@ -3,7 +3,7 @@
   when: is_controller_node
 
 - name: install compute
-  yum:
+  package:
     name: openstack-nova-compute
     state: "{{package_state | default('present')}}"
   when: is_compute_node

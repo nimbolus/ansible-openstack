@@ -63,7 +63,7 @@
     name: heat_stack_user
 
 - name: install
-  yum:
+  package:
     name:
       - openstack-heat-api
       - openstack-heat-api-cfn

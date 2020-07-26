@@ -8,7 +8,7 @@
     dest: /etc/yum.repos.d/grafana.repo
 
 - name: install
-  yum:
+  package:
     name: grafana
 
 - name: configure

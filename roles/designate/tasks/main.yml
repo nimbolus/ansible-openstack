@@ -22,7 +22,7 @@
       - public
 
 - name: install
-  yum:
+  package:
     name:
       - openstack-designate-api
       - openstack-designate-central

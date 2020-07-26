@@ -20,7 +20,7 @@
     keystone_service_url: "{{placement_url}}"
 
 - name: install
-  yum:
+  package:
     name: openstack-placement-api
     state: "{{package_state | default('present')}}"
   notify:

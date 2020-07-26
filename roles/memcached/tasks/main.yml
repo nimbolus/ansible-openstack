@@ -1,5 +1,5 @@
 - name: install
-  yum:
+  package:
     name:
       - memcached
       - python-memcached

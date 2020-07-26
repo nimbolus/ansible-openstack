@@ -34,7 +34,7 @@
     keystone_service_url: "{{nova_url}}/v2.1"
 
 - name: install controller
-  yum:
+  package:
     name:
       - openstack-nova-api
       - openstack-nova-conductor
