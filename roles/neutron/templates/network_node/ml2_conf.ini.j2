@@ -15,5 +15,8 @@ flat_networks = provider
 [ml2_type_vxlan]
 vni_ranges = 1:1000
 
+[ml2_type_vlan]
+network_vlan_ranges = provider:2:10
+
 [securitygroup]
 enable_ipset = true

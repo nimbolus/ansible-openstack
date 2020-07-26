@@ -45,7 +45,9 @@
     src: network_node/ml2_conf.ini.j2
     dest: /etc/neutron/plugins/ml2/ml2_conf.ini
     backup: true
-  notify: restart neutron-server
+  notify:
+    - init neutron db
+    - restart neutron-server
 
 - name: configure network node
   include: network_node.yml
