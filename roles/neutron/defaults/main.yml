@@ -1,6 +1,6 @@
 neutron_db_user_password: "{{secrets_neutron_dbpass}}"
 neutron_user_password: "{{secrets_neutron_pass}}"
-neutron_provider_interface: "{{provider_interface}}"
+neutron_provider_interface: "{{provider_interface | default('')}}"
 neutron_overlay_ip_address: "{{management_ipv4.address}}"
 neutron_metadata_secret: "{{secrets_metadata_secret}}"
 neutron_rabbitmq_user: openstack
