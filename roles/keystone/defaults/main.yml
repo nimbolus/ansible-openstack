@@ -1,6 +1,8 @@
 keystone_admin_password: "{{secrets_admin_pass}}"
 keystone_db_user_password: "{{secrets_keystone_dbpass}}"
 keystone_url: "https://{{ansible_nodename}}:5000"
+keystone_admin_url: "{{keystone_url}}"
+keystone_public_url: "{{keystone_url}}"
 keystone_bootstrap_region: "{{os_region}}"
 keystone_freeipa:
   enabled: false
@@ -25,3 +27,7 @@ keystone_service_endpoint_interfaces:
   - public
   - internal
   - admin
+
+keystone_overwride_admin_with_public_url: false
+keystone_service_public_url: {}
+  # <service_name>: <url> 

@@ -1,0 +1,7 @@
+{%- if item == 'public' and keystone_service_name in keystone_service_public_url -%}
+{{keystone_service_public_url[keystone_service_name]}}{{keystone_service_path | default('')}}
+{%- elif item == 'admin' and keystone_service_name in keystone_service_public_url and keystone_overwride_admin_with_public_url -%}
+{{keystone_service_public_url[keystone_service_name]}}{{keystone_service_path | default('')}}
+{%- else -%}
+{{keystone_service_url}}{{keystone_service_path | default('')}}
+{%- endif -%}

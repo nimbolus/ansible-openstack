@@ -24,10 +24,11 @@ connection = mysql+pymysql://nova:{{nova_db_user_password}}@{{db_host}}/nova_api
 
 [database]
 connection = mysql+pymysql://nova:{{nova_db_user_password}}@{{db_host}}/nova
+{% endif %}
 
 [cinder]
 os_region_name = {{os_region}}
-{% endif %}
+catalog_info = volumev3::internalURL
 
 [glance]
 api_servers = {{glance_url}}

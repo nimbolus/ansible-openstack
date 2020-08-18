@@ -17,7 +17,8 @@
     keystone_service_name: magnum
     keystone_service_description: OpenStack Container Infrastructure Management Service
     keystone_service_type: container-infra
-    keystone_service_url: "{{magnum_url}}/v1"
+    keystone_service_url: "{{magnum_url}}"
+    keystone_service_path: /v1
 
 - name: create domain
   os_keystone_domain:

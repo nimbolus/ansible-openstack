@@ -18,7 +18,8 @@
     keystone_service_name: cinderv2
     keystone_service_description: OpenStack Block Storage
     keystone_service_type: volumev2
-    keystone_service_url: "{{cinder_url}}/v2/%(project_id)s"
+    keystone_service_url: "{{cinder_url}}"
+    keystone_service_path: /v2/%(project_id)s
 
 - name: init keystone v3
   include_role:
@@ -30,4 +31,5 @@
     keystone_service_name: cinderv3
     keystone_service_description: OpenStack Block Storage
     keystone_service_type: volumev3
-    keystone_service_url: "{{cinder_url}}/v3/%(project_id)s"
+    keystone_service_url: "{{cinder_url}}"
+    keystone_service_path: /v3/%(project_id)s

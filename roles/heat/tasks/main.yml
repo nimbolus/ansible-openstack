@@ -17,7 +17,8 @@
     keystone_service_name: heat
     keystone_service_description: Orchestration
     keystone_service_type: orchestration
-    keystone_service_url: "{{heat_url}}/v1/%(tenant_id)s"
+    keystone_service_url: "{{heat_url}}"
+    keystone_service_path: /v1/%(tenant_id)s
 
 - name: init keystone heat-cfn service
   include_role:
@@ -29,7 +30,8 @@
     keystone_service_name: heat-cfn
     keystone_service_description: Orchestration
     keystone_service_type: cloudformation
-    keystone_service_url: "{{heat_cfn_url}}/v1"
+    keystone_service_url: "{{heat_cfn_url}}"
+    keystone_service_path: /v1
 
 - name: create domain
   os_keystone_domain:

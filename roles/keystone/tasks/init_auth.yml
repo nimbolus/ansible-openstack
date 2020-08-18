@@ -26,5 +26,5 @@
     region: "{{os_region}}"
     service: "{{keystone_service_name}}"
     endpoint_interface: "{{item}}"
-    url: "{{keystone_service_url}}"
+    url: "{{lookup('template', 'service_url.j2') | replace('\n', '')}}"
   loop: "{{keystone_service_endpoint_interfaces}}"

@@ -1,7 +1,7 @@
 # {{ansible_managed}}
 
 [DEFAULT]
-public_endpoint = {{keystone_url}}
+public_endpoint = {{keystone_public_url}}
 
 [database]
 connection = mysql+pymysql://keystone:{{keystone_db_user_password}}@{{db_host}}/keystone

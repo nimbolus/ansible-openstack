@@ -17,7 +17,8 @@
     keystone_service_name: designate
     keystone_service_description: DNS
     keystone_service_type: dns
-    keystone_service_url: "{{designate_url}}/"
+    keystone_service_url: "{{designate_url}}"
+    keystone_service_path: /
     keystone_service_endpoint_interfaces:
       - public
 
