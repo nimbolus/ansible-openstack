@@ -2,7 +2,7 @@
 
 http:
   services:
-{% for s in traefik_services %}
+{% for s in traefik_services + traefik_additional_services %}
     {{s.name}}:
       loadBalancer:
         servers:
@@ -10,7 +10,7 @@ http:
 {% endfor %}
 
   routers:
-{% for s in traefik_services %}
+{% for s in traefik_services + traefik_additional_services %}
     {{s.name}}:
       rule: "Host(`{{s.name}}.{{traefik_domain}}`)"
 {% if s.enable_websockets is defined and s.enable_websockets %}
