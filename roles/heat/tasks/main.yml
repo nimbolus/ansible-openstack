@@ -36,7 +36,6 @@
     auth: "{{keystone_admin_auth}}"
     name: heat
     description: Stack projects and users
-  register: heat_domain
 
 - name: create admin user
   os_user:
@@ -50,7 +49,7 @@
     auth: "{{keystone_admin_auth}}"
     user: heat_domain_admin
     role: admin
-    domain: "{{heat_domain.id}}"
+    domain: heat
 
 - name: create heat stack owner role
   os_keystone_role:

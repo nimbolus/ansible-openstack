@@ -24,7 +24,6 @@
     auth: "{{keystone_admin_auth}}"
     name: magnum
     description: Owns users and projects created by magnum
-  register: magnum_domain
 
 - name: create admin user
   os_user:
@@ -38,7 +37,7 @@
     auth: "{{keystone_admin_auth}}"
     user: magnum_domain_admin
     role: admin
-    domain: "{{magnum_domain.id}}"
+    domain: magnum
 
 - name: install
   package:
