@@ -13,6 +13,10 @@ http:
 {% for s in traefik_services %}
     {{s.name}}:
       rule: "Host(`{{s.name}}.{{traefik_domain}}`)"
+{% if s.enable_websockets is defined and s.enable_websockets %}
+      middlewares:
+        - https-forward-header
+{% endif %}
       service: {{s.name}}
       entryPoints:
         - web-secure
@@ -20,3 +24,9 @@ http:
       tls: {}
 {% endif %}
 {% endfor %}
+
+  middlewares:
+    https-forward-header:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"

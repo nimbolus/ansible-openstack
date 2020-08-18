@@ -5,6 +5,8 @@ traefik_domain: example.com
 traefik_controller_domain: controller.{{traefik_domain}}
 traefik_horizon_domain: horizon.{{traefik_domain}}
 traefik_httpd_url: http://localhost:8081
+# skip ssl verification for backends
+traefik_insecure_skip_verify: true
 # default is admin / admin
 traefik_dashboard_users:
   - admin:$apr1$bpcAEgIt$jdv/yN9/LyKWZwxbbmyA2/
@@ -20,18 +22,23 @@ traefik_secrets: []
 
 traefik_services:
   - name: keystone
-    url: https://controller1:5000
+    url: https://localhost:5000
   - name: glance
-    url: http://controller1:9292
+    url: http://localhost:9292
   - name: placement
-    url: http://controller1:8778
+    url: http://localhost:8778
   - name: nova
-    url: http://controller1:8774
+    url: http://localhost:8774
+  - name: nova-novnc
+    url: https://localhost:6080
+    enable_websockets: true
   - name: neutron
-    url: http://controller1:9696
+    url: http://localhost:9696
   - name: cinder
-    url: http://controller1:8776
+    url: http://localhost:8776
   - name: heat
-    url: http://controller1:8004
+    url: http://localhost:8004
   - name: heat-cfn
-    url: http://controller1:8000
+    url: http://localhost:8000
+
+traefik_additional_services: []

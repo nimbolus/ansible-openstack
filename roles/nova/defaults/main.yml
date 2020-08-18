@@ -7,7 +7,6 @@ nova_rabbitmq_user_password: "{{secrets_rabbit_pass}}"
 nova_ip_address: "{{management_ipv4.address}}"
 nova_neutron_user_password: "{{secrets_neutron_pass}}"
 nova_metadata_secret: "{{secrets_metadata_secret}}"
-nova_novnc_host: "{{ansible_nodename}}"
 nova_ephemeral_storage_backend: local # local and rbd are supported 
 nova_rbd_ceph_conf: /etc/ceph/ceph.conf
 nova_rbd_keyring_conf: /etc/ceph/ceph.client.nova.keyring
@@ -19,6 +18,7 @@ nova_libvirt_cpu_model_extra_flags: null
 nova_nested_guest_support: false
 
 nova_url: "http://{{ansible_nodename}}:8774"
+nova_novnc_url: "https://{{ansible_nodename}}:6080"
 
 nova_flavors:
   - name: m1.tiny

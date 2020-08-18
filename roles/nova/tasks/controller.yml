@@ -20,6 +20,7 @@
     login_host: "{{mariadb_bind_address}}"
   delegate_to: "{{db_host}}"
   run_once: true
+  no_log: true
 
 - name: init keystone nova
   include_role:

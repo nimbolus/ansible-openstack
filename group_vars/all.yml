@@ -8,11 +8,11 @@ memcached_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"
 rabbitmq_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"
 logging_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"
 neutron_nova_metadata_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"
-nova_novnc_host: "{{hostvars[groups.controller_nodes[0]].ansible_nodename}}"
 
 keystone_url: "https://{{hostvars[groups.controller_nodes[0]].ansible_nodename}}:5000"
 glance_url: "http://{{hostvars[groups.controller_nodes[0]].ansible_nodename}}:9292"
 neutron_url: "http://{{hostvars[groups.controller_nodes[0]].ansible_nodename}}:9696"
+nova_novnc_url: "https://{{hostvars[groups.controller_nodes[0]].ansible_nodename}}:6080"
 
 is_controller_node: "{{'controller_nodes' in group_names}}"
 is_compute_node: "{{'compute_nodes' in group_names}}"

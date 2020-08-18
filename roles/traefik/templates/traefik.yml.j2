@@ -9,6 +9,9 @@ api:
 
 accessLog: {}
 
+serversTransport:
+  insecureSkipVerify: "{{traefik_insecure_skip_verify | lower}}"
+
 entrypoints:
   web:
     address: ":80"
