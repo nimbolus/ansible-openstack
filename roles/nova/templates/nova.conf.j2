@@ -14,6 +14,9 @@ ssl_only = true
 cert = {{ req_cert_path }}
 key = {{ req_privatekey_path }}
 {% endif %}
+{% if nova_default_schedule_zone %}
+default_schedule_zone = {{nova_default_schedule_zone}}
+{% endif %}
 
 [api]
 auth_strategy = keystone
@@ -29,6 +32,7 @@ connection = mysql+pymysql://nova:{{nova_db_user_password}}@{{db_host}}/nova
 [cinder]
 os_region_name = {{os_region}}
 catalog_info = volumev3::internalURL
+cross_az_attach = {{nova_cross_az_attach | lower}}
 
 [glance]
 api_servers = {{glance_url}}
@@ -91,5 +95,24 @@ images_rbd_pool = {{nova_rbd_pool}}
 images_rbd_ceph_conf = {{nova_rbd_ceph_conf}}
 rbd_user = {{nova_rbd_user}}
 rbd_secret_uuid = {{nova_rbd_secret_uuid}}
+{% endif %}
+{% endif %}
+
+{%- set all_devices = groups.compute_nodes | map('extract', hostvars) | selectattr('nova_pci_devices', 'defined') | map(attribute='nova_pci_devices') | flatten %}
+{% if is_controller_node and all_devices | length > 0 or is_compute_node and nova_pci_devices | length > 0 %}
+
+[pci]
+{% if is_compute_node %}
+passthrough_whitelist = {% for d in nova_pci_devices %}{ "vendor_id":"{{d.vendor_id}}", "product_id":"{{d.product_id}}" }{% if not loop.last %},{% endif%}{% endfor %}
+
+alias = {% for d in nova_pci_devices %}{ "vendor_id":"{{d.vendor_id}}", "product_id":"{{d.product_id}}", "device_type":"{{d.device_type}}", "name":"{{d.name}}" }{% if not loop.last %},{% endif%}{% endfor %}
+
+{% elif is_controller_node %}
+alias = {% for d in all_devices %}{ "vendor_id":"{{d.vendor_id}}", "product_id":"{{d.product_id}}", "device_type":"{{d.device_type}}", "name":"{{d.name}}", "numa_policy":"preferred" }{% if not loop.last %},{% endif%}{% endfor %}
+
+
+[filter_scheduler]
+enabled_filters = AvailabilityZoneFilter,ComputeFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,ServerGroupAntiAffinityFilter,ServerGroupAffinityFilter,PciPassthroughFilter
+available_filters = nova.scheduler.filters.all_filters
 {% endif %}
 {% endif %}

@@ -16,6 +16,14 @@ nova_rbd_pool: vms
 nova_libvirt_cpu_mode: host-model
 nova_libvirt_cpu_model_extra_flags: null
 nova_nested_guest_support: false
+nova_default_schedule_zone: null
+nova_cross_az_attach: true
+# https://docs.openstack.org/nova/latest/admin/pci-passthrough.html
+nova_pci_devices: []
+  # - name: ethernet-nic
+  #   vendor_id: "8888"
+  #   product_id: "8888"
+  #   device_type: type-PCI 
 
 nova_url: "http://{{ansible_nodename}}:8774"
 nova_novnc_url: "https://{{ansible_nodename}}:6080"
