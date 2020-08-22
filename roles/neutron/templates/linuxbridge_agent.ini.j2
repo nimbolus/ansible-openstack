@@ -1,6 +1,11 @@
 # {{ansible_managed}}
 
-{% if is_network_node and neutron_provider_interface != '' %}
+{% set all_networks = neutron_provider_flat_networks + neutron_provider_vlan_networks %}
+{% if is_network_node and all_networks | length > 0 %}
+[linux_bridge]
+physical_interface_mappings = {% for n in all_networks %}{{n.name}}:{{n.interface}}{% if not loop.last %},{% endif %}{% endfor %}
+
+{% elif is_network_node and neutron_provider_interface != '' %}
 [linux_bridge]
 physical_interface_mappings = provider:{{neutron_provider_interface}}
 {% endif %}

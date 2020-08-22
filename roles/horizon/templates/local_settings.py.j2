@@ -52,7 +52,7 @@ OPENSTACK_NEUTRON_NETWORK = {
     'enable_distributed_router': False,
     'enable_ha_router': False,
     'enable_fip_topology_check': True,
-    'physical_networks': ['provider'],
+    'physical_networks': [{{ horizon_physical_networks | map('to_json') | join(', ') }}],
 }
 OPENSTACK_HEAT_STACK = {
     'enable_user_pass': True,

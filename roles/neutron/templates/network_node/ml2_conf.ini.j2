@@ -9,14 +9,24 @@ extension_drivers = port_security
 path_mtu = {{neutron_path_mtu}}
 {% endif %}
 
+{% set all_flat_networks = groups.network_nodes | map('extract', hostvars) | selectattr('neutron_provider_flat_networks', 'defined') | map(attribute='neutron_provider_flat_networks') | flatten | groupby('name') %}
+{% set all_vlan_networks = groups.network_nodes | map('extract', hostvars) | selectattr('neutron_provider_vlan_networks', 'defined') | map(attribute='neutron_provider_vlan_networks') | flatten | groupby('name') %}
+{% if all_flat_networks | length > 0 %}
+[ml2_type_flat]
+flat_networks = {% for n in all_flat_networks %}{{n[1][0]['name']}}{% if not loop.last %},{% endif %}{% endfor %}
+
+{% elif all_vlan_networks | length == 0 %}
 [ml2_type_flat]
 flat_networks = provider
+{% endif %}
 
 [ml2_type_vxlan]
 vni_ranges = 1:1000
 
+{% if all_vlan_networks | length > 0 %}
 [ml2_type_vlan]
-network_vlan_ranges = provider:2:10
+network_vlan_ranges = {% for n in all_vlan_networks %}{{n[1][0]['name']}}:{{n[1][0]['vlan_range']}}{% if not loop.last %},{% endif %}{% endfor %}
+{% endif %}
 
 [securitygroup]
 enable_ipset = true
