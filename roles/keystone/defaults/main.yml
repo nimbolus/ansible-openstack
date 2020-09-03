@@ -4,16 +4,15 @@ keystone_url: "https://{{ansible_nodename}}:5000"
 keystone_admin_url: "{{keystone_url}}"
 keystone_public_url: "{{keystone_url}}"
 keystone_bootstrap_region: "{{os_region}}"
-keystone_freeipa:
-  enabled: false
-  domain: freeipa
-  # freeipa uses tls, so make sure you add the ca certificate to trust anchors
-  url: ldap://ipa1.example.com
-  uid: openstack
-  password: "{{secrets_ldap_pass}}"
-  suffix: dc=example,dc=com
-  user_filter: (memberof=cn=openstack-users,cn=groups,cn=accounts,dc=example,dc=com)
-  group_filter: ""
+keystone_freeipa_servers: []
+  # - domain: example
+  #   # freeipa uses tls, so make sure you add the ca certificate to trust anchors
+  #   url: ldap://ipa1.example.com
+  #   user: uid=openstack,cn=users,cn=accounts,dc=example,dc=com
+  #   password: "{{secrets_ldap_pass}}"
+  #   suffix: dc=example,dc=com
+  #   user_filter: (memberof=cn=openstack-users,cn=groups,cn=accounts,dc=example,dc=com)
+  #   group_filter: ""
 
 keystone_admin_auth:
   auth_url: "{{keystone_url}}/v3"

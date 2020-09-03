@@ -2,24 +2,24 @@
 driver = ldap
 
 [ldap]
-url = {{keystone_freeipa.url}}
+url = {{item.url}}
 use_tls = true
-user = uid={{keystone_freeipa.uid}},cn=users,cn=accounts,{{keystone_freeipa.suffix}}
-password = {{keystone_freeipa.password}}
-suffix = {{keystone_freeipa.suffix}}
+user = {{item.user}}
+password = {{item.password}}
+suffix = {{item.suffix}}
 query_scope = sub
 
-user_tree_dn = cn=users,cn=accounts,{{keystone_freeipa.suffix}}
+user_tree_dn = cn=users,cn=accounts,{{item.suffix}}
 user_objectclass = inetOrgPerson
-user_filter = {{keystone_freeipa.user_filter}}
+user_filter = {{item.user_filter}}
 user_id_attribute = ipaUniqueID
 user_name_attribute = uid
 user_mail_attribute = mail
 user_pass_attribute = userPassword
 
-group_tree_dn = cn=groups,cn=accounts,{{keystone_freeipa.suffix}}
+group_tree_dn = cn=groups,cn=accounts,{{item.suffix}}
 group_objectclass = groupOfNames
-group_filter = {{keystone_freeipa.group_filter}}
+group_filter = {{item.group_filter}}
 group_id_attribute = ipaUniqueID
 group_name_attribute = cn
 group_member_attribute = member

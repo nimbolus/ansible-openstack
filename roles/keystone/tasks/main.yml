@@ -36,13 +36,13 @@
     group: keystone
     mode: 0750
 
-- name: configure freeipa domain
+- name: configure freeipa domains
   template:
     src: keystone.freeipa.conf.j2
-    dest: /etc/keystone/domains/keystone.{{keystone_freeipa.domain}}.conf
+    dest: /etc/keystone/domains/keystone.{{item.domain}}.conf
     group: keystone
     mode: 0640
-  when: keystone_freeipa.enabled
+  loop: "{{keystone_freeipa_servers}}"
   notify: bootstrap keystone
 
 - name: flush handlers
@@ -85,6 +85,6 @@
 - name: create freeipa domain
   os_keystone_domain:
     auth: "{{keystone_admin_auth}}"
-    name: "{{keystone_freeipa.domain}}"
-    description: "FreeIPA {{keystone_freeipa.domain}}"
-  when: keystone_freeipa.enabled
+    name: "{{item.domain}}"
+    description: "FreeIPA {{item.domain}}"
+  loop: "{{keystone_freeipa_servers}}"
