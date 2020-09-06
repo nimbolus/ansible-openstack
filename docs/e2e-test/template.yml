@@ -60,6 +60,9 @@ resources:
     properties:
       name:
         list_join: ["-", [{ get_param: "OS::stack_name" }, "net"]]
+      value_specs:
+        availability_zone_hints:
+          - { get_param: availability_zone }
 
   subnet:
     type: OS::Neutron::Subnet
@@ -83,6 +86,9 @@ resources:
       external_gateway_info: { "network": { get_param: public_network_id } }
       name:
         list_join: ["-", [{ get_param: "OS::stack_name" }, "router"]]
+      value_specs:
+        availability_zone_hints: 
+          - { get_param: availability_zone }
 
   router_subnet_bridge:
     type: OS::Neutron::RouterInterface

@@ -5,22 +5,26 @@
 
 - name: configure provider interface
   lineinfile:
-    path: "/etc/sysconfig/network-scripts/ifcfg-{{provider_interface}}"
-    line: "{{item.option}}={{item.value}}"
-    regexp: "^{{item.option}}"
-  loop:
-    - option: BOOTPROTO
-      value: "none"
-    - option: ONBOOT
-      value: "yes"
-    - option: IPV4_FAILURE_FATAL
-      value: "no"
-    - option: IPV6INIT
-      value: "no"
-    - option: IPV6_AUTOCONF
-      value: "no"
-    - option: IPV6_FAILURE_FATAL
-      value: "no"
+    path: "/etc/sysconfig/network-scripts/ifcfg-{{item[0].interface}}"
+    line: "{{item[1].option}}={{item[1].value}}"
+    regexp: "^{{item[1].option}}"
+  with_nested:
+    - "{{neutron_provider_flat_networks + neutron_provider_vlan_networks}}"
+    - "{{settings}}"
+  vars:
+    settings:
+      - option: BOOTPROTO
+        value: "none"
+      - option: ONBOOT
+        value: "yes"
+      - option: IPV4_FAILURE_FATAL
+        value: "no"
+      - option: IPV6INIT
+        value: "no"
+      - option: IPV6_AUTOCONF
+        value: "no"
+      - option: IPV6_FAILURE_FATAL
+        value: "no"
   when: is_network_node
 
 - name: disable network manager
