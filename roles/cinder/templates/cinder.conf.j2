@@ -57,6 +57,9 @@ volume_group = {{p.vg}}
 volume_backend_name = {{p.name}}
 target_protocol = iscsi
 target_helper = lioadm
+{% if cinder_lvm_iscsi_ip_address %}
+target_ip_address = {{cinder_lvm_iscsi_ip_address}}
+{% endif %}
 
 {% endfor %}
 {% elif cinder_backend == 'rbd' %}

@@ -7,6 +7,7 @@ cinder_default_availability_zone: "{{os_availability_zone}}"
 cinder_backend: lvm # lvm, rbd and nfs are supported
 # see https://docs.openstack.org/cinder/ussuri/install/cinder-storage-install-rdo.html for how to use the filter
 cinder_lvm_filter: '"a|^/dev/sd[a-z][0-9]$|", "r/.*/"'
+cinder_lvm_iscsi_ip_address: null
 cinder_lvm_pools: []
   # - name: local-ssd
   #   vg: cinder-volumes
