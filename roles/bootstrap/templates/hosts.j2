@@ -4,5 +4,5 @@
 # {{ansible_managed}}
 
 {% for node in groups.openstack %}
-{{hostvars[node].management_ipv4.address}} {{hostvars[node].ansible_nodename}} {{hostvars[node].ansible_hostname}}
+{{hostvars[node].management_ipv4.address}} {{hostvars[node].ansible_nodename}}
 {% endfor %}
