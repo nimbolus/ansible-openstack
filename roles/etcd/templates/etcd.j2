@@ -1,7 +1,7 @@
 # {{ansible_managed}}
 
 #[Member]
-ETCD_NAME="{{ansible_hostname}}"
+ETCD_NAME="{{ansible_nodename}}"
 ETCD_DATA_DIR="/var/lib/etcd"
 ETCD_LISTEN_PEER_URLS="http://0.0.0.0:2380"
 ETCD_LISTEN_CLIENT_URLS="http://{{hostvars[inventory_hostname][etcd_listen_interface].address}}:2379"
@@ -9,6 +9,6 @@ ETCD_LISTEN_CLIENT_URLS="http://{{hostvars[inventory_hostname][etcd_listen_inter
 #[Clustering]
 ETCD_INITIAL_ADVERTISE_PEER_URLS="http://{{ansible_nodename}}:2380"
 ETCD_ADVERTISE_CLIENT_URLS="http://{{ansible_nodename}}:2379"
-ETCD_INITIAL_CLUSTER="{% for s in etcd_servers %}{{hostvars[s].ansible_hostname}}=http://{{hostvars[s][etcd_listen_interface].address}}:2380{% if not loop.last %},{% endif %}{% endfor %}"
+ETCD_INITIAL_CLUSTER="{% for s in etcd_servers %}{{hostvars[s].ansible_nodename}}=http://{{hostvars[s][etcd_listen_interface].address}}:2380{% if not loop.last %},{% endif %}{% endfor %}"
 ETCD_INITIAL_CLUSTER_TOKEN="{{etcd_cluster_token}}"
 ETCD_INITIAL_CLUSTER_STATE="new"

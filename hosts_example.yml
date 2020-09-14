@@ -2,10 +2,8 @@ all:
   hosts:
     controller01:
       management_interface: eth1
-      provider_interface: eth2
     compute01:
       management_interface: eth1
-      provider_interface: eth2
   children:
     openstack:
       children:

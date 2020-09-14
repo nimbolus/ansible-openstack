@@ -15,9 +15,6 @@ path_mtu = {{neutron_path_mtu}}
 [ml2_type_flat]
 flat_networks = {% for n in all_flat_networks %}{{n[1][0]['name']}}{% if not loop.last %},{% endif %}{% endfor %}
 
-{% elif all_vlan_networks | length == 0 %}
-[ml2_type_flat]
-flat_networks = provider
 {% endif %}
 
 [ml2_type_vxlan]
@@ -26,6 +23,7 @@ vni_ranges = 1:1000
 {% if all_vlan_networks | length > 0 %}
 [ml2_type_vlan]
 network_vlan_ranges = {% for n in all_vlan_networks %}{{n[1][0]['name']}}:{{n[1][0]['vlan_range']}}{% if not loop.last %},{% endif %}{% endfor %}
+
 {% endif %}
 
 [securitygroup]

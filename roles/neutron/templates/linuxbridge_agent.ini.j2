@@ -5,9 +5,6 @@
 [linux_bridge]
 physical_interface_mappings = {% for n in all_networks %}{{n.name}}:{{n.interface}}{% if not loop.last %},{% endif %}{% endfor %}
 
-{% elif is_network_node and neutron_provider_interface != '' %}
-[linux_bridge]
-physical_interface_mappings = provider:{{neutron_provider_interface}}
 {% endif %}
 
 [securitygroup]

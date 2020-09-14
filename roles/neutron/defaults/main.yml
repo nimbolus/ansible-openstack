@@ -1,6 +1,5 @@
 neutron_db_user_password: "{{secrets_neutron_dbpass}}"
 neutron_user_password: "{{secrets_neutron_pass}}"
-neutron_provider_interface: "{{provider_interface | default('')}}"
 neutron_provider_flat_networks: []
   # - name: provider1
   #   interface: eth0
