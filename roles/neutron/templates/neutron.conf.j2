@@ -9,6 +9,7 @@ allow_overlapping_ips = true
 notify_nova_on_port_status_changes = true
 notify_nova_on_port_data_changes = true
 default_availability_zones = {{neutron_default_availability_zones}}
+dns_domain = {{neutron_dns_domain}}
 {% if neutron_l3_ha %}
 l3_ha = true
 max_l3_agents_per_router = 2

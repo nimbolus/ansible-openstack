@@ -20,6 +20,7 @@ default_schedule_zone = {{nova_default_schedule_zone}}
 
 [api]
 auth_strategy = keystone
+dhcp_domain = {{nova_dhcp_domain}}
 
 {% if is_controller_node %}
 [api_database]

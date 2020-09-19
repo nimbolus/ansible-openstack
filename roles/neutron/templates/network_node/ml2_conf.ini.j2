@@ -4,7 +4,8 @@
 type_drivers = flat,vlan,vxlan
 tenant_network_types = vxlan
 mechanism_drivers = linuxbridge,l2population
-extension_drivers = port_security
+extension_drivers = port_security{% for d in neutron_ml2_extension_drivers %},{{d}}{% endfor %}
+
 {% if neutron_path_mtu %}
 path_mtu = {{neutron_path_mtu}}
 {% endif %}

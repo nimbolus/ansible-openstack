@@ -18,6 +18,7 @@ nova_libvirt_cpu_model_extra_flags: null
 nova_nested_guest_support: false
 nova_default_schedule_zone: null
 nova_cross_az_attach: true
+nova_dhcp_domain: novalocal
 # https://docs.openstack.org/nova/latest/admin/pci-passthrough.html
 nova_pci_devices: []
   # - name: ethernet-nic
