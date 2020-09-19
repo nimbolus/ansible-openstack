@@ -3,11 +3,6 @@
   args:
     warn: false
 
-- name: init designate pools
-  shell: su -s /bin/sh -c "designate-manage pool update" designate
-  args:
-    warn: false
-
 - name: restart named
   systemd:
     name: named
@@ -37,3 +32,8 @@
   systemd:
     name: designate-mdns
     state: restarted
+
+- name: init designate pools
+  shell: su -s /bin/sh -c "designate-manage pool update" designate
+  args:
+    warn: false
