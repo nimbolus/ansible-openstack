@@ -5,8 +5,8 @@ include "/etc/named.rfc1912.zones";
 include "/etc/named.root.key";
 
 options {
-    listen-on    port 53 { 127.0.0.1; {{ansible_default_ipv4.address}}; };
-    listen-on-v6 port 53 { ::1; {% if ansible_default_ipv6 %}{{ansible_default_ipv6.address}};{% endif %}};
+    listen-on    port 53 { 127.0.0.1; {% if designate_named_ipv4_listen_address %}{{designate_named_ipv4_listen_address}}; {% endif %}};
+    listen-on-v6 port 53 { ::1; {% if designate_named_ipv6_listen_address %}{{designate_named_ipv6_listen_address}}; {% endif %}};
     directory    "/var/named";
 
     dump-file          "/var/named/data/cache_dump.db";

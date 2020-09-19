@@ -7,5 +7,7 @@ designate_recursion: false
 designate_forwarders:
   - 8.8.8.8
   - 8.8.4.4
+designate_named_ipv4_listen_address: "{{ansible_default_ipv4.address}}"
+designate_named_ipv6_listen_address: "{{ansible_default_ipv6.address | default(null)}}"
 
 designate_url: "http://{{ansible_nodename}}:9001"
