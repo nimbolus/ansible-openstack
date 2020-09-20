@@ -37,6 +37,9 @@ parameters:
   availability_zone:
     type: string
     default: nova
+  config_drive:
+    type: boolean
+    default: false
 
 resources:
   allow_ssh:
@@ -120,6 +123,7 @@ resources:
           volume_id: { get_resource: root_disk }
           device_type: disk
       flavor: { get_param: flavor }
+      config_drive: { get_param: config_drive }
       networks:
         - port: { get_resource: port }
       availability_zone: { get_param: availability_zone }
