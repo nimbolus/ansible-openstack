@@ -4,6 +4,7 @@ keystone_url: "https://{{ansible_nodename}}:5000"
 keystone_admin_url: "{{keystone_url}}"
 keystone_public_url: "{{keystone_url}}"
 keystone_bootstrap_region: "{{os_region}}"
+keystone_token_expiration: 3600
 keystone_freeipa_servers: []
   # - domain: example
   #   # freeipa uses tls, so make sure you add the ca certificate to trust anchors

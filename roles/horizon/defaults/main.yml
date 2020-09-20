@@ -4,3 +4,4 @@ horizon_allowed_hosts:
   - "{{ansible_nodename}}"
 horizon_physical_networks:
   - provider
+horizon_session_timeout: 3600

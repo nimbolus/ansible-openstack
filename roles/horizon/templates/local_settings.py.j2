@@ -13,6 +13,7 @@ SECRET_KEY='{{horizon_secret_key}}'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 OPENSTACK_HOST = "{{horizon_host}}"
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_TIMEOUT = {{horizon_session_timeout}}
 CACHES = {
     'default': {
          'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
