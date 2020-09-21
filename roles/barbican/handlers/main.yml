@@ -1,0 +1,4 @@
+- name: init barbican db
+  shell: su -s /bin/sh -c "barbican-manage db upgrade" barbican
+  args:
+    warn: false

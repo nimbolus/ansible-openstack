@@ -1,0 +1,16 @@
+# {{ansible_managed}}
+
+[DEFAULT]
+sql_connection = mysql+pymysql://barbican:{{barbican_db_user_password}}@{{db_host}}/barbican
+transport_url = rabbit://{{barbican_rabbitmq_user}}:{{barbican_rabbitmq_user_password}}@{{rabbitmq_host}}
+
+[keystone_authtoken]
+auth_type = password
+username = barbican
+password = {{barbican_user_password}}
+project_name = service
+project_domain_name = Default
+user_domain_name = Default
+www_authenticate_uri = {{keystone_url}}
+auth_url = {{keystone_url}}
+memcached_servers = {{memcached_host}}:11211
