@@ -1,0 +1,16 @@
+# {{ansible_managed}}
+
+Listen 9311
+
+<VirtualHost *:9311>
+    SSLEngine on
+    SSLCertificateFile {{req_cert_path}}
+    SSLCertificateKeyFile {{req_privatekey_path}}
+    ErrorLog /var/log/httpd/barbican.log
+    CustomLog /var/log/httpd/barbican_access.log combined
+    WSGIApplicationGroup %{GLOBAL}
+    WSGIDaemonProcess barbican-api display-name=barbican-api group=barbican processes=2 threads=8 user=barbican
+    WSGIProcessGroup barbican-api
+    WSGIScriptAlias / /usr/bin/barbican-wsgi-api
+    WSGIPassAuthorization On
+</VirtualHost>

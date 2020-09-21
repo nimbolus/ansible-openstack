@@ -1,0 +1,73 @@
+- name: init database
+  include_role:
+    name: mariadb
+    tasks_from: init_db.yml
+  vars:
+    db_name: barbican
+    db_user: barbican
+    db_user_password: "{{barbican_db_user_password}}"
+
+- name: init keystone
+  include_role:
+    name: keystone
+    tasks_from: init_auth.yml
+  vars:
+    keystone_user: barbican
+    keystone_user_password: "{{barbican_user_password}}"
+    keystone_service_name: barbican
+    keystone_service_description: Key Manager
+    keystone_service_type: key-manager
+    keystone_service_url: "{{barbican_url}}"
+
+- name: create creator role
+  os_keystone_role:
+    auth: "{{keystone_admin_auth}}"
+    name: creator
+
+- name: add creator role to user barbican
+  os_user_role:
+    auth: "{{keystone_admin_auth}}"
+    project: service
+    user: barbican
+    role: creator
+
+- name: install
+  package:
+    name:
+      - openstack-barbican
+      - openstack-barbican-api
+    state: "{{package_state | default('present')}}"
+  notify:
+    - init barbican db
+    - restart httpd
+
+- name: configure
+  template:
+    src: barbican.conf.j2
+    dest: /etc/barbican/barbican.conf
+    backup: true
+    group: barbican
+    mode: "0640"
+  notify:
+    - init barbican db
+    - restart httpd
+
+- name: request certificate
+  include_role:
+    name: ca
+    tasks_from: req_cert.yml
+  vars:
+    req_name: barbican
+    req_common_name: "{{ansible_nodename}}"
+    req_owner: apache
+    req_group: apache
+    req_post_command: systemctl reload httpd
+
+- name: configure httpd virtual host
+  template:
+    src: wsgi-barbican.conf.j2
+    dest: /etc/httpd/conf.d/wsgi-barbican.conf
+  notify: restart httpd
+
+- name: flush handlers
+  meta: flush_handlers

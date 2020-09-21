@@ -79,6 +79,10 @@
       tags: openstack,trove
       when: is_controller_node
             and trove_enabled | default(false)
+    - role: barbican
+      tags: openstack,barbican
+      when: is_controller_node
+            and barbican_enabled | default(false)
 
     # logging services
     - role: loki
