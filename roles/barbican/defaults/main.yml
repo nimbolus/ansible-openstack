@@ -1,0 +1,6 @@
+barbican_user_password: "{{secrets_barbican_pass}}"
+barbican_db_user_password: "{{secrets_barbican_dbpass}}"
+barbican_rabbitmq_user: openstack
+barbican_rabbitmq_user_password: "{{secrets_rabbit_pass}}"
+
+barbican_url: "https://{{ansible_nodename}}:9311"
