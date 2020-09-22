@@ -30,8 +30,11 @@
   when: is_block_storage_node or is_controller_node
 
 - name: configure backend
-  include_tasks: "backends/{{cinder_backend}}.yml"
+  include_tasks: "backends/{{backend}}.yml"
   when: is_block_storage_node or is_compute_node
+  loop: "{{cinder_backends}}"
+  loop_control:
+    loop_var: backend
 
 - name: configure backup
   include_tasks: backup/{{cinder_backup_driver}}.yml

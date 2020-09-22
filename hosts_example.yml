@@ -18,7 +18,7 @@ all:
             controller01:
         block_storage_nodes:
           vars:
-            cinder_backend: rbd
+            cinder_backends: ["rbd"]
             cinder_rbd_client_key: secret
           hosts:
             compute01:

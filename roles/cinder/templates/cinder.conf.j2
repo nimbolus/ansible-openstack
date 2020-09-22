@@ -1,20 +1,19 @@
 # {{ansible_managed}}
 
+{% set lvm_backends = ['lvm_'] | product(cinder_lvm_pools | map(attribute='name')) | map('join') | list if 'lvm' in cinder_backends else [] %}
+{% set rbd_backends = ['rbd_'] | product(cinder_rbd_pools | map(attribute='pool')) | map('join') | list if 'rbd' in cinder_backends else [] %}
+{% set nfs_backends = ['nfs_'] | product(cinder_nfs_shares | map(attribute='name')) | map('join') | list if 'nfs' in cinder_backends else [] -%}
+
 [DEFAULT]
 transport_url = rabbit://{{cinder_rabbitmq_user}}:{{cinder_rabbitmq_user_password}}@{{rabbitmq_host}}
 auth_strategy = keystone
 my_ip = {{cinder_ip_address}}
 default_availability_zone = {{cinder_default_availability_zone}}
+default_volume_type = {{cinder_default_volume_type}}
 {% if is_block_storage_node %}
 storage_availability_zone = {{os_availability_zone}}
 glance_api_servers = {{glance_url}}
-{% if cinder_backend == 'lvm' %}
-enabled_backends = {% for p in cinder_lvm_pools %}lvm_{{p.name}}{% if not loop.last %},{% endif %}{% endfor %}
-{% elif cinder_backend == 'rbd' %}
-enabled_backends = {% for p in cinder_rbd_pools %}rbd_{{p.pool}}{% if not loop.last %},{% endif %}{% endfor %}
-{% elif cinder_backend == 'nfs' %}
-enabled_backends = nfs_{{cinder_nfs_backend_name}}
-{% endif %}
+enabled_backends = {{ (lvm_backends + rbd_backends + nfs_backends) | join(',') }}
 {% endif %}
 
 {% if cinder_backup_driver == 'nfs' %}
@@ -48,7 +47,7 @@ password = {{cinder_user_password}}
 lock_path = /var/lib/cinder/tmp
 
 {% if is_block_storage_node %}
-{% if cinder_backend == 'lvm' %}
+{% if 'lvm' in cinder_backends %}
 # lvm backends
 {% for p in cinder_lvm_pools %}
 [lvm_{{p.name}}]
@@ -62,7 +61,8 @@ target_ip_address = {{cinder_lvm_iscsi_ip_address}}
 {% endif %}
 
 {% endfor %}
-{% elif cinder_backend == 'rbd' %}
+{% endif %}
+{% if 'rbd' in cinder_backends %}
 # rbd backends
 {% for p in cinder_rbd_pools %}
 [rbd_{{p.pool}}]
@@ -75,16 +75,20 @@ rbd_secret_uuid = {{cinder_rbd_secret_uuid}}
 glance_api_version = 2
 
 {% endfor %}
-{% elif cinder_backend == 'nfs' %}
+{% endif %}
+{% if 'nfs' in cinder_backends %}
 # nfs backends
-[nfs_{{cinder_nfs_backend_name}}]
+{% for s in cinder_nfs_shares %}
+[nfs_{{s.name}}]
 volume_driver = cinder.volume.drivers.nfs.NfsDriver
-volume_backend_name = {{cinder_nfs_backend_name}}
-nas_host = {{cinder_nfs_nas_host}}
-nas_share_path = {{cinder_nfs_nas_share_path}}
+volume_backend_name = {{s.name}}
+nas_host = {{s.host}}
+nas_share_path = {{s.share_path}}
 {% if cinder_nfs_mount_options %}
 nfs_mount_options = {{cinder_nfs_mount_options}}
 {% endif %}
 nfs_qcow2_volumes = True
+
+{% endfor %}
 {% endif %}
 {% endif %}
