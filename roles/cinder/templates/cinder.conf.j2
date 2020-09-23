@@ -1,5 +1,6 @@
 # {{ansible_managed}}
 
+{# prefix names/pools with backend type for reference in enabled_backends #}
 {% set lvm_backends = ['lvm_'] | product(cinder_lvm_pools | map(attribute='name')) | map('join') | list if 'lvm' in cinder_backends else [] %}
 {% set rbd_backends = ['rbd_'] | product(cinder_rbd_pools | map(attribute='pool')) | map('join') | list if 'rbd' in cinder_backends else [] %}
 {% set nfs_backends = ['nfs_'] | product(cinder_nfs_shares | map(attribute='name')) | map('join') | list if 'nfs' in cinder_backends else [] -%}
