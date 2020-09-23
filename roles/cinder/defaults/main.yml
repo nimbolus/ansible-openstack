@@ -4,7 +4,8 @@ cinder_rabbitmq_user: openstack
 cinder_rabbitmq_user_password: "{{secrets_rabbit_pass}}"
 cinder_ip_address: "{{management_ipv4.address}}"
 cinder_default_availability_zone: "{{os_availability_zone}}"
-cinder_backend: lvm # lvm, rbd and nfs are supported
+cinder_default_volume_type: "__DEFAULT__"
+cinder_backends: [] # lvm, rbd and nfs are supported
 # see https://docs.openstack.org/cinder/ussuri/install/cinder-storage-install-rdo.html for how to use the filter
 cinder_lvm_filter: '"a|^/dev/sd[a-z][0-9]$|", "r/.*/"'
 cinder_lvm_iscsi_ip_address: null
@@ -18,9 +19,10 @@ cinder_rbd_ceph_conf: /etc/ceph/ceph.conf
 cinder_rbd_keyring: /etc/ceph/ceph.client.cinder.keyring
 cinder_rbd_user: cinder
 cinder_rbd_secret_uuid: 095B52A9-EAA7-4472-AF32-99F75F1F3A90
-cinder_nfs_backend_name: nas
-cinder_nfs_nas_host: nas.example.com
-cinder_nfs_nas_share_path: /mnt/tank/cinder
+cinder_nfs_shares: []
+  # - name: nas
+  #   host: nas.example.com
+  #   share_path: /mnt/tank/cinder
 cinder_nfs_mount_options: null
 cinder_backup_driver: null # nfs and rbd is supported
 cinder_backup_nfs_share: 192.168.1.1:/mnt/cinder-backup
