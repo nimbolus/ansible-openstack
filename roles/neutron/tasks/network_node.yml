@@ -18,3 +18,11 @@
     dest: /etc/neutron/metadata_agent.ini
     backup: true
   notify: restart neutron-metadata-agent
+
+- name: configure bgp agent
+  template:
+    src: network_node/bgp_dragent.ini.j2
+    dest: /etc/neutron/bgp_dragent.ini
+    backup: true
+  when: neutron_bgp and neutron_bgp_router_id
+  notify: restart neutron-bgp-dragent

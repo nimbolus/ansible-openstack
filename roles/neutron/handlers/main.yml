@@ -1,5 +1,5 @@
 - name: init neutron db
-  shell: | 
+  shell: |
     su -s /bin/sh -c "neutron-db-manage --config-file /etc/neutron/neutron.conf \
       --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head" neutron
   args:
@@ -35,3 +35,9 @@
     name: neutron-linuxbridge-agent
     state: restarted
   when: is_network_node or is_compute_node
+
+- name: restart neutron-bgp-dragent
+  systemd:
+    name: neutron-bgp-dragent
+    state: restarted
+  when: is_network_node and neutron_bgp and neutron_bgp_router_id

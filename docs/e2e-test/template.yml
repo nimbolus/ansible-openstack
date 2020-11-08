@@ -8,15 +8,12 @@ parameters:
   private_network:
     type: string
     default: "192.168.1.0/24"
-  private_network_dhcp_start:
-    type: string
-    default: "192.168.1.100"
-  private_network_dhcp_end:
-    type: string
-    default: "192.168.1.254"
   dns_nameservers:
     type: comma_delimited_list
     default: "9.9.9.9,8.8.8.8"
+  ipv6_subnet_pool:
+    type: string
+    default: ""
   flavor:
     type: string
     default: m1.small
@@ -41,6 +38,13 @@ parameters:
     type: boolean
     default: false
 
+conditions:
+  ipv6_enabled:
+    not:
+      equals:
+        - get_param: ipv6_subnet_pool
+        - ""
+
 resources:
   allow_ssh:
     type: OS::Neutron::SecurityGroup
@@ -56,7 +60,21 @@ resources:
             port_range_max: 22,
             protocol: tcp,
           }
+        - {
+            ethertype: IPv6,
+            direction: ingress,
+            remote_ip_prefix: "::/0",
+            port_range_min: 22,
+            port_range_max: 22,
+            protocol: tcp,
+          }
         - { direction: ingress, remote_ip_prefix: 0.0.0.0/0, protocol: icmp }
+        - {
+            ethertype: IPv6,
+            direction: ingress,
+            remote_ip_prefix: "::/0",
+            protocol: icmp,
+          }
 
   net:
     type: OS::Neutron::Net
@@ -77,11 +95,20 @@ resources:
       network: { get_resource: net }
       ip_version: 4
       cidr: { get_param: private_network }
-      allocation_pools:
-        - {
-            start: { get_param: private_network_dhcp_start },
-            end: { get_param: private_network_dhcp_end },
-          }
+
+  subnet_v6:
+    type: OS::Neutron::Subnet
+    depends_on: [net]
+    condition: ipv6_enabled
+    properties:
+      name:
+        list_join: ["-", [{ get_param: "OS::stack_name" }, "subnet-v6"]]
+      network: { get_resource: net }
+      ip_version: 6
+      ipv6_ra_mode: slaac
+      ipv6_address_mode: slaac
+      subnetpool: { get_param: ipv6_subnet_pool }
+      prefixlen: 64
 
   router:
     type: OS::Neutron::Router
@@ -90,7 +117,7 @@ resources:
       name:
         list_join: ["-", [{ get_param: "OS::stack_name" }, "router"]]
       value_specs:
-        availability_zone_hints: 
+        availability_zone_hints:
           - { get_param: availability_zone }
 
   router_subnet_bridge:
@@ -99,6 +126,14 @@ resources:
     properties:
       router: { get_resource: router }
       subnet: { get_resource: subnet }
+
+  router_subnet_bridge_v6:
+    type: OS::Neutron::RouterInterface
+    condition: ipv6_enabled
+    depends_on: [router, subnet_v6]
+    properties:
+      router: { get_resource: router }
+      subnet: { get_resource: subnet_v6 }
 
   root_disk:
     type: OS::Cinder::Volume

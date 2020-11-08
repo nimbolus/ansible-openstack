@@ -27,6 +27,13 @@
   notify: restart neutron-linuxbridge-agent
   when: is_network_node or is_compute_node
 
+- name: install bgp service plugin
+  package:
+    name:
+      - openstack-neutron-dynamic-routing-common
+      - openstack-neutron-bgp-dragent
+  when: neutron_bgp
+
 - name: configure
   template:
     src: neutron.conf.j2
@@ -39,6 +46,7 @@
     - restart neutron-dhcp-agent
     - restart neutron-metadata-agent
     - restart neutron-l3-agent
+    - restart neutron-bgp-dragent
 
 - name: configure modular layer 2 plugin
   template:
@@ -118,3 +126,10 @@
     enabled: true
     state: started
   when: is_network_node or is_compute_node
+
+- name: start and enable bgp agent
+  systemd:
+    name: neutron-bgp-dragent
+    enabled: true
+    state: started
+  when: is_network_node and neutron_bgp and neutron_bgp_router_id
