@@ -56,7 +56,7 @@
       path: "{{ca_dir}}/certs/{{req_common_name}}_{{req_name}}.crt"
     register: req_cert
     delegate_to: "{{ca_host}}"
-    
+
   - name: "upload private key for {{req_name}}"
     copy:
       content: "{{req_privatekey.content | b64decode}}"

@@ -47,17 +47,17 @@
       when: is_controller_node
     - role: nova
       tags: openstack,nova
-      when: is_controller_node 
+      when: is_controller_node
             or is_compute_node
     - role: neutron
       tags: openstack,neutron
       when: is_controller_node
-            or is_network_node 
+            or is_network_node
             or is_compute_node
     - role: cinder
       tags: openstack,cinder
-      when: is_controller_node 
-            or is_compute_node 
+      when: is_controller_node
+            or is_compute_node
             or is_block_storage_node
     - role: heat
       tags: openstack,heat
