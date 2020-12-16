@@ -8,5 +8,8 @@ magnum_cinder_volume_type: ssd
 magnum_openstack_ca_file: null
 # needs to be true to use cinder as volume driver
 magnum_cluster_user_trust: false
+# install docker registry as podman container (requires ansible-galaxy collection `containers.podman`)
+magnum_registry: false
+magnum_registry_http_addr: 0.0.0.0:5001
 
 magnum_url: "http://{{ansible_nodename}}:9511"

@@ -1,0 +1,43 @@
+- name: install podman
+  package:
+    name: podman
+    state: "{{package_state | default('present')}}"
+
+- name: request certificate for registry
+  include_role:
+    name: ca
+    tasks_from: req_cert.yml
+  vars:
+    req_name: registry
+    req_common_name: "{{ansible_nodename}}"
+    req_owner: root
+    req_group: root
+    req_post_command: podman restart registry
+
+- name: create registry data directory
+  file:
+    path: /var/lib/registry
+    state: directory
+
+- name: create registry systemd service
+  template:
+    src: registry.service.j2
+    dest: /etc/systemd/system/registry.service
+  notify: restart magnum registry
+
+- name: flush handlers
+  meta: flush_handlers
+
+- name: start and enable registry
+  systemd:
+    name: registry
+    state: started
+    enabled: true
+
+- name: copy mirror script
+  copy:
+    src: mirror_docker_images.sh
+    dest: ~/magnum_mirror_docker_images.sh
+    mode: 0755
+  become: false
+

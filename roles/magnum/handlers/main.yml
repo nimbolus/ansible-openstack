@@ -12,3 +12,9 @@
   systemd:
     name: openstack-magnum-conductor
     state: restarted
+
+- name: restart magnum registry
+  systemd:
+    name: registry
+    state: restarted
+    daemon_reload: true

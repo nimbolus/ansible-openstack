@@ -75,3 +75,7 @@
   loop:
     - openstack-magnum-api
     - openstack-magnum-conductor
+
+- name: install registry
+  include_tasks: registry.yml
+  when: magnum_registry | bool
