@@ -1,0 +1,104 @@
+- name: create security group for management
+  os_security_group:
+    auth: "{{octavia_keystone_auth}}"
+    name: octavia-lb-mgmt
+    description: "Octavia Load Balancer management"
+
+- name: add rule for icmp
+  os_security_group_rule:
+    auth: "{{octavia_keystone_auth}}"
+    security_group: octavia-lb-mgmt
+    protocol: icmp
+    remote_ip_prefix: 0.0.0.0/0
+
+- name: add rule for ssh
+  os_security_group_rule:
+    auth: "{{octavia_keystone_auth}}"
+    security_group: octavia-lb-mgmt
+    protocol: tcp
+    port_range_min: "22"
+    port_range_max: "22"
+    remote_ip_prefix: 0.0.0.0/0
+
+- name: add rule for alt https
+  os_security_group_rule:
+    auth: "{{octavia_keystone_auth}}"
+    security_group: octavia-lb-mgmt
+    protocol: tcp
+    port_range_min: "9443"
+    port_range_max: "9443"
+    remote_ip_prefix: 0.0.0.0/0
+
+- name: create security group for health manager
+  os_security_group:
+    auth: "{{octavia_keystone_auth}}"
+    name: octavia-lb-health-mgr
+    description: "Octavia Load Balancer health manager"
+
+- name: add rule for health
+  os_security_group_rule:
+    auth: "{{octavia_keystone_auth}}"
+    security_group: octavia-lb-mgmt
+    protocol: udp
+    port_range_min: "5555"
+    port_range_max: "5555"
+    remote_ip_prefix: 0.0.0.0/0
+
+- name: create management network
+  os_network:
+    auth: "{{octavia_keystone_auth}}"
+    name: octavia-lb-mgmt
+    region_name: "{{os_region}}"
+    availability_zone: "{{os_availability_zone}}"
+  register: octavia_management_network
+
+- name: create management subnet
+  os_subnet:
+    auth: "{{octavia_keystone_auth}}"
+    network_name: octavia-lb-mgmt
+    name: octavia-lb-mgmt
+    cidr: "{{octavia_management_subnet}}"
+
+- name: create management port
+  os_port:
+    auth: "{{octavia_keystone_auth}}"
+    name: octavia-health-mgr
+    network: octavia-lb-mgmt
+    device_owner: Octavia:health-mgr
+    region_name: "{{os_region}}"
+    availability_zone: "{{os_availability_zone}}"
+    security_groups: octavia-lb-health-mgr
+    fixed_ips:
+      - ip_address: "{{octavia_management_fixed_ip}}"
+
+- name: fetch management port mac address
+  shell: |
+    . {{ansible_env.PWD}}/octavia-openrc
+    openstack port show octavia-health-mgr -c mac_address -f value
+  changed_when: false
+  check_mode: false
+  register: octavia_management_port_mac_address
+
+- name: copy dhclient config
+  copy:
+    src: dhclient.conf
+    dest: /etc/dhcp/octavia.conf
+  notify: restart octavia-interface
+
+- name: copy interface script
+  copy:
+    src: octavia-interface.sh
+    dest: /usr/local/bin/octavia-interface.sh
+    mode: "0755"
+  notify: restart octavia-interface
+
+- name: create interface service
+  template:
+    src: octavia-interface.service.j2
+    dest: /etc/systemd/system/octavia-interface.service
+  notify: restart octavia-interface
+
+# - name: copy network config
+#   copy:
+#     src: ifcfg-o-hm0
+#     dest: /etc/sysconfig/network-scripts/ifcfg-o-hm0

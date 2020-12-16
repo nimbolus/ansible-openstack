@@ -1,0 +1,61 @@
+# {{ansible_managed}}
+
+[DEFAULT]
+transport_url = rabbit://{{octavia_rabbitmq_user}}:{{octavia_rabbitmq_user_password}}@{{rabbitmq_host}}
+
+[database]
+connection = mysql+pymysql://octavia:{{octavia_db_user_password}}@{{db_host}}/octavia
+
+[oslo_messaging]
+topic = octavia_prov
+
+[api_settings]
+bind_host = {{management_ipv4.address}}
+bind_port = 9876
+
+[keystone_authtoken]
+www_authenticate_uri = {{keystone_url}}
+memcached_servers = {{memcached_host}}:11211
+auth_url = {{keystone_url}}
+auth_type = password
+project_domain_name = Default
+user_domain_name = Default
+project_name = service
+username = octavia
+password = {{octavia_user_password}}
+
+[service_auth]
+auth_url = {{keystone_url}}
+memcached_servers = {{memcached_host}}:11211
+auth_type = password
+project_domain_name = Default
+user_domain_name = Default
+project_name = service
+username = octavia
+password = {{octavia_user_password}}
+
+[certificates]
+ca_private_key_passphrase = {{octavia_amphora_ca_key_passphrase}}
+ca_private_key = {{octavia_amphora_ca_dir}}/private/ca.key
+ca_certificate = {{octavia_amphora_ca_dir}}/certs/ca.crt
+
+[haproxy_amphora]
+server_ca = {{octavia_amphora_ca_dir}}/certs/ca.crt
+client_cert = {{req_bundle_path}}
+
+[health_manager]
+bind_port = 5555
+bind_ip = {{octavia_management_fixed_ip}}
+controller_ip_port_list = {{octavia_management_fixed_ip}}:5555
+
+[controller_worker]
+amp_image_owner_id = {{octavia_amphora_image_project_id}}
+amp_image_tag = amphora
+amp_ssh_key_name = amphora
+amp_secgroup_list = octavia-lb-mgmt
+amp_boot_network_list = {{octavia_management_network.network.id}}
+amp_flavor_id = 200
+network_driver = allowed_address_pairs_driver
+compute_driver = compute_nova_driver
+amphora_driver = amphora_haproxy_rest_driver
+client_ca = {{req_ca_cert_path}}

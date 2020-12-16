@@ -1,0 +1,15 @@
+[Unit]
+Description=Octavia Interface Creator
+Requires=neutron-linuxbridge-agent.service
+After=neutron-linuxbridge-agent.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+Environment=MGMT_NETWORK_ID={{octavia_management_network.network.id}}
+Environment=MGMT_MAC_ADDRESS={{octavia_management_port_mac_address.stdout}}
+ExecStart=/usr/local/bin/octavia-interface.sh start
+ExecStop=/usr/local/bin/octavia-interface.sh stop
+
+[Install]
+WantedBy=multi-user.target

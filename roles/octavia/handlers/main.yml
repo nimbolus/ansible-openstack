@@ -1,0 +1,30 @@
+- name: init octavia db
+  shell: su -s /bin/sh -c "octavia-db-manage upgrade head" octavia
+  args:
+    warn: false
+
+- name: restart octavia-api
+  systemd:
+    name: octavia-api
+    state: restarted
+
+- name: restart octavia-health-manager
+  systemd:
+    name: octavia-health-manager
+    state: restarted
+
+- name: restart octavia-housekeeping
+  systemd:
+    name: octavia-housekeeping
+    state: restarted
+
+- name: restart octavia-worker
+  systemd:
+    name: octavia-worker
+    state: restarted
+
+- name: restart octavia-interface
+  systemd:
+    name: octavia-interface
+    state: restarted
+    daemon_reload: true

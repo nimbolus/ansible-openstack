@@ -6,9 +6,15 @@ ca_ssl_dir: /etc/pki/tls
 ca_install_trust: false
 ca_freeipa_backend: false
 
+ca_owner: root
 ca_country_name: DE
 ca_organization_name: Example Ltd.
 ca_organization_unit_name: openstack
 ca_email_address: john.doe@example.com
 
+# install cfssl to enable generating new pkis (e.g. for octavia)
+ca_cfssl_install: false
+ca_cfssl_version: 1.5.0
+ca_cfssl_url: https://github.com/cloudflare/cfssl/releases/download/v{{ca_cfssl_version}}/cfssl_{{ca_cfssl_version}}_linux_amd64
+ca_cfssljson_url: https://github.com/cloudflare/cfssl/releases/download/v{{ca_cfssl_version}}/cfssljson_{{ca_cfssl_version}}_linux_amd64
 ca_host: "{{ansible_nodename}}"

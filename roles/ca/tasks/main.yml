@@ -34,3 +34,15 @@
 - name: update ca trust
   shell: update-ca-trust extract
   when: ca_install_trust | bool
+
+- name: install cfssl
+  get_url:
+    url: "{{item.url}}"
+    dest: "/usr/local/bin/{{item.name}}"
+    mode: "0755"
+  loop:
+    - url: "{{ca_cfssl_url}}"
+      name: cfssl
+    - url: "{{ca_cfssljson_url}}"
+      name: cfssljson
+  when: ca_cfssl_install | bool

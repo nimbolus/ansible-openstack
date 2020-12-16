@@ -84,6 +84,10 @@
       tags: openstack,designate
       when: is_controller_node
             and designate_enabled | default(false)
+    - role: octavia
+      tags: openstack,octavia
+      when: is_controller_node
+            and octavia_enabled | default(false)
     - role: trove
       tags: openstack,trove
       when: is_controller_node
