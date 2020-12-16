@@ -23,6 +23,7 @@ neutron_dnsmasq_local_resolv: false
 neutron_az_aware_scheduler: false
 # activate extension drivers such as `dns` here
 neutron_ml2_extension_drivers: []
+neutron_service_plugins: router
 # more information at: https://docs.openstack.org/neutron/latest/admin/config-bgp-dynamic-routing.html
 neutron_bgp: false
 # set id in host vars to enable bgp router on network node
