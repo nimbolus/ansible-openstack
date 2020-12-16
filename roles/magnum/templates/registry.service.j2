@@ -1,0 +1,23 @@
+[Unit]
+Description=Docker Registry (System Container)
+
+[Service]
+EnvironmentFile=/etc/sysconfig/registry
+ExecStart=/usr/bin/podman run --name registry \
+    --network host \
+    -v /var/lib/registry:/var/lib/registry:z \
+    -v {{req_privatekey_path}}:/certs/domain.key:ro,z \
+    -v {{req_cert_path}}:/certs/domain.crt:ro,z \
+    -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key \
+    -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \
+    -e REGISTRY_COMPATIBILITY_SCHEMA1_ENABLED=true \
+    -e REGISTRY_HTTP_ADDR={{magnum_registry_http_addr}} \
+    docker.io/library/registry:2
+ExecStop=/usr/bin/podman stop registry
+ExecStopPost=/usr/bin/podman rm registry
+Restart=always
+RestartSec=10
+TimeoutStartSec=10min
+
+[Install]
+WantedBy=multi-user.target
