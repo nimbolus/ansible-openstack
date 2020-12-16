@@ -1,0 +1,12 @@
+# {{ansible_managed}}
+# keystone environment variables for openstack octavia
+
+export PS1="(openstack octavia) $PS1"
+
+export OS_USERNAME=octavia
+export OS_PASSWORD={{octavia_user_password}}
+export OS_PROJECT_NAME=service
+export OS_USER_DOMAIN_NAME=Default
+export OS_PROJECT_DOMAIN_NAME=Default
+export OS_AUTH_URL={{keystone_admin_url}}
+export OS_IDENTITY_API_VERSION=3
