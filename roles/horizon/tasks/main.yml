@@ -16,3 +16,6 @@
     src: openstack-dashboard.conf.j2
     dest: /etc/httpd/conf.d/openstack-dashboard.conf
   notify: reload httpd
+
+- name: flush handlers
+  meta: flush_handlers

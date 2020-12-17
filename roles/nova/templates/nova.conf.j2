@@ -81,7 +81,8 @@ enabled = true
 server_proxyclient_address = $my_ip
 {% if is_controller_node %}
 server_listen = $my_ip
-{% elif is_compute_node %}
+{% endif %}
+{% if is_compute_node %}
 novncproxy_base_url = {{nova_novnc_url}}/vnc_auto.html
 server_listen = 0.0.0.0
 
@@ -108,7 +109,8 @@ passthrough_whitelist = {% for d in nova_pci_devices %}{ "vendor_id":"{{d.vendor
 
 alias = {% for d in nova_pci_devices %}{ "vendor_id":"{{d.vendor_id}}", "product_id":"{{d.product_id}}", "device_type":"{{d.device_type}}", "name":"{{d.name}}" }{% if not loop.last %},{% endif%}{% endfor %}
 
-{% elif is_controller_node %}
+{% endif %}
+{% if is_controller_node %}
 alias = {% for d in all_devices %}{ "vendor_id":"{{d.vendor_id}}", "product_id":"{{d.product_id}}", "device_type":"{{d.device_type}}", "name":"{{d.name}}", "numa_policy":"preferred" }{% if not loop.last %},{% endif%}{% endfor %}
 
 

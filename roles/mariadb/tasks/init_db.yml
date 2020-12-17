@@ -9,6 +9,7 @@
     login_host: "{{db_host}}"
   delegate_to: "{{db_host}}"
   run_once: true
+  no_log: true
 
 - name: "create database user {{db_user}}"
   mysql_user:
