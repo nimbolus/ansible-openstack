@@ -33,11 +33,3 @@
     name: registry
     state: started
     enabled: true
-
-- name: copy mirror script
-  copy:
-    src: mirror_docker_images.sh
-    dest: ~/magnum_mirror_docker_images.sh
-    mode: 0755
-  become: false
-
