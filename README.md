@@ -9,7 +9,7 @@ ansible localhost -m template -a "src=secrets.yml.j2 dest=secrets.yml"
 ```
 
 Next create certificate authority and save the key at `/etc/openstack-ca/private/ca.key`
-and the certificate at `/etc/openstack-ca/certs/ca.crt` on the ca node. This can be done manually or 
+and the certificate at `/etc/openstack-ca/certs/ca.crt` on the ca node. This can be done manually or
 with the `copy_ca.yml` playbook. Remember to use the password from `secrets_ca_key_pass` to encrypt the key.
 
 ```sh
@@ -39,8 +39,20 @@ ansible controller1 -m shell -b -a 'su -s /bin/sh -c "nova-manage cell_v2 discov
 ## Upgrade
 
 Set `bootstrap_openstack_release` to new release and run:
+
 ```sh
 ansible-playbook main.yml --tags bootstrap
+```
+
+This will install the new package repository.
+Next upgrade OpenStack and run the database migrations for the new release by executing:
+
+```sh
 ansible-playbook main.yml --extra-vars "package_state=latest" --tags openstack
+```
+
+Finally upgrade all other packages by running:
+
+```sh
 ansible-playbook main.yml --tags bootstrap --extra-vars "bootstrap_system_upgrade=true"
 ```
