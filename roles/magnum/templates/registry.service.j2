@@ -2,7 +2,6 @@
 Description=Docker Registry (System Container)
 
 [Service]
-EnvironmentFile=/etc/sysconfig/registry
 ExecStart=/usr/bin/podman run --name registry \
     --network host \
     -v /var/lib/registry:/var/lib/registry:z \

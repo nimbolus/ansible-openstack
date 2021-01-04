@@ -1,5 +1,5 @@
 - name: copy ca certificate and key to main controller node
-  hosts: controller1
+  hosts: "{{groups.controller_nodes.0}}"
   become: true
   vars:
     ca_dir: /etc/pki/openstack
