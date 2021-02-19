@@ -13,6 +13,7 @@ default_availability_zone = {{cinder_default_availability_zone}}
 default_volume_type = {{cinder_default_volume_type}}
 {% if is_block_storage_node %}
 storage_availability_zone = {{os_availability_zone}}
+allow_availability_zone_fallback = {{cinder_allow_availability_zone_fallback|lower}}
 glance_api_servers = {{glance_url}}
 enabled_backends = {{ (lvm_backends + rbd_backends + nfs_backends) | join(',') }}
 {% endif %}
