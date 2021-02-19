@@ -49,7 +49,6 @@
     auth: "{{octavia_keystone_auth}}"
     name: octavia-lb-mgmt
     region_name: "{{os_region}}"
-    availability_zone: "{{os_availability_zone}}"
   register: octavia_management_network
 
 - name: create management subnet
@@ -58,16 +57,19 @@
     network_name: octavia-lb-mgmt
     name: octavia-lb-mgmt
     cidr: "{{octavia_management_subnet}}"
+    no_gateway_ip: true
+    allocation_pool_start: "{{octavia_management_subnet | ansible.netcommon.ipaddr('next_usable')}}"
+    allocation_pool_end: "{{octavia_management_subnet | ansible.netcommon.ipaddr('last_usable')}}"
 
 - name: create management port
   os_port:
     auth: "{{octavia_keystone_auth}}"
     name: octavia-health-mgr
     network: octavia-lb-mgmt
-    device_owner: Octavia:health-mgr
+    device_owner: octavia:health-mgr
     region_name: "{{os_region}}"
-    availability_zone: "{{os_availability_zone}}"
     security_groups: octavia-lb-health-mgr
+    admin_state_up: false
     fixed_ips:
       - ip_address: "{{octavia_management_fixed_ip}}"
 
