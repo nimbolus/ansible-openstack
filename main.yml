@@ -79,6 +79,10 @@
       tags: openstack,trove
       when: is_controller_node
             and trove_enabled | default(false)
+    - role: octavia
+      tags: openstack,octavia
+      when: is_controller_node
+            and octavia_enabled | default(false)
 
     # logging services
     - role: loki

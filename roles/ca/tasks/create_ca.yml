@@ -1,0 +1,33 @@
+- name: create ca directory
+  file:
+    name: "{{item}}"
+    state: directory
+    owner: "{{ca_owner}}"
+  loop:
+    - "{{ca_dir}}"
+    - "{{ca_dir}}/private"
+    - "{{ca_dir}}/certs"
+    - "{{ca_dir}}/csr"
+
+- name: create cfssl ca config
+  template:
+    src: ca.json.j2
+    dest: "{{ca_dir}}/ca.json"
+    owner: "{{ca_owner}}"
+
+- name: init ca
+  shell: |
+    /usr/local/bin/cfssl gencert -initca ca.json | /usr/local/bin/cfssljson -bare ca -
+    openssl ec -aes256 -in ca-key.pem -out private/ca.key -passout pass:{{octavia_amphora_ca_key_passphrase}}
+    mv ca.pem certs/ca.crt
+    rm ca-key.pem
+  args:
+    chdir: "{{ca_dir}}"
+    creates: "{{ca_dir}}/certs/ca.crt"
+  become_user: "{{ca_owner}}"
+
+- name: protect ca key
+  file:
+    name: "{{ca_dir}}/private/ca.key"
+    mode: "0600"
+    owner: "{{ca_owner}}"
