@@ -105,14 +105,16 @@ rbd_secret_uuid = {{nova_rbd_secret_uuid}}
 
 [pci]
 {% if is_compute_node %}
-passthrough_whitelist = {% for d in nova_pci_devices %}{ "vendor_id":"{{d.vendor_id}}", "product_id":"{{d.product_id}}" }{% if not loop.last %},{% endif%}{% endfor %}
+passthrough_whitelist = [{% for d in nova_pci_devices %}{ "vendor_id":"{{d.vendor_id}}", "product_id":"{{d.product_id}}" }{% if not loop.last %},{% endif%}{% endfor %}]
 
-alias = {% for d in nova_pci_devices %}{ "vendor_id":"{{d.vendor_id}}", "product_id":"{{d.product_id}}", "device_type":"{{d.device_type}}", "name":"{{d.name}}" }{% if not loop.last %},{% endif%}{% endfor %}
-
+{% for d in nova_pci_devices %}
+alias = { "vendor_id":"{{d.vendor_id}}", "product_id":"{{d.product_id}}", "device_type":"{{d.device_type}}", "name":"{{d.name}}" }
+{% endfor %}
 {% endif %}
 {% if is_controller_node %}
-alias = {% for d in all_devices %}{ "vendor_id":"{{d.vendor_id}}", "product_id":"{{d.product_id}}", "device_type":"{{d.device_type}}", "name":"{{d.name}}", "numa_policy":"preferred" }{% if not loop.last %},{% endif%}{% endfor %}
-
+{% for d in all_devices %}
+alias = { "vendor_id":"{{d.vendor_id}}", "product_id":"{{d.product_id}}", "device_type":"{{d.device_type}}", "name":"{{d.name}}", "numa_policy":"preferred" }
+{% endfor %}
 
 [filter_scheduler]
 enabled_filters = AvailabilityZoneFilter,ComputeFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,ServerGroupAntiAffinityFilter,ServerGroupAffinityFilter,PciPassthroughFilter
