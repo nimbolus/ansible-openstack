@@ -3,6 +3,14 @@
 
 # {{ansible_managed}}
 
+# openstack nodes
 {% for node in groups.openstack %}
 {{hostvars[node].management_ipv4.address}} {{hostvars[node].ansible_nodename}}
 {% endfor %}
+{% if bootstrap_extra_hosts | length > 0 %}
+
+# extra hosts
+{% for host in bootstrap_extra_hosts %}
+{{host.ip_address}} {{host.name}}
+{% endfor %}
+{% endif %}

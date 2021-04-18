@@ -4,3 +4,6 @@ bootstrap_disable_firewalld: true
 # on CentOS 7 the NetworkManager needs to be disabled
 bootstrap_disable_networkmanager: false
 bootstrap_system_upgrade: false
+bootstrap_extra_hosts: []
+  # - name:
+  #   ip_address:
