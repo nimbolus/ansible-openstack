@@ -21,7 +21,9 @@
 
 - name: install
   package:
-    name: openstack-placement-api
+    name:
+      - openstack-placement-api
+      - "{{'python' if ansible_distribution_major_version|int < 8 else 'python3'}}-osc-placement"
     state: "{{package_state | default('present')}}"
   notify:
     - init placement db
