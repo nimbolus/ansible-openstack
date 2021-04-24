@@ -1,0 +1,6 @@
+collections:
+  - ansible.posix
+  - openstack.cloud
+  - community.general
+  - community.mysql
+  - community.rabbitmq

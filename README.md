@@ -2,6 +2,12 @@
 
 ## Requirements
 
+Install Ansible collections:
+
+```sh
+ansible-galaxy install -r requirements.yml
+```
+
 Generate secrets by run ansible locally:
 
 ```sh
