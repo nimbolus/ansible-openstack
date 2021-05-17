@@ -5,20 +5,11 @@
       - "{{'python' if ansible_distribution_major_version|int < 8 else 'python3'}}-rados"
       - ceph-common
 
-- name: check ceph keyring
-  file:
-    path: "{{cinder_rbd_keyring}}"
-    mode: 0640
-    group: cinder
-  when: is_block_storage_node
-
-- name: set keyring in ceph config
-  blockinfile:
-    path: /etc/ceph/ceph.conf
-    marker: "# {mark} ANSIBLE MANAGED BLOCK - cinder"
-    block: |
-      [client.cinder]
-      keyring = {{cinder_rbd_keyring}}
+- name: add user to ceph group
+  user:
+    name: cinder
+    groups: ceph
+    append: true
   when: is_block_storage_node
 
 - name: fetch ceph key

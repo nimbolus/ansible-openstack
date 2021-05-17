@@ -72,8 +72,10 @@ volume_driver = cinder.volume.drivers.rbd.RBDDriver
 volume_backend_name = {{p.name}}
 rbd_pool = {{p.pool}}
 rbd_ceph_conf = {{cinder_rbd_ceph_conf}}
+rbd_keyring_conf = {{cinder_rbd_keyring}}
 rbd_user = {{cinder_rbd_user}}
 rbd_secret_uuid = {{cinder_rbd_secret_uuid}}
+rbd_exclusive_cinder_pool = {{p.exclusive_cinder_pool | default(true)}}
 glance_api_version = 2
 
 {% endfor %}

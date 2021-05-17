@@ -4,3 +4,4 @@ collections:
   - community.general
   - community.mysql
   - community.rabbitmq
+  - community.crypto

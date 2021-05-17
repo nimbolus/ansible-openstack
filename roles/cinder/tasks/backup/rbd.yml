@@ -1,9 +1,4 @@
-- name: check ceph backup keyring
-  file:
-    path: "{{cinder_backup_rbd_keyring}}"
-    mode: 0640
-    group: cinder
-
+# NOTE: not compatible with ceph-ansible
 - name: set backup keyring in ceph config
   blockinfile:
     path: /etc/ceph/ceph.conf
@@ -11,3 +6,9 @@
     block: |
       [client.cinder-backup]
       keyring = {{cinder_backup_rbd_keyring}}
+
+- name: add user to ceph group
+  user:
+    name: cinder
+    groups: ceph
+    append: true

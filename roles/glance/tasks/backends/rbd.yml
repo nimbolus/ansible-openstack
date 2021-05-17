@@ -5,8 +5,8 @@
       - "{{'python' if ansible_distribution_major_version|int < 8 else 'python3'}}-rados"
       - ceph-common
 
-- name: check ceph keyring
-  file:
-    path: "{{glance_rbd_keyring_conf}}"
-    mode: 0640
-    group: glance
+- name: add user to ceph group
+  user:
+    name: glance
+    groups: ceph
+    append: true
