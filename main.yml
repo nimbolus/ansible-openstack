@@ -79,6 +79,10 @@
       tags: openstack,trove
       when: is_controller_node
             and trove_enabled | default(false)
+    - role: swift-ceph
+      tags: openstack,swift-ceph
+      when: is_controller_node
+            and swift_ceph_enabled | default(false)
 
     # logging services
     - role: loki

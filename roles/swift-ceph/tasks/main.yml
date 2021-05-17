@@ -1,0 +1,12 @@
+- name: init keystone
+  include_role:
+    name: keystone
+    tasks_from: init_auth.yml
+  vars:
+    keystone_user: swift-ceph
+    keystone_user_password: "{{swift_ceph_user_password}}"
+    keystone_service_name: swift-ceph
+    keystone_service_description: OpenStack Object Storage
+    keystone_service_type: object-store
+    keystone_service_url: "{{swift_ceph_url}}"
+    keystone_service_path: /swift/v1/AUTH_$(project_id)s
