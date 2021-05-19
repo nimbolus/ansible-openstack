@@ -25,6 +25,15 @@ OPENSTACK_API_VERSIONS = {
     "image": 2,
     "volume": 3,
 }
+{% if horizon_customize_site_branding %}
+SITE_BRANDING = "{{ horizon_customize_site_branding }}"
+{% endif %}
+{% if horizon_customize_site_branding_link %}
+SITE_BRANDING_LINK = "{{ horizon_customize_site_branding_link }}"
+{% endif %}
+{% if horizon_customize_help_url %}
+HORIZON_CONFIG["help_url"] = "{{ horizon_customize_help_url }}"
+{% endif %}
 OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True
 OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = "Default"
 OPENSTACK_KEYSTONE_DEFAULT_ROLE = "member"

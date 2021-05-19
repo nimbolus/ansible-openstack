@@ -11,6 +11,22 @@
     backup: true
   notify: restart httpd
 
+- name: copy custom logo
+  copy:
+    src: "{{ horizon_custom_logo_file }}"
+    dest: /usr/share/openstack-dashboard/openstack_dashboard/static/dashboard/img/logo.svg
+    backup: true
+  when: horizon_custom_logo_file
+  notify: restart httpd
+
+- name: copy custom logo-splash
+  copy:
+    src: "{{ horizon_custom_logo_splash_file }}"
+    dest: /usr/share/openstack-dashboard/openstack_dashboard/static/dashboard/img/logo-splash.svg
+    backup: true
+  when: horizon_custom_logo_splash_file
+  notify: restart httpd
+
 - name: configure httpd
   template:
     src: openstack-dashboard.conf.j2

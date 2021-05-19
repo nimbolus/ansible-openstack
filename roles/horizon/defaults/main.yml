@@ -5,3 +5,16 @@ horizon_allowed_hosts:
 horizon_physical_networks:
   - provider
 horizon_session_timeout: 3600
+
+
+# customize the dashboard: https://docs.openstack.org/horizon/latest/admin/customize-configure.html
+horizon_customize_site_branding: ~ # Example, Inc. Cloud
+horizon_customize_site_branding_link: ~ # http://example.com
+horizon_customize_help_url: ~ # http://openstack.mycompany.org
+
+# specify file to override the default OpenStack logo in the upper left corner in the Horizon Dashboard
+# you should use svg, as the name of the file will be ".../logo.svg"
+horizon_custom_logo_file: ~
+# specify file to override the default OpenStack logo on the login screen
+# you should use svg, as the name of the file will be ".../logo-splash.svg"
+horizon_custom_logo_splash_file: ~
