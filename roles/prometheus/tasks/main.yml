@@ -3,7 +3,7 @@
   register: prometheus_current_version
   failed_when: false
   check_mode: false
-  changed_when: prometheus_version not in prometheus_current_version.stderr
+  changed_when: prometheus_version not in prometheus_current_version.stdout
 
 - name: install
   include_tasks: install.yml
