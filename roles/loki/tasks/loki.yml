@@ -7,7 +7,7 @@
 
 - name: download loki
   unarchive:
-    src: "https://github.com/grafana/loki/releases/download/{{loki_version}}/loki-linux-amd64.zip"
+    src: "https://github.com/grafana/loki/releases/download/v{{loki_version}}/loki-linux-amd64.zip"
     dest: /tmp
     remote_src: true
   when: loki_current_version.changed
