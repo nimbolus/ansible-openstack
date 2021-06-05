@@ -55,25 +55,54 @@
     state: absent
   no_log: true
 
-- name: add management user
-  rabbitmq_user:
-    user: "{{rabbitmq_management_user}}"
-    password: "{{rabbitmq_management_password}}"
-    update_password: always
-    tags: administrator
-    vhost: "/"
-    configure_priv: ".*"
-    read_priv: ".*"
-    write_priv: ".*"
-  no_log: true
+- block:
+  - name: add management user (version 3.6 or older)
+    rabbitmq_user:
+      user: "{{rabbitmq_management_user}}"
+      password: "{{rabbitmq_management_password}}"
+      tags: administrator
+      permissions:
+        - vhost: "/"
+          configure_priv: ".*"
+          read_priv: ".*"
+          write_priv: ".*"
+    no_log: true
 
-- name: add user
-  rabbitmq_user:
-    user: "{{rabbitmq_user}}"
-    password: "{{rabbitmq_user_password}}"
-    update_password: always
-    vhost: "/"
-    configure_priv: ".*"
-    read_priv: ".*"
-    write_priv: ".*"
-  no_log: true
+  - name: add user (version 3.6 or older)
+    rabbitmq_user:
+      user: "{{rabbitmq_user}}"
+      password: "{{rabbitmq_user_password}}"
+      permissions:
+        - vhost: "/"
+          configure_priv: ".*"
+          read_priv: ".*"
+          write_priv: ".*"
+    no_log: true
+
+  when: ansible_distribution_major_version|int < 8
+
+- block:
+  - name: add management user (version 3.7 or newer)
+    rabbitmq_user:
+      user: "{{rabbitmq_management_user}}"
+      password: "{{rabbitmq_management_password}}"
+      update_password: always
+      tags: administrator
+      vhost: "/"
+      configure_priv: ".*"
+      read_priv: ".*"
+      write_priv: ".*"
+    no_log: true
+
+  - name: add user (version 3.7 or newer)
+    rabbitmq_user:
+      user: "{{rabbitmq_user}}"
+      password: "{{rabbitmq_user_password}}"
+      update_password: always
+      vhost: "/"
+      configure_priv: ".*"
+      read_priv: ".*"
+      write_priv: ".*"
+    no_log: true
+
+  when: ansible_distribution_major_version|int >= 8
