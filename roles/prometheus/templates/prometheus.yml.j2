@@ -29,6 +29,16 @@ scrape_configs:
       labels:
         nodename: {{hostvars[t].ansible_nodename}}
 {% endfor %}
+{% if 'openstack' in prometheus_enabled_exporters %}
+  - job_name: 'openstack'
+    metrics_path: '/probe'
+    params:
+      cloud: ['openstack']
+    scrape_interval: 60m
+    scrape_timeout: 1m
+    static_configs:
+    - targets: ['localhost:9180']
+{% endif %}
 {% for c in prometheus_scrape_configs %}
   {{ c | to_yaml }}
 {% endfor %}

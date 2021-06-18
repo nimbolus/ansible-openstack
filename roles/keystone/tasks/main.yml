@@ -77,6 +77,17 @@
     mode: 0600
   become: false
 
+- name: create openstack directory
+  file:
+    path: /etc/openstack
+    state: directory
+
+- name: create clouds.yaml
+  template:
+    src: clouds.yaml.j2
+    dest: /etc/openstack/clouds.yaml
+    mode: 0600
+
 - name: create service project
   os_project:
     auth: "{{keystone_admin_auth}}"

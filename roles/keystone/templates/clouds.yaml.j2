@@ -1,0 +1,14 @@
+# {{ansible_managed}}
+# keystone auth for third party applications
+
+clouds:
+  openstack:
+    auth:
+      auth_url: "{{keystone_admin_url}}"
+      username: "admin"
+      password: "{{keystone_admin_password}}"
+      project_name: "admin"
+      project_domain_name: "Default"
+      user_domain_name: "Default"
+    interface: "public"
+    identity_api_version: 3

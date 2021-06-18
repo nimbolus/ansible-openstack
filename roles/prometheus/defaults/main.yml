@@ -1,2 +1,5 @@
 prometheus_version: 2.26.0
 prometheus_scrape_configs: []
+prometheus_enabled_exporters:
+  - openstack
+prometheus_openstack_exporter_version: 1.4.0
