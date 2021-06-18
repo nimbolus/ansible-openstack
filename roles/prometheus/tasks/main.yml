@@ -1,12 +1,19 @@
 - name: check for version
-  shell: /usr/local/bin/prometheus --version
+  command: /usr/local/bin/prometheus --version
   register: prometheus_current_version
   failed_when: false
   check_mode: false
   changed_when: prometheus_version not in prometheus_current_version.stdout
+  notify: restart prometheus
 
 - name: install
   include_tasks: install.yml
+  vars:
+    download_url: "https://github.com/prometheus/prometheus/releases/download/v{{prometheus_version}}/prometheus-{{prometheus_version}}.linux-amd64.tar.gz"
+    download_folder: "prometheus-{{prometheus_version}}.linux-amd64"
+    download_binaries:
+      - prometheus
+      - promtool
   when: prometheus_current_version.changed
 
 - name: create prometheus user
@@ -43,6 +50,12 @@
     src: prometheus.yml.j2
     dest: /etc/prometheus/prometheus.yml
   notify: restart prometheus
+
+- name: setup exporters
+  include_tasks: "exporters/{{exporter}}.yml"
+  loop: "{{prometheus_enabled_exporters}}"
+  loop_control:
+    loop_var: exporter
 
 - name: flush handlers
   meta: flush_handlers

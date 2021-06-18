@@ -1,21 +1,21 @@
-- name: download
+# downloads and extracts binary archives from github
+# required vars on include: download_url, download_folder, download_binaries
+
+- name: "install {{download_binaries[0]}}: download"
   unarchive:
-    src: "https://github.com/prometheus/prometheus/releases/download/v{{prometheus_version}}/prometheus-{{prometheus_version}}.linux-amd64.tar.gz"
+    src: "{{download_url}}"
     remote_src: true
     dest: /tmp
 
-- name: copy binaries
+- name: "install {{download_binaries[0]}}: copy binaries"
   copy:
-    src: "/tmp/prometheus-{{prometheus_version}}.linux-amd64/{{item}}"
+    src: "/tmp/{{download_folder}}/{{item}}"
     remote_src: true
     dest: "/usr/local/bin/{{item}}"
-    mode: 755
-  loop:
-    - prometheus
-    - promtool
-  notify: restart prometheus
+    mode: 0755
+  loop: "{{download_binaries}}"
 
-- name: cleanup
+- name: "install {{download_binaries[0]}}: cleanup"
   file:
-    path: /tmp/prometheus-{{prometheus_version}}.linux-amd64
+    path: "/tmp/{{download_folder}}"
     state: absent

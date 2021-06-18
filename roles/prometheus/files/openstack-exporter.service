@@ -1,0 +1,14 @@
+[Unit]
+Description=Prometheus OpenStack Exporter
+Documentation=https://github.com/openstack-exporter/openstack-exporter
+After=network-online.target
+
+[Service]
+User=prometheus
+Restart=on-failure
+ExecStart=/usr/local/bin/openstack-exporter \
+    --os-client-config /etc/openstack/clouds.prometheus.yaml \
+    --multi-cloud --disable-slow-metrics --disable-deprecated-metrics
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,37 @@
+- name: check for openstack-exporter version
+  command: /usr/local/bin/openstack-exporter --version
+  register: prometheus_openstack_exporter_current_version
+  failed_when: false
+  check_mode: false
+  changed_when: prometheus_openstack_exporter_version not in prometheus_openstack_exporter_current_version.stderr
+  notify: restart prometheus-openstack-exporter
+
+- name: install openstack-exporter
+  include_tasks: ../install.yml
+  vars:
+    download_url: "https://github.com/openstack-exporter/openstack-exporter/releases/download/v{{prometheus_openstack_exporter_version}}/openstack-exporter-{{prometheus_openstack_exporter_version}}.linux-amd64.tar.gz"
+    download_folder: "openstack-exporter-{{prometheus_openstack_exporter_version}}.linux-amd64"
+    download_binaries:
+      - openstack-exporter
+    download_notify_service: prometheus-openstack-exporter
+  when: prometheus_openstack_exporter_current_version.changed
+
+- name: copy clouds.yaml
+  copy:
+    src: /etc/openstack/clouds.yaml
+    remote_src: true
+    dest: /etc/openstack/clouds.prometheus.yaml
+    mode: 0600
+    owner: prometheus
+
+- name: create openstack-exporter systemd service
+  copy:
+    src: openstack-exporter.service
+    dest: /etc/systemd/system/prometheus-openstack-exporter.service
+  notify: restart prometheus-openstack-exporter
+
+- name: start and enable openstack-exporter
+  systemd:
+    name: prometheus-openstack-exporter
+    state: started
+    enabled: true
