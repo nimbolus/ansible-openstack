@@ -68,3 +68,16 @@
     disk: "{{item.disk}}"
   loop: "{{nova_flavors}}"
   run_once: true
+
+- name: set availability zones
+  os_nova_host_aggregate:
+    auth: "{{keystone_admin_auth}}"
+    name: "az-{{hostvars[item].os_availability_zone}}"
+    hosts:
+      - "{{hostvars[item].ansible_nodename}}"
+    purge_hosts: false
+    availability_zone: "{{hostvars[item].os_availability_zone}}"
+  loop: "{{groups.compute_nodes}}"
+  when: "'os_availability_zone' in hostvars[item]
+        and hostvars[item].os_availability_zone != 'nova'"
+  run_once: true
