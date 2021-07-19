@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from openstack_dashboard.settings import HORIZON_CONFIG
 DEBUG = False
 WEBROOT = '/dashboard/'
-ALLOWED_HOSTS = [{% for h in horizon_allowed_hosts %}'{{h}}'{% if not loop.last %},{% endif %}{% endfor %}]
+ALLOWED_HOSTS = [{% for h in horizon_allowed_hosts %}'{{h}}'{% if not loop.last %}, {% endif %}{% endfor %}]
 SHOW_OPENRC_FILE = True
 SHOW_OPENSTACK_CLOUDS_YAML = True
 LOCAL_PATH = '/tmp'
