@@ -1,0 +1,13 @@
+- name: check for log file
+  stat:
+    path: "{{item}}"
+  register: log_file
+
+- name: set acls for log file
+  acl:
+    path: "{{item}}"
+    entity: td-agent
+    etype: user
+    permissions: r
+    state: present
+  when: log_file.stat.exists

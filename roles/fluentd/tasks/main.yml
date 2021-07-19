@@ -20,27 +20,13 @@
     - install fluent plugins
     - restart fluentd
 
-- name: get available groups
-  getent:
-    database: group
+- name: set directory acls
+  include_tasks: acl_directory.yml
+  loop: "{{fluentd_log_directories}}"
 
-- name: add user to service groups
-  user:
-    name: td-agent
-    groups: "{{item}}"
-    append: true
-  when: item in ansible_facts.getent_group
-  loop:
-    - root
-    - keystone
-    - nova
-    - neutron
-    - cinder
-    - glance
-    - placement
-    - magnum
-    - designate
-    - heat
+- name: set file acls
+  include_tasks: acl_file.yml
+  loop: "{{fluentd_log_files}}"
 
 - name: flush handlers
   meta: flush_handlers
@@ -50,4 +36,3 @@
     name: td-agent
     state: started
     enabled: true
-

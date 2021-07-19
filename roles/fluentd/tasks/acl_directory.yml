@@ -1,0 +1,23 @@
+- name: check for log directory
+  stat:
+    path: "{{item}}"
+  register: log_directory
+
+- name: set acls for directory
+  acl:
+    path: "{{item}}"
+    entity: td-agent
+    etype: user
+    permissions: rx
+    state: present
+  when: log_directory.stat.exists
+
+- name: set default acls for directory
+  acl:
+    path: "{{item}}"
+    entity: td-agent
+    etype: user
+    permissions: r
+    default: true
+    state: present
+  when: log_directory.stat.exists

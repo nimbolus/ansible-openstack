@@ -466,6 +466,58 @@
   </pair>
 </match>
 
+# HTTPd
+<source>
+  @type tail
+  path /var/log/httpd/error_log
+  tag httpd
+  <parse>
+    @type apache_error
+  </parse>
+</source>
+
+<match httpd>
+  @type add
+  <pair>
+    service httpd
+  </pair>
+</match>
+
+# RabbitMQ
+<source>
+  @type tail
+  path /var/log/rabbitmq/rabbit@{{ansible_hostname}}.log
+  tag rabbitmq
+  format multiline
+  format_firstline /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}/
+  format1 /^(?<Timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}) \[(?<log_level>\w+)\] (?<Payload>.*)/
+</source>
+
+<match rabbitmq>
+  @type add
+  <pair>
+    service rabbitmq
+  </pair>
+</match>
+
+# MariaDB
+<source>
+  @type tail
+  path /var/log/mariadb/mariadb.log
+  tag mariadb
+  format multiline
+  format_firstline /^\d{6}/
+  format1 /^(?<time>\d{6} \d{1,2}:\d{1,2}:\d{1,2}) (\[(?<log_level>\S+)\]|mysqld_safe) (?<Payload>.*)/
+  time_format %y%m%d %k:%M:%S
+</source>
+
+<match mariadb>
+  @type add
+  <pair>
+    service mariadb
+  </pair>
+</match>
+
 <match greped.**>
   @type loki
   url http://{{logging_host}}:3100
