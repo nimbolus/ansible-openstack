@@ -26,7 +26,7 @@ openstack network create provider1 \
 ```sh
 openstack subnet create floating-ip \
     --network provider1 \
-    --gateway 192.168.100.1/24 \
+    --gateway 192.168.100.1 \
     --subnet-range 192.168.100.0/24 \
     --no-dhcp
 ```
