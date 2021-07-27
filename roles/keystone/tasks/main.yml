@@ -28,7 +28,7 @@
     - init keystone db
     - init keystone token provider
     - bootstrap keystone
-  
+
 - name: create directory for domain configurations
   file:
     path: /etc/keystone/domains
@@ -88,3 +88,5 @@
     name: "{{item.domain}}"
     description: "FreeIPA {{item.domain}}"
   loop: "{{keystone_freeipa_servers}}"
+  loop_control:
+    label: "{{item.domain}}"
