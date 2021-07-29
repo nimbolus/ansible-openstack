@@ -30,4 +30,4 @@ keystone_service_endpoint_interfaces:
 
 keystone_overwride_admin_with_public_url: false
 keystone_service_public_url: {}
-  # <service_name>: <url> 
+  # <service_name>: <url>

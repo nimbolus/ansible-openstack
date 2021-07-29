@@ -43,6 +43,8 @@
     group: keystone
     mode: 0640
   loop: "{{keystone_freeipa_servers}}"
+  loop_control:
+    label: "{{item.domain}}"
   notify: bootstrap keystone
 
 - name: flush handlers
