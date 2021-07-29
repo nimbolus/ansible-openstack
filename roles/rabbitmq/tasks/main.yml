@@ -8,16 +8,10 @@
     dest: /etc/httpd/conf.d/rabbitmq.conf
   notify: reload httpd
 
-- name: start and enable
-  systemd:
-    name: rabbitmq-server
-    state: started
-    enabled: true
-
 - name: enable management plugin
-  rabbitmq_plugin:
-    names: rabbitmq_management
-    state: enabled
+  copy:
+    content: "[rabbitmq_management]."
+    dest: /etc/rabbitmq/enabled_plugins
 
 - name: configure (version 3.6 or older)
   blockinfile:
@@ -48,6 +42,12 @@
 
 - name: flush handlers
   meta: flush_handlers
+
+- name: start and enable
+  systemd:
+    name: rabbitmq-server
+    state: started
+    enabled: true
 
 - name: remove guest user
   rabbitmq_user:
