@@ -34,6 +34,13 @@
   when: "is_compute_node
         and nova_ephemeral_storage_backend == 'rbd'"
 
+- name: start and enable libvirt
+  systemd:
+    name: libvirtd
+    enabled: true
+    state: started
+  when: is_compute_node
+
 - name: flush handlers
   meta: flush_handlers
 
@@ -51,12 +58,9 @@
 
 - name: start and enable compute
   systemd:
-    name: "{{item}}"
+    name: openstack-nova-compute
     enabled: true
     state: started
-  loop:
-    - libvirtd
-    - openstack-nova-compute
   when: is_compute_node
 
 - name: add flavors
