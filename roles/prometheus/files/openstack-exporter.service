@@ -7,6 +7,7 @@ After=network-online.target
 User=prometheus
 Restart=on-failure
 ExecStart=/usr/local/bin/openstack-exporter \
+    --web.listen-address="127.0.0.1:9180" \
     --os-client-config /etc/openstack/clouds.prometheus.yaml \
     --multi-cloud --disable-slow-metrics --disable-deprecated-metrics
 
