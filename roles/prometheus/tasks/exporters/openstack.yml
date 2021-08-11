@@ -16,9 +16,9 @@
     download_notify_service: prometheus-openstack-exporter
   when: prometheus_openstack_exporter_current_version.changed
 
-- name: copy clouds.yaml
+- name: copy clouds.keystone.yaml
   copy:
-    src: /etc/openstack/clouds.yaml
+    src: /etc/openstack/clouds.keystone.yaml
     remote_src: true
     dest: /etc/openstack/clouds.prometheus.yaml
     mode: 0600

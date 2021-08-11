@@ -85,7 +85,7 @@
 - name: create clouds.yaml
   template:
     src: clouds.yaml.j2
-    dest: /etc/openstack/clouds.yaml
+    dest: /etc/openstack/clouds.keystone.yaml
     mode: 0600
 
 - name: create service project
