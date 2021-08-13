@@ -1,0 +1,6 @@
+# {{ansible_managed}}
+{% for host in groups.compute_nodes %}
+{%- if host != inventory_hostname and hostvars[host].nova_ssh_public_key is defined %}
+{{ hostvars[host].nova_ssh_public_key.content | b64decode }}
+{%- endif %}
+{% endfor %}

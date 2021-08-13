@@ -98,6 +98,9 @@ images_rbd_ceph_conf = {{nova_rbd_ceph_conf}}
 rbd_user = {{nova_rbd_user}}
 rbd_secret_uuid = {{nova_rbd_secret_uuid}}
 {% endif %}
+{% if nova_enable_migrations %}
+live_migration_scheme = ssh
+{% endif %}
 {% endif %}
 
 {%- set all_devices = groups.compute_nodes | map('extract', hostvars) | selectattr('nova_pci_devices', 'defined') | map(attribute='nova_pci_devices') | flatten %}
@@ -115,9 +118,15 @@ alias = { "vendor_id":"{{d.vendor_id}}", "product_id":"{{d.product_id}}", "devic
 {% for d in all_devices %}
 alias = { "vendor_id":"{{d.vendor_id}}", "product_id":"{{d.product_id}}", "device_type":"{{d.device_type}}", "name":"{{d.name}}", "numa_policy":"preferred" }
 {% endfor %}
+{% endif %}
+{% endif %}
+{% if is_controller_node %}
 
 [filter_scheduler]
-enabled_filters = AvailabilityZoneFilter,ComputeFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,ServerGroupAntiAffinityFilter,ServerGroupAffinityFilter,PciPassthroughFilter
-available_filters = nova.scheduler.filters.all_filters
+{% if all_devices | length > 0 and 'PciPassthroughFilter' not in nova_scheduler_enabled_filters %}
+enabled_filters = {{nova_scheduler_enabled_filters | join(',')}},PciPassthroughFilter
+{% else %}
+enabled_filters = {{nova_scheduler_enabled_filters | join(',')}}
 {% endif %}
+available_filters = nova.scheduler.filters.all_filters
 {% endif %}

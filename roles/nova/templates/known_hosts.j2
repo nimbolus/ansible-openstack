@@ -1,0 +1,8 @@
+# {{ansible_managed}}
+{% for host in groups.compute_nodes %}
+{%- if host != inventory_hostname and hostvars[host].nova_ssh_host_key is defined %}
+{% for line in hostvars[host].nova_ssh_host_key.stdout_lines | sort %}
+{{ hostvars[host].management_ipv4.address }},{{ line }}
+{% endfor %}
+{% endif %}
+{% endfor %}

@@ -34,6 +34,16 @@
   when: "is_compute_node
         and nova_ephemeral_storage_backend == 'rbd'"
 
+- name: enable migrations
+  include_tasks: migrations.yml
+  args:
+    apply:
+      tags:
+        - nova_enable_migrations
+  when: "is_compute_node
+        and nova_enable_migrations"
+  tags: nova_enable_migrations
+
 - name: start and enable libvirt
   systemd:
     name: libvirtd
@@ -70,6 +80,7 @@
     vcpus: "{{item.vcpus}}"
     ram: "{{item.ram}}"
     disk: "{{item.disk}}"
+    state: "{{item.state | default('present')}}"
   loop: "{{nova_flavors}}"
   run_once: true
 
