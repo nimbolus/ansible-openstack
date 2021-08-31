@@ -36,6 +36,13 @@
     state: restarted
   when: is_network_node or is_compute_node
 
+- name: restart neutron-sriov-nic-agent
+  systemd:
+    name: neutron-sriov-nic-agent
+    state: restarted
+  when: (is_network_node or is_compute_node)
+        and neutron_sriov_agent
+
 - name: restart neutron-bgp-dragent
   systemd:
     name: neutron-bgp-dragent

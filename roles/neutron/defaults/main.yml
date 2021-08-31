@@ -7,7 +7,8 @@ neutron_provider_flat_networks: []
 neutron_provider_vlan_networks: []
   # - name: provider1
   #   interface: eth0
-  #   vlan_range: 1:10
+  #   sriov_nic: eth1 (optional: one of interface and sriov_nic must be set)
+  #   vlan_range: 1:10 (optional)
   #   configure_interface: true (optional)
 neutron_overlay_ip_address: "{{management_ipv4.address}}"
 neutron_metadata_secret: "{{secrets_metadata_secret}}"
@@ -33,6 +34,9 @@ neutron_service_plugins: router
 neutron_bgp: false
 # set id in host vars to enable bgp router on network node
 neutron_bgp_router_id: null
+neutron_sriov: false
+neutron_sriov_networks: "{{neutron_provider_vlan_networks | selectattr('sriov_nic', 'defined')}}"
+neutron_sriov_agent: "{{neutron_sriov and (neutron_sriov_networks | length > 0)}}"
 
 neutron_url: "http://{{ansible_nodename}}:9696"
 neutron_nova_metadata_host: "{{ansible_nodename}}"

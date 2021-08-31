@@ -35,6 +35,11 @@ nova_pci_devices: []
   #   vendor_id: "8888"
   #   product_id: "8888"
   #   device_type: type-PCI
+# https://docs.openstack.org/neutron/latest/admin/config-sriov.html
+nova_sriov_devices: []
+  # - devname: eth1
+  #   physical_network: net1
+  #   trusted: false
 
 nova_url: "http://{{ansible_nodename}}:8774"
 nova_novnc_url: "https://{{ansible_nodename}}:6080"

@@ -1,0 +1,7 @@
+# {{ansible_managed}}
+
+[securitygroup]
+firewall_driver = neutron.agent.firewall.NoopFirewallDriver
+
+[sriov_nic]
+physical_device_mappings = {% for n in neutron_sriov_networks %}{{n.name}}:{{n.sriov_nic}}{% if not loop.last %},{% endif %}{% endfor %}

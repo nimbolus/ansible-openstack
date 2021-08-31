@@ -108,7 +108,7 @@ live_migration_scheme = ssh
 
 [pci]
 {% if is_compute_node %}
-passthrough_whitelist = [{% for d in nova_pci_devices %}{ "vendor_id":"{{d.vendor_id}}", "product_id":"{{d.product_id}}" }{% if not loop.last %},{% endif%}{% endfor %}]
+passthrough_whitelist = [{% for d in nova_pci_devices %}{ "vendor_id":"{{d.vendor_id}}", "product_id":"{{d.product_id}}" }{% if not loop.last %},{% endif%}{% endfor %}{% for d in nova_sriov_devices %},{ "devname":"{{d.devname}}", "physical_network":"{{d.physical_network}}", "trusted":"{{d.trusted|lower}}" }{% endfor %}]
 
 {% for d in nova_pci_devices %}
 alias = { "vendor_id":"{{d.vendor_id}}", "product_id":"{{d.product_id}}", "device_type":"{{d.device_type}}", "name":"{{d.name}}" }

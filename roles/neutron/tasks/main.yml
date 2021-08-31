@@ -27,6 +27,14 @@
   notify: restart neutron-linuxbridge-agent
   when: is_network_node or is_compute_node
 
+- name: install sriov-nic agent
+  package:
+    name: openstack-neutron-sriov-nic-agent
+    state: "{{package_state | default('present')}}"
+  notify: restart neutron-linuxbridge-agent
+  when: (is_network_node or is_compute_node)
+        and neutron_sriov_agent
+
 - name: install bgp service plugin
   package:
     name:
@@ -47,6 +55,7 @@
     - restart neutron-metadata-agent
     - restart neutron-l3-agent
     - restart neutron-bgp-dragent
+    - restart neutron-sriov-nic-agent
 
 - name: configure modular layer 2 plugin
   template:
@@ -68,6 +77,15 @@
     backup: true
   notify: restart neutron-linuxbridge-agent
   when: is_network_node or is_compute_node
+
+- name: configure sriov-nic agent
+  template:
+    src: sriov_agent.ini.j2
+    dest: /etc/neutron/plugins/ml2/sriov_agent.ini
+    backup: true
+  notify: restart neutron-sriov-nic-agent
+  when: (is_network_node or is_compute_node)
+        and neutron_sriov_agent
 
 - name: link ml2 plugin
   file:
@@ -126,6 +144,14 @@
     enabled: true
     state: started
   when: is_network_node or is_compute_node
+
+- name: start and enable sriov-nic agent
+  systemd:
+    name: neutron-sriov-nic-agent
+    enabled: true
+    state: started
+  when: (is_network_node or is_compute_node)
+        and neutron_sriov_agent
 
 - name: start and enable bgp agent
   systemd:
