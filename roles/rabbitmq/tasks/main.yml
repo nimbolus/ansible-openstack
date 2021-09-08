@@ -40,6 +40,19 @@
   notify: restart rabbitmq
   when: ansible_distribution_major_version|int >= 8
 
+- name: create systemd overwrite directory
+  file:
+    path: /etc/systemd/system/rabbitmq-server.service.d
+    state: directory
+    mode: "0755"
+
+- name: set ulimits
+  template:
+    src: limits.conf.j2
+    dest: /etc/systemd/system/rabbitmq-server.service.d/limits.conf
+    mode: "0644"
+  notify: restart rabbitmq
+
 - name: flush handlers
   meta: flush_handlers
 
