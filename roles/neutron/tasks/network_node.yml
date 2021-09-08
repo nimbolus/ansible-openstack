@@ -3,6 +3,7 @@
     src: network_node/l3_agent.ini.j2
     dest: /etc/neutron/l3_agent.ini
     backup: true
+  when: neutron_l3_agent
   notify: restart neutron-l3-agent
 
 - name: configure dhcp agent
@@ -10,6 +11,7 @@
     src: network_node/dhcp_agent.ini.j2
     dest: /etc/neutron/dhcp_agent.ini
     backup: true
+  when: neutron_dhcp_agent
   notify: restart neutron-dhcp-agent
 
 - name: configure metadata agent
@@ -17,6 +19,7 @@
     src: network_node/metadata_agent.ini.j2
     dest: /etc/neutron/metadata_agent.ini
     backup: true
+  when: neutron_metadata_agent
   notify: restart neutron-metadata-agent
 
 - name: configure bgp agent

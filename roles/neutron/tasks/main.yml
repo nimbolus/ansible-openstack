@@ -104,21 +104,21 @@
     name: neutron-l3-agent
     enabled: true
     state: started
-  when: is_network_node
+  when: is_network_node and neutron_l3_agent
 
 - name: start and enable metadata agent
   systemd:
     name: neutron-metadata-agent
     enabled: true
     state: started
-  when: is_network_node
+  when: is_network_node and neutron_metadata_agent
 
 - name: start and enable dhcp agent
   systemd:
     name: neutron-dhcp-agent
     enabled: true
     state: started
-  when: is_network_node
+  when: is_network_node and neutron_dhcp_agent
 
 - name: start and enable linuxbridge agent
   systemd:
