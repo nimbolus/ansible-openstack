@@ -103,7 +103,7 @@ live_migration_scheme = ssh
 {% endif %}
 {% endif %}
 
-{%- set all_devices = groups.compute_nodes | map('extract', hostvars) | selectattr('nova_pci_devices', 'defined') | map(attribute='nova_pci_devices') | flatten %}
+{%- set all_devices = groups.compute_nodes | map('extract', hostvars) | selectattr('nova_pci_devices', 'defined') | map(attribute='nova_pci_devices') | flatten | unique %}
 {% if is_controller_node and all_devices | length > 0 or is_compute_node and nova_pci_devices | length > 0 %}
 
 [pci]
