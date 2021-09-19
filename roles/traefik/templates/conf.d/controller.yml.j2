@@ -9,7 +9,9 @@ http:
 
   routers:
     horizon:
-      rule: "Host(`{{traefik_horizon_domain}}`)"
+{% set public_rule = ['Host(`horizon.'+traefik_public_domain+'`)'] if traefik_public_domain else [] %}
+{% set internal_rule = ['Host(`horizon.'+traefik_admin_domain+'`)'] if traefik_admin_domain else [] %}
+      rule: "{{(public_rule+internal_rule) | join(' || ')}}"
       service: controller
       entryPoints:
         - web-secure

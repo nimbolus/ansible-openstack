@@ -1,5 +1,15 @@
 - "DNS:{{traefik_controller_domain}}"
-- "DNS:{{traefik_horizon_domain}}"
+{% if traefik_admin_domain %}
+- "DNS:horizon.{{traefik_admin_domain}}"
+{% endif %}
+{% if traefik_public_domain %}
+- "DNS:horizon.{{traefik_public_domain}}"
+{% endif %}
 {% for s in traefik_services %}
-- "DNS:{{s.name}}.{{traefik_domain}}"
+{% if traefik_admin_domain %}
+- "DNS:{{s.name}}.{{traefik_admin_domain}}"
+{% endif %}
+{% if traefik_public_domain %}
+- "DNS:{{s.name}}.{{traefik_public_domain}}"
+{% endif %}
 {% endfor %}

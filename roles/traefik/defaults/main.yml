@@ -1,9 +1,9 @@
 traefik_version: 2.4.8
 # log level can be DEBUG, PANIC, FATAL, ERROR, WARN or INFO
 traefik_log_level: ERROR
-traefik_domain: example.com
-traefik_controller_domain: controller.{{traefik_domain}}
-traefik_horizon_domain: horizon.{{traefik_domain}}
+traefik_admin_domain: null
+traefik_public_domain: example.com
+traefik_controller_domain: "controller.{{traefik_public_domain}}"
 traefik_httpd_url: http://localhost:8081
 # skip ssl verification for backends
 traefik_insecure_skip_verify: true

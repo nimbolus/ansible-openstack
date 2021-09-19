@@ -11,8 +11,10 @@ http:
 
   routers:
 {% for s in traefik_services + traefik_additional_services %}
+{% set public_rule = ['Host(`'+s.name+'.'+traefik_public_domain+'`)'] if traefik_public_domain else [] %}
+{% set internal_rule = ['Host(`'+s.name+'.'+traefik_admin_domain+'`)'] if traefik_admin_domain else [] %}
     {{s.name}}:
-      rule: "Host(`{{s.name}}.{{traefik_domain}}`)"
+      rule: "{{(public_rule+internal_rule) | join(' || ')}}"
 {% if s.enable_websockets is defined and s.enable_websockets %}
       middlewares:
         - https-forward-header
