@@ -1,3 +1,5 @@
 swift_ceph_user_password: "{{secrets_swift_ceph_pass}}"
 
 swift_ceph_url: "http://{{ansible_nodename}}:8080"
+swift_ceph_s3: true
+swift_ceph_s3_url: "{{swift_ceph_url}}"
