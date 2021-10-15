@@ -1,90 +1,44 @@
-- name: init database
-  include_role:
-    name: mariadb
-    tasks_from: init_db.yml
-  vars:
-    db_name: octavia
-    db_user: octavia
-    db_user_password: "{{octavia_db_user_password}}"
+- name: setup controller
+  include_tasks: controller.yml
+  when: is_controller_node
 
-- name: init keystone octavia service
-  include_role:
-    name: keystone
-    tasks_from: init_auth.yml
-  vars:
-    keystone_user: octavia
-    keystone_user_password: "{{octavia_user_password}}"
-    keystone_service_name: octavia
-    keystone_service_description: OpenStack Octavia
-    keystone_service_type: load-balancer
-    keystone_service_url: "{{octavia_url}}"
-    keystone_service_path: /
-
-- name: add amphora flavor
-  os_nova_flavor:
-    auth: "{{octavia_keystone_auth}}"
-    flavorid: "200"
-    name: amphora
-    vcpus: "1"
-    ram: "1024"
-    disk: "2"
-    is_public: false
-
-- name: create amphora ssh key
-  openssh_keypair:
-    path: ~/.ssh/octavia_amphora_id_rsa
-    size: 4096
-    mode: 0600
-  become: false
-  register: octavia_amphora_ssh_key
-
-- name: create amphora key pair
-  os_keypair:
-    auth: "{{octavia_keystone_auth}}"
-    name: amphora
-    public_key_file: "{{octavia_amphora_ssh_key.filename}}.pub"
-
-- name: create env file for maintaining
-  template:
-    src: octavia-openrc.j2
-    dest: ~/octavia-openrc
-    mode: 0600
-  become: false
-
-- name: install
+- name: install controller
   package:
     name:
       - openstack-octavia-api
-      - openstack-octavia-health-manager
-      - openstack-octavia-housekeeping
-      - openstack-octavia-worker
       - openstack-octavia-ui
       - openstack-octavia-diskimage-create
+      - debootstrap
       - "{{'python' if ansible_distribution_major_version|int < 8 else 'python3'}}-octaviaclient"
-      - bridge-utils
     state: "{{package_state | default('present')}}"
   notify:
     - init octavia db
     - restart octavia-api
+    - restart httpd
+  when: is_controller_node
+
+- name: install worker
+  package:
+    name:
+      - openstack-octavia-health-manager
+      - openstack-octavia-housekeeping
+      - openstack-octavia-worker
+      - "{{'python' if ansible_distribution_major_version|int < 8 else 'python3'}}-octaviaclient"
+      - bridge-utils
+    state: "{{package_state | default('present')}}"
+  notify:
     - restart octavia-health-manager
     - restart octavia-housekeeping
     - restart octavia-worker
-    - restart httpd
+  when: is_network_node and octavia_worker
 
 - name: create management network
   include_tasks: network.yml
+  when: is_controller_node
 
-- name: request certificate for controller
-  include_role:
-    name: ca
-    tasks_from: req_cert.yml
-  vars:
-    req_name: octavia
-    req_common_name: "{{ansible_nodename}}"
-    req_owner: octavia
-    req_group: octavia
-    req_post_command: systemctl restart octavia-api octavia-health-manager octavia-housekeeping octavia-worker
-    req_create_bundle: true
+- name: create ports
+  include_tasks: port.yml
+  when: is_network_node and octavia_worker
 
 - name: create amphora server ca
   include_role:
@@ -95,6 +49,20 @@
     ca_organization_unit_name: Octavia Amphora
     ca_owner: octavia
     ca_key_passphrase: "{{octavia_amphora_ca_key_passphrase}}"
+  when: is_network_node and octavia_worker
+
+- name: request certificate for worker
+  include_role:
+    name: ca
+    tasks_from: req_cert.yml
+  vars:
+    req_name: octavia
+    req_common_name: "{{ansible_nodename}}"
+    req_owner: octavia
+    req_group: octavia
+    req_post_command: systemctl restart octavia-health-manager octavia-housekeeping octavia-worker
+    req_create_bundle: true
+  when: is_network_node and octavia_worker
 
 - name: configure
   template:
@@ -107,18 +75,27 @@
     - restart octavia-health-manager
     - restart octavia-housekeeping
     - restart octavia-worker
+  when: is_controller_node or
+        (is_network_node and octavia_worker)
 
 - name: flush handlers
   meta: flush_handlers
 
-- name: start and enable
+- name: start and enable controller
+  systemd:
+    name: octavia-api
+    state: started
+    enabled: true
+  when: is_controller_node
+
+- name: start and enable worker
   systemd:
     name: "{{item}}"
     state: started
     enabled: true
   loop:
-    - octavia-api
-    - octavia-health-manager
-    - octavia-housekeeping
-    - octavia-worker
     - octavia-interface
+    - octavia-worker
+    - octavia-housekeeping
+    - octavia-health-manager
+  when: is_network_node and octavia_worker

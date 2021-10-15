@@ -6,10 +6,10 @@ After=neutron-linuxbridge-agent.service
 [Service]
 Type=oneshot
 RemainAfterExit=true
-Environment=MGMT_NETWORK_ID={{octavia_management_network.network.id}}
+Environment=MGMT_NETWORK_ID={{hostvars[groups["controller_nodes"][0]]["octavia_management_network"]["stdout"]}}
 Environment=MGMT_MAC_ADDRESS={{octavia_management_port_mac_address.stdout}}
-ExecStart=/usr/local/bin/octavia-interface.sh start
-ExecStop=/usr/local/bin/octavia-interface.sh stop
+ExecStart=/usr/local/bin/octavia-interface.sh start {{octavia_management_veth_interface}} {{octavia_management_interface}}
+ExecStop=/usr/local/bin/octavia-interface.sh stop {{octavia_management_veth_interface}} {{octavia_management_interface}}
 
 [Install]
 WantedBy=multi-user.target

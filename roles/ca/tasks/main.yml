@@ -7,7 +7,6 @@
     - "{{ca_dir}}/private"
     - "{{ca_dir}}/certs"
     - "{{ca_dir}}/csr"
-  when: ansible_nodename == ca_host
 
 - name: create ssl directory
   file:
@@ -23,7 +22,11 @@
     path: "{{ca_cert_path}}"
   register: ca_cert
   delegate_to: "{{ca_host}}"
-  when: ca_install_trust | bool
+
+- name: distribute ca certificate
+  copy:
+    content: "{{ca_cert.content | b64decode}}"
+    dest: "{{ca_dir}}/certs/ca.crt"
 
 - name: copy ca certificate to trust anchors
   copy:

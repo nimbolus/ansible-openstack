@@ -41,6 +41,7 @@
     - magnum
     - designate
     - heat
+    - octavia
 
 - name: flush handlers
   meta: flush_handlers

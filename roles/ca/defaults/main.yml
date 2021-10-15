@@ -13,7 +13,7 @@ ca_organization_unit_name: openstack
 ca_email_address: john.doe@example.com
 
 # install cfssl to enable generating new pkis (e.g. for octavia)
-ca_cfssl_install: false
+ca_cfssl_install: "{{(octavia_enabled and octavia_worker) | default(false)}}"
 ca_cfssl_version: 1.5.0
 ca_cfssl_url: https://github.com/cloudflare/cfssl/releases/download/v{{ca_cfssl_version}}/cfssl_{{ca_cfssl_version}}_linux_amd64
 ca_cfssljson_url: https://github.com/cloudflare/cfssl/releases/download/v{{ca_cfssl_version}}/cfssljson_{{ca_cfssl_version}}_linux_amd64

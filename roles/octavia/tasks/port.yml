@@ -1,0 +1,40 @@
+- name: create management port
+  os_port:
+    auth: "{{octavia_keystone_auth}}"
+    name: octavia-health-mgr-{{ansible_hostname}}-{{os_availability_zone}}
+    network: octavia-lb-mgmt
+    device_owner: octavia:health-mgr
+    region_name: "{{os_region}}"
+    security_groups: octavia-lb-health-mgr
+    admin_state_up: false
+    fixed_ips:
+      - ip_address: "{{octavia_management_fixed_ip}}"
+  delegate_to: "{{groups.controller_nodes.0}}"
+
+- name: fetch management port mac address
+  shell: |
+    . {{ansible_env.PWD}}/octavia-openrc
+    openstack port show octavia-health-mgr-{{ansible_hostname}}-{{os_availability_zone}} -c mac_address -f value
+  changed_when: false
+  check_mode: false
+  register: octavia_management_port_mac_address
+  delegate_to: "{{groups.controller_nodes.0}}"
+
+- name: copy dhclient config
+  copy:
+    src: dhclient.conf
+    dest: /etc/dhcp/octavia.conf
+  notify: restart octavia-interface
+
+- name: copy interface script
+  copy:
+    src: octavia-interface.sh
+    dest: /usr/local/bin/octavia-interface.sh
+    mode: "0755"
+  notify: restart octavia-interface
+
+- name: create interface service
+  template:
+    src: octavia-interface.service.j2
+    dest: /etc/systemd/system/octavia-interface.service
+  notify: restart octavia-interface

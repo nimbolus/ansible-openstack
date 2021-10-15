@@ -466,6 +466,78 @@
   </pair>
 </match>
 
+# Octavia API
+<source>
+  @type tail
+  path /var/log/octavia/api.log
+  tag octavia.api
+  format multiline
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  time_format %F %T.%L
+</source>
+
+<match octavia.api>
+  @type add
+  <pair>
+    service octavia.api
+  </pair>
+</match>
+
+# Octavia Health-Manager
+<source>
+  @type tail
+  path /var/log/octavia/health-manager.log
+  tag octavia.health-manager
+  format multiline
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  time_format %F %T.%L
+</source>
+
+<match octavia.health-manager>
+  @type add
+  <pair>
+    service octavia.health-manager
+  </pair>
+</match>
+
+# Octavia Housekeeping
+<source>
+  @type tail
+  path /var/log/octavia/housekeeping.log
+  tag octavia.housekeeping
+  format multiline
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  time_format %F %T.%L
+</source>
+
+<match octavia.housekeeping>
+  @type add
+  <pair>
+    service octavia.housekeeping
+  </pair>
+</match>
+
+# Octavia Worker
+<source>
+  @type tail
+  path /var/log/octavia/worker.log
+  tag octavia.worker
+  format multiline
+  format_firstline /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  format /(?<time>[^ ]* [^ ]*) (?<pid>[^ ]*) (?<level>[^ ]*) (?<class>[^ ]*) \[(?<context>.*)\] (?<message>.*)/
+  time_format %F %T.%L
+</source>
+
+<match octavia.worker>
+  @type add
+  <pair>
+    service octavia.worker
+  </pair>
+</match>
+
 <match greped.**>
   @type loki
   url http://{{logging_host}}:3100

@@ -2,29 +2,35 @@
   shell: su -s /bin/sh -c "octavia-db-manage upgrade head" octavia
   args:
     warn: false
+  when: is_controller_node
 
 - name: restart octavia-api
   systemd:
     name: octavia-api
     state: restarted
+  when: is_controller_node
 
 - name: restart octavia-health-manager
   systemd:
     name: octavia-health-manager
     state: restarted
+  when: is_network_node and octavia_worker
 
 - name: restart octavia-housekeeping
   systemd:
     name: octavia-housekeeping
     state: restarted
+  when: is_network_node and octavia_worker
 
 - name: restart octavia-worker
   systemd:
     name: octavia-worker
     state: restarted
+  when: is_network_node and octavia_worker
 
 - name: restart octavia-interface
   systemd:
     name: octavia-interface
     state: restarted
     daemon_reload: true
+  when: is_network_node and octavia_worker

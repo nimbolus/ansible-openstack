@@ -4,17 +4,23 @@ octavia_rabbitmq_user: openstack
 octavia_rabbitmq_user_password: "{{secrets_rabbit_pass}}"
 octavia_amphora_ca_dir: /etc/pki/octavia-amphora
 octavia_amphora_ca_key_passphrase: "{{secrets_octavia_amphora_ca_key_pass}}"
-# use service project id here
-octavia_amphora_image_project_id: f59382db809c43139982ca4189404650
+# use global service project id here
+octavia_service_project_id: f59382db809c43139982ca4189404650
 octavia_management_subnet: 172.31.255.0/24
 octavia_management_fixed_ip: 172.31.255.2
+octavia_management_ssh: false
+octavia_management_veth_interface: o-bhm0
+octavia_management_interface: o-hm0
+octavia_heartbeat_key: "{{secrets_octavia_heartbeat_key}}"
+# choose either SINGLE (one amphora per load balancer) or ACTIVE_STANDBY (two amphora per load balancer)
+octavia_loadbalancer_topology: SINGLE
+octavia_worker: false
 
 octavia_keystone_auth:
   auth_url: "{{keystone_url}}/v3"
   username: octavia
   password: "{{octavia_user_password}}"
   user_domain_name: Default
-  project_domain_name: Default
-  project_name: service
+  project_id: "{{octavia_service_project_id}}"
 
 octavia_url: "http://{{ansible_nodename}}:9876"
