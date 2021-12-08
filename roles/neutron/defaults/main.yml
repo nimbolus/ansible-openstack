@@ -29,6 +29,7 @@ neutron_dnsmasq_local_resolv: false
 neutron_az_aware_scheduler: false
 # activate extension drivers such as `dns` here
 neutron_ml2_extension_drivers: []
+# activate service plugins such as `trunk` or `vpnaas` here
 neutron_service_plugins: router
 # more information at: https://docs.openstack.org/neutron/latest/admin/config-bgp-dynamic-routing.html
 neutron_bgp: false
@@ -37,6 +38,7 @@ neutron_bgp_router_id: null
 neutron_sriov: false
 neutron_sriov_networks: "{{neutron_provider_vlan_networks | selectattr('sriov_nic', 'defined')}}"
 neutron_sriov_agent: "{{neutron_sriov and (neutron_sriov_networks | length > 0)}}"
+neutron_vpnaas: "{{'vpnaas' in neutron_service_plugins}}"
 
 neutron_url: "http://{{ansible_nodename}}:9696"
 neutron_nova_metadata_host: "{{ansible_nodename}}"

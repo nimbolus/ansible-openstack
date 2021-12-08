@@ -2,3 +2,11 @@
 
 [DEFAULT]
 interface_driver = linuxbridge
+
+{% if neutron_vpnaas %}
+[agent]
+extensions = vpnaas
+
+[vpnagent]
+vpn_device_driver = neutron_vpnaas.services.vpn.device_drivers.libreswan_ipsec.LibreSwanDriver
+{% endif %}

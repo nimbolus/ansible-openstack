@@ -35,6 +35,17 @@
   when: (is_network_node or is_compute_node)
         and neutron_sriov_agent
 
+- name: install vpnaas plugin
+  package:
+    name: openstack-neutron-vpnaas
+    state: "{{package_state | default('present')}}"
+  notify:
+    - init neutron db
+    - restart neutron-server
+    - restart neutron-l3-agent
+  when: (is_controller_node or is_network_node)
+        and neutron_vpnaas
+
 - name: install bgp service plugin
   package:
     name:
@@ -86,6 +97,18 @@
   notify: restart neutron-sriov-nic-agent
   when: (is_network_node or is_compute_node)
         and neutron_sriov_agent
+
+- name: configure vpnaas plugin
+  template:
+    src: network_node/vpnaas.ini.j2
+    dest: /etc/neutron/neutron_vpnaas.conf
+    backup: true
+  notify:
+    - init neutron db
+    - restart neutron-server
+    - restart neutron-l3-agent
+  when: (is_controller_node or is_network_node)
+        and neutron_vpnaas
 
 - name: link ml2 plugin
   file:

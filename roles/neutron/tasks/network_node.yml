@@ -29,3 +29,9 @@
     backup: true
   when: neutron_bgp and neutron_bgp_router_id
   notify: restart neutron-bgp-dragent
+
+- name: install libreswan for vpnaas plugin
+  package:
+    name: libreswan
+    state: "{{package_state | default('present')}}"
+  when: neutron_vpnaas
