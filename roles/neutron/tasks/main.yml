@@ -1,5 +1,5 @@
 - name: setup server
-  include: server.yml
+  include_tasks: server.yml
   when: is_controller_node
 
 - name: install
@@ -78,7 +78,7 @@
     - restart neutron-server
 
 - name: configure network node
-  include: network_node.yml
+  include_tasks: network_node.yml
   when: is_network_node
 
 - name: configure linuxbridge agent
