@@ -11,6 +11,7 @@ auth_strategy = keystone
 my_ip = {{cinder_ip_address}}
 default_availability_zone = {{cinder_default_availability_zone}}
 default_volume_type = {{cinder_default_volume_type}}
+report_discard_supported = true
 {% if is_block_storage_node %}
 storage_availability_zone = {{os_availability_zone}}
 allow_availability_zone_fallback = {{cinder_allow_availability_zone_fallback|lower}}
