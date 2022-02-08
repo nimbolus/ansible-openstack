@@ -51,3 +51,27 @@ Patches:
 ```
 
 See [magnum-ussuri-container-not-booting-up](https://ask.openstack.org/en/question/128391/magnum-ussuri-container-not-booting-up/) for more information.
+
+## DNF mirrorlists are empty after upgrading to CentOS Stream
+
+After upgrading to CenOS 8-steam (Package: `centos-release-stream`), also other `centos-release-*` packages needs to be updated:
+
+```sh
+dnf --disablerepo="*" --enablerepo="extras" update \
+  centos-release-advanced-virtualization \
+  centos-release-ceph-nautilus \
+  centos-release-messaging \
+  centos-release-nfv-common \
+  centos-release-nfv-openvswitch \
+  centos-release-openstack-ussuri \
+  centos-release-rabbitmq-38 \
+  centos-release-storage-common \
+  centos-release-virt-common
+```
+
+The `centos-release-ceph-nautilius` package may has no available update. It can be fixed by manually setting the mirrorlist to `http://mirrorlist.centos.org/?release=$avstream&arch=$basearch&repo=storage-ceph-nautilus`.
+
+This can be done with Ansible:
+```sh
+ansible openstack -m lineinfile -b -a 'path=/etc/yum.repos.d/CentOS-Ceph-Nautilus.repo line="mirrorlist=http://mirrorlist.centos.org/?release=$avstream&arch=$basearch&repo=storage-ceph-nautilus" regexp="^mirrorlist="'
+```
