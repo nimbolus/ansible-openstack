@@ -6,6 +6,7 @@ cinder_ip_address: "{{management_ipv4.address}}"
 cinder_default_availability_zone: "{{os_availability_zone}}"
 cinder_default_volume_type: "__DEFAULT__"
 cinder_allow_availability_zone_fallback: false
+cinder_verify_glance_signatures: disabled
 cinder_backends: [] # lvm, rbd and nfs are supported
 # see https://docs.openstack.org/cinder/ussuri/install/cinder-storage-install-rdo.html for how to use the filter
 cinder_lvm_filter: '"a|^/dev/sd[a-z][0-9]$|", "r/.*/"'
