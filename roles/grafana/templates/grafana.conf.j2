@@ -1,5 +1,6 @@
 # {{ansible_managed}}
 
 <Location /grafana>
+  ProxyPreserveHost on
   ProxyPass http://localhost:3000/grafana
 </Location>
