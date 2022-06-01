@@ -52,6 +52,15 @@ Patches:
 
 See [magnum-ussuri-container-not-booting-up](https://ask.openstack.org/en/question/128391/magnum-ussuri-container-not-booting-up/) for more information.
 
+## Octavia network bridge is not available on worker node
+
+This happens if the worker node doesn't run the DHCP agent for the Octavia management network. To fix this remove the existing DHCP agent from the network and add the agent that runs on the Octavia worker node:
+
+```sh
+openstack network agent remove network --dhcp <old-dhcp-agent-id> <octavia-lb-mgmt-network-id>
+openstack network agent add network --dhcp <dhcp-agent-id> <octavia-lb-mgmt-network-id>
+```
+
 ## DNF mirrorlists are empty after upgrading to CentOS Stream
 
 After upgrading to CenOS 8-steam (Package: `centos-release-stream`), also other `centos-release-*` packages needs to be updated:
@@ -69,9 +78,14 @@ dnf --disablerepo="*" --enablerepo="extras" update \
   centos-release-virt-common
 ```
 
-The `centos-release-ceph-nautilius` package may has no available update. It can be fixed by manually setting the mirrorlist to `http://mirrorlist.centos.org/?release=$avstream&arch=$basearch&repo=storage-ceph-nautilus`.
-
-This can be done with Ansible:
+Maybe also the YUM variable files need to be updated:
 ```sh
-ansible openstack -m lineinfile -b -a 'path=/etc/yum.repos.d/CentOS-Ceph-Nautilus.repo line="mirrorlist=http://mirrorlist.centos.org/?release=$avstream&arch=$basearch&repo=storage-ceph-nautilus" regexp="^mirrorlist="'
+ansible openstack -m copy -b -a 'dest=/etc/yum/vars/avstream content="8-stream\n"'
+ansible openstack -m copy -b -a 'dest=/etc/yum/vars/cloudsigdist content="8-stream\n"'
+ansible openstack -m copy -b -a 'dest=/etc/yum/vars/nfvsigdist content="8-stream\n"'
+```
+
+Sometimes also a reinstallation of the repo release package helps:
+```sh
+dnf --disablerepo="*" --enablerepo="extras" reinstall centos-release-advanced-virtualization
 ```
