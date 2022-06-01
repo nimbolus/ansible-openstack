@@ -10,7 +10,7 @@
       - openstack-octavia-diskimage-create
       - debootstrap
       - "{{'python' if ansible_distribution_major_version|int < 8 else 'python3'}}-octaviaclient"
-    state: "{{package_state | default('present')}}"
+    state: "{{package_state | default('present')}}"
   notify:
     - init octavia db
     - restart octavia-api
@@ -25,7 +25,8 @@
       - openstack-octavia-worker
       - "{{'python' if ansible_distribution_major_version|int < 8 else 'python3'}}-octaviaclient"
       - bridge-utils
-    state: "{{package_state | default('present')}}"
+      - dhcp-client
+    state: "{{package_state | default('present')}}"
   notify:
     - restart octavia-health-manager
     - restart octavia-housekeeping
