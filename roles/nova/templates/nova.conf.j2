@@ -17,6 +17,26 @@ key = {{ req_privatekey_path }}
 {% if nova_default_schedule_zone %}
 default_schedule_zone = {{nova_default_schedule_zone}}
 {% endif %}
+{% if is_compute_node %}
+{% if nova_reserved_host_cpus %}
+reserved_host_cpus = {{nova_reserved_host_cpus}}
+{% endif %}
+{% if nova_reserved_host_memory_mb %}
+reserved_host_memory_mb = {{nova_reserved_host_memory_mb}}
+{% endif %}
+{% if nova_reserved_host_disk_mb %}
+reserved_host_disk_mb = {{nova_reserved_host_disk_mb}}
+{% endif %}
+{% if nova_cpu_allocation_ratio %}
+cpu_allocation_ratio = {{nova_cpu_allocation_ratio}}
+{% endif %}
+{% if nova_ram_allocation_ratio %}
+ram_allocation_ratio = {{nova_ram_allocation_ratio}}
+{% endif %}
+{% if nova_disk_allocation_ratio %}
+disk_allocation_ratio = {{nova_disk_allocation_ratio}}
+{% endif %}
+{% endif %}
 
 [api]
 auth_strategy = keystone

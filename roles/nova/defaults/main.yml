@@ -26,6 +26,12 @@ nova_scheduler_enabled_filters:
   - ServerGroupAntiAffinityFilter
   - ServerGroupAffinityFilter
   # PciPassthroughFilter will be enabled if nova_pci_devices are configured
+nova_reserved_host_cpus: null
+nova_reserved_host_memory_mb: null
+nova_reserved_host_disk_mb: null
+nova_cpu_allocation_ratio: null
+nova_ram_allocation_ratio: null
+nova_disk_allocation_ratio: null
 nova_cross_az_attach: true
 nova_dhcp_domain: novalocal
 nova_enable_migrations: false
