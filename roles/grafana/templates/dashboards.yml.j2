@@ -9,3 +9,13 @@ providers:
     allowUiUpdates: true
     options:
       path: /var/lib/grafana/dashboards
+{% for i in grafana_additional_dashboards %}
+  - name: {{i.folder | lower}}
+    folder: {{i.folder}}
+    type: file
+    disableDeletion: true
+    editable: true
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/{{i.folder | lower}}-dashboards
+{% endfor %}

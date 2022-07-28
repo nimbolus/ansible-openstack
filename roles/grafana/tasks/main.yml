@@ -31,6 +31,12 @@
     dest: /etc/httpd/conf.d/grafana.conf
   notify: reload httpd
 
+- name: install plugins
+  grafana_plugin:
+    name: "{{item}}"
+  loop: "{{grafana_plugins}}"
+  notify: restart grafana
+
 - name: create dashboards folder
   file:
     path: /var/lib/grafana/dashboards
@@ -38,7 +44,26 @@
 
 - name: get dashboards
   include_tasks: dashboard.yml
+  vars:
+    dashboard_folder: dashboards
   loop: "{{grafana_dashboards}}"
+  loop_control:
+    loop_var: dashboard
+
+- name: create additional dashboard folders
+  file:
+    path: /var/lib/grafana/{{item | lower}}-dashboards
+    state: directory
+  loop: "{{grafana_additional_dashboards | map(attribute='folder')}}"
+
+- name: get additional dashboards
+  include_tasks: dashboard.yml
+  vars:
+    dashboard_folder: "{{item.0.folder | lower}}-dashboards"
+    dashboard: "{{item.1}}"
+  with_subelements:
+    - "{{grafana_additional_dashboards}}"
+    - dashboards
 
 - name: flush handlers
   meta: flush_handlers

@@ -40,5 +40,5 @@ scrape_configs:
     - targets: ['localhost:9180']
 {% endif %}
 {% for c in prometheus_scrape_configs %}
-  {{ c | to_yaml }}
+  - {{ c | to_yaml | indent(4) }}
 {% endfor %}

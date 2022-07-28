@@ -1,18 +1,18 @@
-- name: "check for dashboard '{{item.name}}'"
+- name: "check for dashboard '{{dashboard.name}}' in folder {{dashboard_folder}}"
   stat:
-    path: "/var/lib/grafana/dashboards/{{item.name}}.json"
+    path: "/var/lib/grafana/{{dashboard_folder}}/{{dashboard.name}}.json"
   register: grafana_dashboard
 
-- name: "downlaod dashboard '{{item.name}}'"
+- name: "downlaod dashboard '{{dashboard.name}}' in folder {{dashboard_folder}}"
   get_url:
-    url: "{{item.url}}"
-    dest: "/var/lib/grafana/dashboards/{{item.name}}.json"
+    url: "{{dashboard.url}}"
+    dest: "/var/lib/grafana/{{dashboard_folder}}/{{dashboard.name}}.json"
   notify: restart grafana
   when: not grafana_dashboard.stat.exists
-  
-- name: "rename dashboard '{{item.name}}'"
+
+- name: "rename dashboard '{{dashboard.name}}' in folder {{dashboard_folder}}"
   lineinfile:
-    path: "/var/lib/grafana/dashboards/{{item.name}}.json"
+    path: "/var/lib/grafana/{{dashboard_folder}}/{{dashboard.name}}.json"
     regexp: '^  "title": '
-    line: "  \"title\": \"{{item.name}}\","
+    line: "  \"title\": \"{{dashboard.name}}\","
   notify: restart grafana

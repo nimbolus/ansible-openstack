@@ -5,3 +5,4 @@ collections:
   - community.mysql
   - community.rabbitmq
   - community.crypto
+  - community.grafana
