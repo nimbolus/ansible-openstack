@@ -13,6 +13,7 @@
     req_owner: root
     req_group: root
     req_post_command: podman restart registry
+    req_notify: restart magnum registry
 
 - name: create registry data directory
   file:

@@ -8,7 +8,7 @@
     - nova_api
     - nova
     - nova_cell0
-  
+
 - name: create database user
   mysql_user:
     name: nova
@@ -42,7 +42,7 @@
       - openstack-nova-conductor
       - openstack-nova-novncproxy
       - openstack-nova-scheduler
-    state: "{{package_state | default('present')}}"
+    state: "{{package_state | default('present')}}"
   notify:
     - init nova db
     - restart nova-api
@@ -59,4 +59,5 @@
     req_common_name: "{{ansible_nodename}}"
     req_owner: nova
     req_group: nova
-    req_post_command: systemctl reload openstack-nova-novncproxy
+    req_post_command: systemctl restart openstack-nova-novncproxy
+    req_notify: restart nova-novncproxy

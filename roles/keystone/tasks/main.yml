@@ -14,7 +14,7 @@
     - httpd
     - "{{ '' if ansible_distribution_major_version|int < 8 else 'python3-' }}mod_wsgi"
     - mod_ssl
-    state: "{{package_state | default('present')}}"
+    state: "{{package_state | default('present')}}"
   notify:
     - init keystone db
     - restart httpd
@@ -60,6 +60,7 @@
     req_owner: apache
     req_group: apache
     req_post_command: systemctl reload httpd
+    req_notify: reload httpd
 
 - name: configure httpd virtual host
   template:

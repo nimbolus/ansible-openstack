@@ -63,6 +63,10 @@
     req_group: octavia
     req_post_command: systemctl restart octavia-health-manager octavia-housekeeping octavia-worker
     req_create_bundle: true
+    req_notify:
+      - restart octavia-health-manager
+      - restart octavia-housekeeping
+      - restart octavia-worker
   when: is_network_node and octavia_worker
 
 - name: configure

@@ -15,6 +15,7 @@
     req_owner: apache
     req_group: apache
     req_post_command: systemctl reload httpd
+    req_notify: reload httpd
 
 - name: configure
   lineinfile:
@@ -38,9 +39,9 @@
       line: "Listen {{httpd_ssl_listen_port}} https"
     - regexp: '^<VirtualHost _default_'
       line: "<VirtualHost _default_:{{httpd_ssl_listen_port}}>"
-    - regexp: SSLCertificateFile 
+    - regexp: SSLCertificateFile
       line: "SSLCertificateFile {{req_cert_path}}"
-    - regexp: SSLCertificateKeyFile 
+    - regexp: SSLCertificateKeyFile
       line: "SSLCertificateKeyFile {{req_privatekey_path}}"
   notify: reload httpd
 

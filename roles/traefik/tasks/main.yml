@@ -45,6 +45,7 @@
     req_group: root
     req_post_command: systemctl restart traefik
     req_subject_alt_name: "{{lookup('template', 'subject_alt_name.j2') | from_yaml}}"
+    req_notify: restart traefik
   when: not traefik_acme | bool
 
 - name: configure
@@ -69,6 +70,7 @@
     dest: /etc/traefik/secrets
     owner: traefik
     mode: 0600
+  notify: restart traefik
 
 - name: flush handlers
   meta: flush_handlers
