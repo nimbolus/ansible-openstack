@@ -28,6 +28,7 @@
     - init keystone db
     - init keystone token provider
     - bootstrap keystone
+    - restart httpd
 
 - name: create directory for domain configurations
   file:

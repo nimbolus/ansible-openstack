@@ -28,7 +28,7 @@ keystone_service_endpoint_interfaces:
   - internal
   - admin
 
-keystone_service_internal_url: {}
+keystone_service_public_url: {}
   # <service_name>: <url>
 keystone_service_admin_url: {}
   # <service_name>: <url>

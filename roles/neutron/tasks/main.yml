@@ -8,7 +8,7 @@
       - openstack-neutron
       - openstack-neutron-ml2
       - net-tools
-    state: "{{package_state | default('present')}}"
+    state: "{{package_state | default('present')}}"
   when: is_controller_node or is_network_node
   notify:
     - init neutron db
@@ -23,14 +23,14 @@
       - openstack-neutron-linuxbridge
       - ebtables
       - ipset
-    state: "{{package_state | default('present')}}"
+    state: "{{package_state | default('present')}}"
   notify: restart neutron-linuxbridge-agent
   when: is_network_node or is_compute_node
 
 - name: install sriov-nic agent
   package:
     name: openstack-neutron-sriov-nic-agent
-    state: "{{package_state | default('present')}}"
+    state: "{{package_state | default('present')}}"
   notify: restart neutron-linuxbridge-agent
   when: (is_network_node or is_compute_node)
         and neutron_sriov_agent
@@ -38,7 +38,7 @@
 - name: install vpnaas plugin
   package:
     name: openstack-neutron-vpnaas
-    state: "{{package_state | default('present')}}"
+    state: "{{package_state | default('present')}}"
   notify:
     - init neutron db
     - restart neutron-server

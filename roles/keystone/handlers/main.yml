@@ -11,7 +11,7 @@
 - name: bootstrap keystone
   shell: |
     keystone-manage bootstrap --bootstrap-password {{keystone_admin_password}} \
-      --bootstrap-admin-url {{keystone_url}}/v3/ \
-      --bootstrap-internal-url {{keystone_internal_url}}/v3/ \
+      --bootstrap-internal-url {{keystone_url}}/v3/ \
+      --bootstrap-admin-url {{keystone_admin_url}}/v3/ \
       --bootstrap-public-url {{keystone_public_url}}/v3/ \
       --bootstrap-region-id {{keystone_bootstrap_region}}
