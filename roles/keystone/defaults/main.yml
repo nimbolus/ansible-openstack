@@ -15,6 +15,30 @@ keystone_freeipa_servers: []
   #   user_filter: (memberof=cn=openstack-users,cn=groups,cn=accounts,dc=example,dc=com)
   #   group_filter: ""
 
+keystone_openid_crypto_passphrase: "{{secrets_openid_secret}}"
+keystone_openid_providers: []
+  # - name: myopenid
+  #   client_id: openstack
+  #   client_secret: secret
+  #   domain: myopenid
+  #   metadata_url: https://keycloak.example.com/auth/realms/admin/.well-known/openid-configuration
+  #   issuer: https://keycloak.example.com/auth/realms/admin
+  #   # examples: https://docs.openstack.org/keystone/latest/admin/federation/mapping_combinations.html
+  #   mapping_rules:
+  #     - local:
+  #         - user:
+  #             name: "{0}"
+  #             email: "{1}"
+  #         - groups: "{2}"
+  #           domain:
+  #             name: myopenid
+  #       remote:
+  #         - type: OIDC-preferred_username
+  #         - type: OIDC-email
+  #         - type: OIDC-groups
+
+keystone_federation_trusted_dashboard_hosts: "{{horizon_allowed_hosts}}"
+
 keystone_admin_auth:
   auth_url: "{{keystone_url}}/v3"
   username: admin

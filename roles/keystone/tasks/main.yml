@@ -19,6 +19,18 @@
     - init keystone db
     - restart httpd
 
+- name: install httpd openidc auth mod
+  dnf:
+    name: "@mod_auth_openidc/default"
+  when: keystone_openid_providers | length > 0
+  notify: restart httpd
+
+- name: create openid metadata directory
+  file:
+    path: /etc/httpd/mod_auth_openidc
+    state: directory
+  when: keystone_openid_providers | length > 0
+
 - name: configure
   template:
     src: keystone.conf.j2
@@ -67,6 +79,8 @@
   template:
     src: wsgi-keystone.conf.j2
     dest: /etc/httpd/conf.d/wsgi-keystone.conf
+    group: apache
+    mode: 0640
   notify: restart httpd
 
 - name: flush handlers
@@ -105,3 +119,11 @@
   loop: "{{keystone_freeipa_servers}}"
   loop_control:
     label: "{{item.domain}}"
+
+- name: configure openid providers
+  include_tasks: openid_provider.yml
+  loop: "{{keystone_openid_providers}}"
+  loop_control:
+    loop_var: provider
+    label: "{{provider.name}}"
+  when: keystone_openid_providers | length > 0

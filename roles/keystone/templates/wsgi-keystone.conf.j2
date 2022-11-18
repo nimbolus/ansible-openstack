@@ -38,3 +38,41 @@ Alias /identity /usr/bin/keystone-wsgi-public
     WSGIApplicationGroup %{GLOBAL}
     WSGIPassAuthorization On
 </Location>
+{% if keystone_openid_providers | length > 0 %}
+
+OIDCClaimPrefix "OIDC-"
+OIDCResponseType id_token
+OIDCScope "openid email profile"
+OIDCCryptoPassphrase {{keystone_openid_crypto_passphrase}}
+OIDCRedirectURI /v3/auth/OS-FEDERATION/websso/openid
+OIDCProviderTokenEndpointAuth client_secret_basic
+OIDCRemoteUserClaim email
+OIDCClaimDelimiter ";"
+OIDCMetadataDir /etc/httpd/mod_auth_openidc
+OIDCDiscoverURL /oidc-discover
+
+{% for provider in keystone_openid_providers %}
+# {{provider.name}} openid provider
+<Location /v3/OS-FEDERATION/identity_providers/{{provider.name}}/protocols/openid/auth>
+    AuthType openid-connect
+    Require valid-user
+</Location>
+
+<Location /v3/auth/OS-FEDERATION/identity_providers/{{provider.name}}/protocols/openid/websso>
+    AuthType openid-connect
+    Require valid-user
+</Location>
+
+{% endfor %}
+<Location /v3/auth/OS-FEDERATION/websso/openid>
+    AuthType openid-connect
+    Require valid-user
+</Location>
+
+<Location /oidc-discover>
+{% for provider in keystone_openid_providers %}
+    RewriteCond %{QUERY_STRING} target_link_uri=[^&]*identity_providers%2F{{provider.name}}%2F[^&]*
+    RewriteRule ^(.*)$ /v3/auth/OS-FEDERATION/websso/openid?%{QUERY_STRING}&iss={{provider.issuer}} [R=302,NE,L]
+{% endfor %}
+</Location>
+{% endif %}

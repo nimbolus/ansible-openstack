@@ -20,6 +20,22 @@ CACHES = {
          'LOCATION': '{{memcached_host}}:11211',
     }
 }
+{% if horizon_openid_providers | length > 0 %}
+WEBSSO_ENABLED = True
+WEBSSO_INITIAL_CHOICE = "{{horizon_websso_default}}"
+WEBSSO_CHOICES = (
+    ("credentials", _("Keystone Credentials")),
+{% for provider in horizon_openid_providers %}
+    ("openid_{{provider.name}}", _("{{provider.display_name}}")),
+{% endfor %}
+)
+WEBSSO_IDP_MAPPING = {
+{% for provider in horizon_openid_providers %}
+    "openid_{{provider.name}}": ("{{provider.name}}", "openid"),
+{% endfor %}
+}
+LOGOUT_URL = "{{horizon_openid_logout_url}}"
+{% endif %}
 OPENSTACK_API_VERSIONS = {
     "identity": 3,
     "image": 2,

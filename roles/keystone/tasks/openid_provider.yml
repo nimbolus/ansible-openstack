@@ -1,0 +1,54 @@
+- name: "create openid client metadata for {{provider.name}}"
+  copy:
+    content: |
+      {
+        "client_id": "{{provider.client_id}}",
+        "client_secret": "{{provider.client_secret}}"
+      }
+    dest: "/etc/httpd/mod_auth_openidc/{{provider.issuer | urlsplit('hostname')}}{{provider.issuer | urlsplit('path') | replace('/', '%2F')}}.client"
+    group: apache
+    mode: 0640
+
+- name: "create openid config metadata for {{provider.name}}"
+  copy:
+    content: |
+      {}
+    dest: "/etc/httpd/mod_auth_openidc/{{provider.issuer | urlsplit('hostname')}}{{provider.issuer | urlsplit('path') | replace('/', '%2F')}}.conf"
+
+- name: "create openid provider metadata for {{provider.name}}"
+  get_url:
+    url: "{{provider.metadata_url}}"
+    dest: "/etc/httpd/mod_auth_openidc/{{provider.issuer | urlsplit('hostname')}}{{provider.issuer | urlsplit('path') | replace('/', '%2F')}}.provider"
+
+- name: "create openid domain for {{provider.name}}"
+  openstack.cloud.identity_domain:
+    auth: "{{keystone_admin_auth}}"
+    name: "{{provider.domain}}"
+    description: "OpenID {{provider.domain}}"
+
+- name: "get info about openid domain for {{provider.name}}"
+  openstack.cloud.identity_domain_info:
+    auth: "{{keystone_admin_auth}}"
+    name: "{{provider.domain}}"
+  register: openid_provider_domain
+
+- name: "create openid identity provider for {{provider.name}}"
+  openstack.cloud.federation_idp:
+    auth: "{{keystone_admin_auth}}"
+    name: "{{provider.name}}"
+    domain_id: "{{openid_provider_domain.openstack_domains[0].id}}"
+    remote_ids:
+      - "{{provider.issuer}}"
+
+- name: "create openid mapping rules for {{provider.name}}"
+  openstack.cloud.federation_mapping:
+    auth: "{{keystone_admin_auth}}"
+    name: "{{provider.name}}_mapping"
+    rules: "{{provider.mapping_rules}}"
+
+- name: "create openid federation protocol for {{provider.name}}"
+  openstack.cloud.keystone_federation_protocol:
+    auth: "{{keystone_admin_auth}}"
+    name: openid
+    idp_id: "{{provider.name}}"
+    mapping_id: "{{provider.name}}_mapping"
