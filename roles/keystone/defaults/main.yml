@@ -36,6 +36,10 @@ keystone_openid_providers: []
   #         - type: OIDC-preferred_username
   #         - type: OIDC-email
   #         - type: OIDC-groups
+  #   groups:
+  #     - name: example
+  #       description: This is an example group
+  #       role: member
 
 keystone_federation_trusted_dashboard_hosts: "{{horizon_allowed_hosts}}"
 

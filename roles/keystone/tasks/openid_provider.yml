@@ -52,3 +52,22 @@
     name: openid
     idp_id: "{{provider.name}}"
     mapping_id: "{{provider.name}}_mapping"
+
+- name: "create openid groups for {{provider.name}}"
+  openstack.cloud.identity_group:
+    auth: "{{keystone_admin_auth}}"
+    name: "{{item.name}}"
+    description: "{{item.description}}"
+    domain_id: "{{openid_provider_domain.openstack_domains[0].id}}"
+  loop: "{{provider.groups}}"
+  register: openid_provider_group
+  failed_when: "'Duplicate entry found with name' not in openid_provider_group.msg and openid_provider_group.failed"
+
+# creating assignments does not work at the moment: https://storyboard.openstack.org/#!/story/2008823
+- name: "create openid group role assignments for {{provider.name}}"
+  openstack.cloud.role_assignment:
+    auth: "{{keystone_admin_auth}}"
+    group: "{{item.name}}"
+    role: "{{item.role}}"
+    domain: "{{openid_provider_domain.openstack_domains[0].id}}"
+  loop: "{{provider.groups}}"
