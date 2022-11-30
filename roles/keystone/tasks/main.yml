@@ -81,7 +81,7 @@
     dest: /etc/httpd/conf.d/wsgi-keystone.conf
     group: apache
     mode: 0640
-  notify: restart httpd
+  notify: reload httpd
 
 - name: flush handlers
   meta: flush_handlers

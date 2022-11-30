@@ -12,6 +12,7 @@ LOCAL_PATH = '/tmp'
 SECRET_KEY = '{{horizon_secret_key}}'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 OPENSTACK_HOST = "{{horizon_host}}"
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_TIMEOUT = {{horizon_session_timeout}}
 CACHES = {
@@ -53,7 +54,7 @@ HORIZON_CONFIG["help_url"] = "{{ horizon_customize_help_url }}"
 OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True
 OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = "Default"
 OPENSTACK_KEYSTONE_DEFAULT_ROLE = "member"
-OPENSTACK_KEYSTONE_URL = "{{keystone_url}}/v3"
+OPENSTACK_KEYSTONE_URL = "{{horizon_keystone_url}}/v3"
 OPENSTACK_KEYSTONE_BACKEND = {
     'name': 'native',
     'can_edit_user': True,

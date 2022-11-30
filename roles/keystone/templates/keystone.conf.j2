@@ -16,7 +16,7 @@ domain_config_dir = /etc/keystone/domains
 {% if keystone_openid_providers | length > 0 %}
 
 [auth]
-methods = password,token,openid
+methods = password,token,oauth1,mapped,application_credential,openid
 
 [federation]
 {% for host in keystone_federation_trusted_dashboard_hosts %}

@@ -16,6 +16,7 @@ keystone_freeipa_servers: []
   #   group_filter: ""
 
 keystone_openid_crypto_passphrase: "{{secrets_openid_secret}}"
+keystone_openid_horizon_logout_url: "https://{{horizon_allowed_hosts[0]}}/dashboard/auth/logout"
 keystone_openid_providers: []
   # - name: myopenid
   #   client_id: openstack
