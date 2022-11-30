@@ -17,6 +17,7 @@ http:
         - web-secure
       middlewares:
         - horizon-path
+        - horizon-https-forward-header
 {% if not traefik_acme %}
       tls: {}
 {% endif %}
@@ -45,6 +46,10 @@ http:
       replacePathRegex:
         regex: ^/(dashboard/)?(.*)
         replacement: /dashboard/$2
+    horizon-https-forward-header:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
     traefik-dashboard-auth:
       basicAuth:
         users:

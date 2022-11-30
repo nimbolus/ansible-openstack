@@ -5,11 +5,12 @@ horizon_allowed_hosts:
 horizon_physical_networks:
   - provider
 horizon_session_timeout: 3600
+horizon_keystone_url: "{{keystone_url}}"
 
 horizon_openid_providers: []
   # - name: myopenid
   #   display_name: My OpenID
-horizon_openid_logout_url: "{{keystone_public_url}}/v3/auth/OS-FEDERATION/websso/openid?session=logout&logout=https://{{horizon_allowed_hosts[0]}}/dashboard/auth/logout/"
+horizon_openid_logout_url: "{{keystone_public_url}}/v3/auth/OS-FEDERATION/websso/openid?session=logout&logout={{keystone_public_url}}/logout"
 horizon_websso_default: credentials
 
 # customize the dashboard: https://docs.openstack.org/horizon/latest/admin/customize-configure.html
