@@ -57,8 +57,16 @@ Next upgrade OpenStack and run the database migrations for the new release by ex
 ansible-playbook main.yml --extra-vars "package_state=latest" --tags openstack
 ```
 
-Finally upgrade all other packages by running:
+Upgrade all other packages and restart at least `httpd`:
 
 ```sh
 ansible-playbook main.yml --tags bootstrap --extra-vars "bootstrap_system_upgrade=true"
+ansible controller_nodes -m systemd -b -a "name=httpd state=restarted"
+```
+
+Finally remove the old package repository:
+
+```
+sudo dnf repository-packages centos-openstack-ussuri remove-or-reinstall
+sudo dnf remove centos-release-openstack-ussuri
 ```
