@@ -1,5 +1,7 @@
 glance_user_password: "{{secrets_glance_pass}}"
 glance_db_user_password: "{{secrets_glance_dbpass}}"
+glance_rabbitmq_user: openstack
+glance_rabbitmq_user_password: "{{secrets_rabbit_pass}}"
 glance_backend: file # file and rbd are supported
 glance_rbd_pool: images
 glance_rbd_user: glance

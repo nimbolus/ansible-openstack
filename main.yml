@@ -97,6 +97,9 @@
       tags: openstack,swift-ceph
       when: is_controller_node
             and swift_ceph_enabled | default(false)
+    - role: ceilometer
+      tags: openstack,ceilometer
+      when: ceilometer_enabled | default(false)
 
     # logging services
     - role: loki

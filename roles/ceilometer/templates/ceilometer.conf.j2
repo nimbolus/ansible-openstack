@@ -1,0 +1,13 @@
+[DEFAULT]
+transport_url =  rabbit://{{ceilometer_rabbitmq_user}}:{{ceilometer_rabbitmq_user_password}}@{{rabbitmq_host}}
+
+[service_credentials]
+auth_type = password
+auth_url = {{keystone_url}}
+project_domain_id = default
+user_domain_id = default
+project_name = service
+username = ceilometer
+password = {{ceilometer_user_password}}
+interface = internalURL
+region_name = {{os_region}}

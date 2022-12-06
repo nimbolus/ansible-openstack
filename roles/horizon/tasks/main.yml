@@ -1,7 +1,7 @@
 - name: install
   package:
     name: openstack-dashboard
-    state: "{{package_state | default('present')}}"
+    state: "{{package_state | default('present')}}"
   notify: restart httpd
 
 - name: configure

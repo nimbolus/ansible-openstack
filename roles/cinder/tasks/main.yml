@@ -3,7 +3,7 @@
     name:
       - openstack-cinder
       - "{{'python' if ansible_distribution_major_version|int < 8 else 'python3'}}-keystone"
-    state: "{{package_state | default('present')}}"
+    state: "{{package_state | default('present')}}"
   notify:
     - init cinder db
     - restart cinder-api

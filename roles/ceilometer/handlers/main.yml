@@ -1,0 +1,35 @@
+- name: init gnocchi db
+  shell: su -s /bin/sh -c "gnocchi-upgrade" gnocchi
+  args:
+    warn: false
+  when: is_controller_node
+
+- name: restart gnocchi-api
+  systemd:
+    name: openstack-gnocchi-api
+    state: restarted
+  when: is_controller_node
+
+- name: restart gnocchi-metricd
+  systemd:
+    name: openstack-gnocchi-metricd
+    state: restarted
+  when: is_controller_node
+
+- name: init ceilometer db
+  shell: su -s /bin/sh -c "ceilometer-upgrade" ceilometer
+  args:
+    warn: false
+  when: is_controller_node
+
+- name: restart ceilometer-notification
+  systemd:
+    name: openstack-ceilometer-notification
+    state: restarted
+  when: is_controller_node
+
+- name: restart ceilometer-central
+  systemd:
+    name: openstack-ceilometer-central
+    state: restarted
+  when: is_controller_node

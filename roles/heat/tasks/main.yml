@@ -70,7 +70,7 @@
       - openstack-heat-api-cfn
       - openstack-heat-engine
       - openstack-heat-ui
-    state: "{{package_state | default('present')}}"
+    state: "{{package_state | default('present')}}"
   notify:
     - init heat db
     - restart httpd

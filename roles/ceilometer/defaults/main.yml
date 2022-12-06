@@ -1,0 +1,7 @@
+ceilometer_gnocchi_db_user_password: "{{secrets_ceilometer_gnocchi_dbpass}}"
+ceilometer_user_password: "{{secrets_ceilometer_pass}}"
+ceilometer_gnocchi_user_password: "{{secrets_ceilometer_gnocchi_pass}}"
+ceilometer_rabbitmq_user: openstack
+ceilometer_rabbitmq_user_password: "{{secrets_rabbit_pass}}"
+
+ceilometer_gnocchi_url: "http://{{ansible_nodename}}:8041"

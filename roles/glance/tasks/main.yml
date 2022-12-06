@@ -22,7 +22,7 @@
 - name: install
   package:
     name: openstack-glance
-    state: "{{package_state | default('present')}}"
+    state: "{{package_state | default('present')}}"
   notify:
     - init glance db
     - restart glance-api

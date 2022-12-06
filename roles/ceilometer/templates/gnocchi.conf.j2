@@ -1,0 +1,22 @@
+[indexer]
+url = mysql+pymysql://ceilometer-gnocchi:{{secrets_ceilometer_gnocchi_dbpass}}@{{db_host}}/ceilometer-gnocchi
+
+[api]
+auth_mode = keystone
+port = 8041
+uwsgi_mode = http-socket
+
+[keystone_authtoken]
+auth_type = password
+auth_url = {{keystone_url}}
+project_domain_name = Default
+user_domain_name = Default
+project_name = service
+username = gnocchi
+password = {{ceilometer_gnocchi_user_password}}
+interface = internalURL
+region_name = {{os_region}}
+
+[storage]
+file_basepath = /var/lib/gnocchi
+driver = file
