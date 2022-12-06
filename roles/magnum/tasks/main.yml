@@ -47,7 +47,7 @@
       - openstack-magnum-conductor
       - openstack-magnum-ui
       - "{{'python' if ansible_distribution_major_version|int < 8 else 'python3'}}-magnumclient"
-    state: "{{package_state | default('present')}}"
+    state: "{{package_state | default('present')}}"
   notify:
     - init magnum db
     - restart magnum-api

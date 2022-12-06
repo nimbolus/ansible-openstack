@@ -33,5 +33,5 @@
 - name: install libreswan for vpnaas plugin
   package:
     name: libreswan
-    state: "{{package_state | default('present')}}"
+    state: "{{package_state | default('present')}}"
   when: neutron_vpnaas

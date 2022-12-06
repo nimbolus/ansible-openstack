@@ -1,7 +1,7 @@
 - name: install podman
   package:
     name: podman
-    state: "{{package_state | default('present')}}"
+    state: "{{package_state | default('present')}}"
 
 - name: request certificate for registry
   include_role:

@@ -25,7 +25,7 @@
       - openstack-trove
       - openstack-trove-ui
       - "{{'python' if ansible_distribution_major_version|int < 8 else 'python3'}}-troveclient"
-    state: "{{package_state | default('present')}}"
+    state: "{{package_state | default('present')}}"
   notify:
     - init trove db
     - restart trove-api

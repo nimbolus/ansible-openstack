@@ -33,7 +33,7 @@
       - openstack-designate-ui
       - bind
       - bind-utils
-    state: "{{package_state | default('present')}}"
+    state: "{{package_state | default('present')}}"
   notify:
     - init designate db
     - restart designate-central
@@ -68,7 +68,7 @@
 - name: configure named
   template:
     src: named.conf.j2
-    dest: /etc/named.conf 
+    dest: /etc/named.conf
     backup: true
   notify: restart named
 
