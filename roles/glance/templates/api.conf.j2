@@ -28,3 +28,11 @@ password = {{glance_user_password}}
 
 [paste_deploy]
 flavor = keystone
+
+{% if ceilometer_enabled | default(false) %}
+[DEFAULT]
+transport_url = rabbit://{{glance_rabbitmq_user}}:{{glance_rabbitmq_user_password}}@{{rabbitmq_host}}
+
+[oslo_messaging_notifications]
+driver = messagingv2
+{% endif %}

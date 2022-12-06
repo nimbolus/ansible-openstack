@@ -36,6 +36,10 @@ ram_allocation_ratio = {{nova_ram_allocation_ratio}}
 {% if nova_disk_allocation_ratio %}
 disk_allocation_ratio = {{nova_disk_allocation_ratio}}
 {% endif %}
+{% if ceilometer_enabled | default(false) %}
+instance_usage_audit = True
+instance_usage_audit_period = hour
+{% endif %}
 {% endif %}
 
 [api]
@@ -120,6 +124,14 @@ rbd_secret_uuid = {{nova_rbd_secret_uuid}}
 {% endif %}
 {% if nova_enable_migrations %}
 live_migration_scheme = ssh
+{% endif %}
+{% if ceilometer_enabled | default(false) %}
+
+[oslo_messaging_notifications]
+driver = messagingv2
+
+[notifications]
+notify_on_state_change = vm_and_task_state
 {% endif %}
 {% endif %}
 

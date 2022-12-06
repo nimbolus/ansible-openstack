@@ -50,6 +50,11 @@ password = {{cinder_user_password}}
 [oslo_concurrency]
 lock_path = /var/lib/cinder/tmp
 
+{% if ceilometer_enabled | default(false) %}
+[oslo_messaging_notifications]
+driver = messagingv2
+{% endif %}
+
 {% if is_block_storage_node %}
 {% if 'lvm' in cinder_backends %}
 # lvm backends

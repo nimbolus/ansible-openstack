@@ -1,0 +1,7 @@
+- name: install controller
+  include_tasks: controller.yml
+  when: is_controller_node
+
+- name: install compute
+  include_tasks: compute.yml
+  when: is_compute_node

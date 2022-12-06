@@ -1,0 +1,96 @@
+- name: init gnocchi database
+  include_role:
+    name: mariadb
+    tasks_from: init_db.yml
+  vars:
+    db_name: ceilometer-gnocchi
+    db_user: ceilometer-gnocchi
+    db_user_password: "{{ceilometer_gnocchi_db_user_password}}"
+
+- name: init keystone ceilometer service
+  include_role:
+    name: keystone
+    tasks_from: init_auth.yml
+  vars:
+    keystone_user: ceilometer
+    keystone_user_password: "{{ceilometer_user_password}}"
+    keystone_service_name: ceilometer
+    keystone_service_description: Telemetry
+    keystone_service_type: metering
+    keystone_service_endpoint_interfaces: []
+
+- name: init keystone gnocchi service
+  include_role:
+    name: keystone
+    tasks_from: init_auth.yml
+  vars:
+    keystone_user: gnocchi
+    keystone_user_password: "{{ceilometer_gnocchi_user_password}}"
+    keystone_service_name: gnocchi
+    keystone_service_description: Metric Service
+    keystone_service_type: metric
+    keystone_service_url: "{{ceilometer_gnocchi_url}}"
+
+- name: install controller
+  package:
+    name:
+      - openstack-gnocchi-api
+      - openstack-gnocchi-metricd
+      - "{{'python' if ansible_distribution_major_version|int < 8 else 'python3'}}-gnocchiclient"
+      - uwsgi
+      - uwsgi-plugin-common
+      - uwsgi-plugin-python3
+      - openstack-ceilometer-notification
+      - openstack-ceilometer-central
+    state: "{{package_state | default('present')}}"
+  notify:
+    - init gnocchi db
+    - restart gnocchi-api
+    - restart gnocchi-metricd
+    - init ceilometer db
+    - restart ceilometer-notification
+    - restart ceilometer-central
+
+- name: configure gnocchi
+  template:
+    src: gnocchi.conf.j2
+    dest: /etc/gnocchi/gnocchi.conf
+    backup: true
+  notify:
+    - init gnocchi db
+    - restart gnocchi-api
+    - restart gnocchi-metricd
+
+- name: configure ceilometer
+  template:
+    src: "{{item}}.j2"
+    dest: "/etc/ceilometer/{{item}}"
+    backup: true
+  loop:
+    - pipeline.yaml
+    - ceilometer.conf
+  notify:
+    - init ceilometer db
+    - restart ceilometer-notification
+    - restart ceilometer-central
+
+- name: flush handlers
+  meta: flush_handlers
+
+- name: start and enable gnocchi
+  systemd:
+    name: "{{item}}"
+    state: started
+    enabled: true
+  loop:
+    - gnocchi-api
+    - gnocchi-metricd
+
+- name: start and enable ceilometer
+  systemd:
+    name: "{{item}}"
+    state: started
+    enabled: true
+  loop:
+    - openstack-ceilometer-notification
+    - openstack-ceilometer-central

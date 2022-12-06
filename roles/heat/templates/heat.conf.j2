@@ -31,3 +31,8 @@ auth_url = {{keystone_url}}
 username = heat
 password = {{heat_user_password}}
 user_domain_name = default
+
+{% if ceilometer_enabled | default(false) %}
+[oslo_messaging_notifications]
+driver = messagingv2
+{% endif %}

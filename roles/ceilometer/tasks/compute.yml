@@ -1,0 +1,21 @@
+- name: install compute
+  package:
+    name: openstack-ceilometer-compute
+    state: "{{package_state | default('present')}}"
+
+- name: configure ceilometer
+  template:
+    src: ceilometer.conf.j2
+    dest: /etc/ceilometer/ceilometer.conf
+    backup: true
+  notify:
+    - restart ceilometer-compute
+
+- name: flush handlers
+  meta: flush_handlers
+
+- name: start and enable ceilometer-compute
+  systemd:
+    name: openstack-ceilometer-compute
+    state: started
+    enabled: true

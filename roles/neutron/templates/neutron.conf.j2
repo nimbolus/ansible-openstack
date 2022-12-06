@@ -35,6 +35,11 @@ password = {{neutron_nova_user_password}}
 project_domain_name = default
 project_name = service
 user_domain_name = default
+
+{% if ceilometer_enabled | default(false) %}
+[oslo_messaging_notifications]
+driver = messagingv2
+{% endif %}
 {% endif %}
 
 [keystone_authtoken]
