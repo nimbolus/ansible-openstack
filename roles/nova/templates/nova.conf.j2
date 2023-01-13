@@ -86,6 +86,9 @@ metadata_proxy_shared_secret = {{nova_metadata_secret}}
 [oslo_concurrency]
 lock_path = /var/lib/nova/tmp
 
+[oslo_messaging_rabbit]
+heartbeat_in_pthread = false
+
 [placement]
 auth_type = password
 auth_url = {{keystone_url}}/v3
