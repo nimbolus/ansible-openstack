@@ -1,7 +1,5 @@
 - name: init designate db
   shell: su -s /bin/sh -c "designate-manage database sync" designate
-  args:
-    warn: false
 
 - name: restart named
   systemd:
@@ -35,5 +33,3 @@
 
 - name: init designate pools
   shell: su -s /bin/sh -c "designate-manage pool update" designate
-  args:
-    warn: false

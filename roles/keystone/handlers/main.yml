@@ -1,7 +1,5 @@
 - name: init keystone db
   shell: su -s /bin/sh -c "keystone-manage db_sync" keystone
-  args:
-    warn: false
 
 - name: init keystone token provider
   shell: |

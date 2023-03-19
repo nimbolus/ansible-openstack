@@ -1,14 +1,12 @@
 - name: init glance db
   shell: su -s /bin/sh -c "glance-manage db_sync" glance
-  args:
-    warn: false
 
 - name: restart glance-registry
   systemd:
     name: openstack-glance-registry
     state: restarted
   when: ansible_distribution_major_version|int < 8
-  
+
 - name: restart glance-api
   systemd:
     name: openstack-glance-api

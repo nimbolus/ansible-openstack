@@ -1,7 +1,5 @@
 - name: init trove db
   shell: su -s /bin/sh -c "trove-manage db_sync" trove
-  args:
-    warn: false
 
 - name: restart trove-api
   systemd:

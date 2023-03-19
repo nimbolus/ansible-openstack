@@ -1,7 +1,5 @@
 - name: init octavia db
   shell: su -s /bin/sh -c "octavia-db-manage upgrade head" octavia
-  args:
-    warn: false
   when: is_controller_node
 
 - name: restart octavia-api

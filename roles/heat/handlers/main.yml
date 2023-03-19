@@ -1,7 +1,5 @@
 - name: init heat db
   shell: su -s /bin/sh -c "heat-manage db_sync" heat
-  args:
-    warn: false
 
 - name: restart heat-api
   systemd:

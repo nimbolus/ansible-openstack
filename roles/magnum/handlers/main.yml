@@ -1,7 +1,5 @@
 - name: init magnum db
   shell: su -s /bin/sh -c "magnum-db-manage upgrade" magnum
-  args:
-    warn: false
 
 - name: restart magnum-api
   systemd:
