@@ -1,7 +1,7 @@
 # {{ansible_managed}}
 
 [ml2]
-type_drivers = flat,vlan,vxlan
+type_drivers = flat,vlan,vxlan,local
 tenant_network_types = vxlan
 mechanism_drivers = linuxbridge,l2population{% if neutron_sriov %},sriovnicswitch{% endif %}
 
