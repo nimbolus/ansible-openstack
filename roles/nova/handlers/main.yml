@@ -41,6 +41,12 @@
     state: restarted
   when: is_compute_node
 
+- name: restart libvirtd
+  systemd:
+    name: libvirtd
+    state: restarted
+  when: is_compute_node
+
 - name: define nova ceph secret
   shell: |
     virsh secret-define --file /etc/ceph/libvirt_nova_ceph.xml

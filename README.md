@@ -16,7 +16,7 @@ ansible localhost -m template -a "src=secrets.yml.j2 dest=secrets.yml"
 
 Next create certificate authority and save the key at `/etc/openstack-ca/private/ca.key`
 and the certificate at `/etc/openstack-ca/certs/ca.crt` on the ca node. This can be done manually or
-with the `copy_ca.yml` playbook. Remember to use the password from `secrets_ca_key_pass` to encrypt the key.
+with the `copy_ca.yml` playbook. Remember to use the passphrase from `secrets_ca_key_pass` to encrypt the key.
 
 ```sh
 ansible-playbook copy_ca.yml --extra-vars "ca_cert_path=./my-ca.crt ca_key_path=./my-ca.key"

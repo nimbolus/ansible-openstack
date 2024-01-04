@@ -104,6 +104,12 @@ enabled = true
 server_proxyclient_address = $my_ip
 {% if is_controller_node %}
 server_listen = $my_ip
+{% if nova_libvirt_vnc_tls %}
+vencrypt_client_key = {{libvirt_vnc_nova_novnc.privatekey_path}}
+vencrypt_client_cert = {{libvirt_vnc_nova_novnc.cert_path}}
+vencrypt_ca_certs = {{libvirt_vnc_nova_novnc.ca_cert_path}}
+auth_schemes = {{nova_vnc_auth_schemes | join(',')}}
+{% endif %}
 {% endif %}
 {% if is_compute_node %}
 novncproxy_base_url = {{nova_novnc_url}}/vnc_auto.html
