@@ -18,7 +18,7 @@
 - name: init ca
   shell: |
     /usr/local/bin/cfssl gencert -initca ca.json | /usr/local/bin/cfssljson -bare ca -
-    openssl ec -aes256 -in ca-key.pem -out private/ca.key -passout pass:{{octavia_amphora_ca_key_passphrase}}
+    openssl ec -aes256 -in ca-key.pem -out private/ca.key -passout pass:{{ca_key_passphrase}}
     mv ca.pem certs/ca.crt
     rm ca-key.pem
   args:

@@ -61,3 +61,30 @@
     req_group: nova
     req_post_command: systemctl restart openstack-nova-novncproxy
     req_notify: restart nova-novncproxy
+
+- name: create libvirt-vnc ca
+  include_role:
+    name: ca
+    tasks_from: create_ca.yml
+  vars:
+    ca_dir: "{{nova_libvirt_vnc_ca_dir}}"
+    ca_organization_unit_name: libvirt VNC
+    ca_owner: root
+    ca_key_passphrase: "{{nova_libvirt_vnc_ca_key_passphrase}}"
+  when: nova_libvirt_vnc_tls
+
+- name: request libvirt-vnc certificate for nova-novnc
+  include_role:
+    name: ca
+    tasks_from: request_cert.yml
+  vars:
+    ca_dir: "{{nova_libvirt_vnc_ca_dir}}"
+    ca_organization_unit_name: libvirt VNC
+    ca_key_passphrase: "{{nova_libvirt_vnc_ca_key_passphrase}}"
+    req_name: nova-novnc
+    req_common_name: "{{ansible_nodename}}"
+    req_owner: nova
+    req_group: nova
+    req_post_command: systemctl restart openstack-nova-novncproxy
+    req_notify: restart nova-novncproxy
+  when: nova_libvirt_vnc_tls

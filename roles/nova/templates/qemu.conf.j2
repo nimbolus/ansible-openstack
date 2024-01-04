@@ -1,0 +1,7 @@
+# {{ansible_managed}}
+
+{% if nova_libvirt_vnc_tls %}
+vnc_tls = 1
+vnc_tls_x509_cert_dir = "{{nova_libvirt_vnc_ca_dir}}"
+vnc_tls_x509_verify = 1
+{% endif %}

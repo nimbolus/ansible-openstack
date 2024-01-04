@@ -46,6 +46,9 @@ nova_sriov_devices: []
   # - devname: eth1
   #   physical_network: net1
   #   trusted: false
+nova_libvirt_vnc_tls: false
+nova_libvirt_vnc_ca_dir: /etc/pki/libvirt-vnc
+nova_libvirt_vnc_ca_key_passphrase: "{{secrets_nova_libvirt_vnc_ca_key_pass}}"
 
 nova_url: "http://{{ansible_nodename}}:8774"
 nova_novnc_url: "https://{{ansible_nodename}}:6080"

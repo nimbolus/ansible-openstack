@@ -34,6 +34,41 @@
   when: "is_compute_node
         and nova_ephemeral_storage_backend == 'rbd'"
 
+- name: create libvirt-vnc ca directory
+  file:
+    name: "{{nova_libvirt_vnc_ca_dir}}"
+    state: directory
+  when: "is_compute_node
+        and nova_libvirt_vnc_tls"
+
+- name: request libvirt-vnc certificates for qemu
+  include_role:
+    name: ca
+    tasks_from: request_cert.yml
+  vars:
+    ca_dir: "{{nova_libvirt_vnc_ca_dir}}"
+    ca_organization_unit_name: libvirt VNC
+    ca_key_passphrase: "{{nova_libvirt_vnc_ca_key_passphrase}}"
+    req_name: qemu
+    req_common_name: "{{ansible_nodename}}"
+    req_owner: root
+    req_group: root
+    req_post_command: systemctl restart libvirtd
+    req_notify: restart libvirtd
+    req_override_privatekey_path: "{{nova_libvirt_vnc_ca_dir}}/server-key.pem"
+    req_override_cert_path: "{{nova_libvirt_vnc_ca_dir}}/server-cert.pem"
+    req_override_ca_cert_path: "{{nova_libvirt_vnc_ca_dir}}/ca-cert.pem"
+  when: "is_compute_node
+        and nova_libvirt_vnc_tls"
+
+- name: configure qemu
+  template:
+    src: qemu.conf.j2
+    dest: /etc/libvirt/qemu.conf
+    backup: true
+  when: is_compute_node
+  notify: restart libvirtd
+
 - name: enable migrations
   include_tasks: migrations.yml
   args:
