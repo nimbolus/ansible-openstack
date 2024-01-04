@@ -11,8 +11,8 @@ block_device_allocate_retries = 150
 max_local_block_devices = -1
 {% if is_controller_node %}
 ssl_only = true
-cert = {{ req_cert_path }}
-key = {{ req_privatekey_path }}
+cert = {{ openstack_nova_novnc.cert_path }}
+key = {{ openstack_nova_novnc.privatekey_path }}
 {% endif %}
 {% if nova_default_schedule_zone %}
 default_schedule_zone = {{nova_default_schedule_zone}}

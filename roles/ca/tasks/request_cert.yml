@@ -8,20 +8,20 @@
 #   req_notify (defaults to null)
 #   req_subject_alt_name (defaults to null)
 #   req_create_bundle (defaults to False) - creates a combined private key and certificate file
-#   req_override_privatekey_path (optional)
-#   req_override_cert_path (optional)
-#   req_override_bundle_path (optional)
-#   req_override_ca_cert_path (optional)
+#   req_privatekey_path (optional)
+#   req_cert_path (optional)
+#   req_bundle_path (optional)
+#   req_ca_cert_path (optional)
 
 - vars:
     default_privatekey_path: "{{ca_dir}}/private/{{req_common_name}}_{{req_name}}.key"
     default_csr_path: "{{ca_dir}}/csr/{{req_common_name}}_{{req_name}}.csr"
     default_cert_path: "{{ca_dir}}/certs/{{req_common_name}}_{{req_name}}.crt"
     default_bundle_path: "{{ca_dir}}/certs/{{req_common_name}}_{{req_name}}.bundle"
-    privatekey_path: "{{req_override_privatekey_path | default(default_privatekey_path)}}"
-    csr_path: "{{(req_override_cert_path + '.csr') if req_override_cert_path is defined else default_csr_path}}"
-    cert_path: "{{req_override_cert_path | default(default_cert_path)}}"
-    bundle_path: "{{req_override_bundle_path | default(default_bundle_path)}}"
+    privatekey_path: "{{req_privatekey_path | default(default_privatekey_path)}}"
+    csr_path: "{{(req_cert_path + '.csr') if req_cert_path is defined else default_csr_path}}"
+    cert_path: "{{req_cert_path | default(default_cert_path)}}"
+    bundle_path: "{{req_bundle_path | default(default_bundle_path)}}"
     ca_cert_path: "{{ca_dir}}/certs/ca.crt"
     fact_key: "{{req_fact_key | default(((ca_dir | basename) + '_' + req_name) | replace('-', '_'))}}"
   block:
@@ -84,16 +84,16 @@
       slurp:
         path: "{{ca_cert_path}}"
       register: req_ca_cert
-      when: req_override_ca_cert_path is defined
+      when: req_ca_cert_path is defined
       delegate_to: "{{ca_host}}"
 
     - name: "upload ca certificate for {{req_name}}"
       copy:
         content: "{{req_ca_cert.content | b64decode}}"
-        dest: "{{req_override_ca_cert_path}}"
+        dest: "{{req_ca_cert_path}}"
         owner: "{{req_owner | default(req_name)}}"
         group: "{{req_group | default(req_name)}}"
-      when: req_override_ca_cert_path is defined
+      when: req_ca_cert_path is defined
       notify: "{{req_notify | default(null)}}"
 
     - name: "fetch private key for {{req_name}}"

@@ -6,7 +6,7 @@
 - name: request certificate for registry
   include_role:
     name: ca
-    tasks_from: req_cert.yml
+    tasks_from: request_cert.yml
   vars:
     req_name: registry
     req_common_name: "{{ansible_nodename}}"

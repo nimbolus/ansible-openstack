@@ -5,8 +5,8 @@ Description=Docker Registry (System Container)
 ExecStart=/usr/bin/podman run --name registry \
     --network host \
     -v /var/lib/registry:/var/lib/registry:z \
-    -v {{req_privatekey_path}}:/certs/domain.key:ro,z \
-    -v {{req_cert_path}}:/certs/domain.crt:ro,z \
+    -v {{openstack_registry.privatekey_path}}:/certs/domain.key:ro,z \
+    -v {{openstack_registry.cert_path}}:/certs/domain.crt:ro,z \
     -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key \
     -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \
     -e REGISTRY_COMPATIBILITY_SCHEMA1_ENABLED=true \

@@ -8,7 +8,7 @@
 - name: request certificate
   include_role:
     name: ca
-    tasks_from: req_cert.yml
+    tasks_from: request_cert.yml
   vars:
     req_name: HTTP
     req_common_name: "{{ansible_nodename}}"
@@ -40,9 +40,9 @@
     - regexp: '^<VirtualHost _default_'
       line: "<VirtualHost _default_:{{httpd_ssl_listen_port}}>"
     - regexp: SSLCertificateFile
-      line: "SSLCertificateFile {{req_cert_path}}"
+      line: "SSLCertificateFile {{openstack_HTTP.cert_path}}"
     - regexp: SSLCertificateKeyFile
-      line: "SSLCertificateKeyFile {{req_privatekey_path}}"
+      line: "SSLCertificateKeyFile {{openstack_HTTP.privatekey_path}}"
   notify: reload httpd
 
 - name: configure ssl redirect

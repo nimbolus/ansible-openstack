@@ -52,7 +52,7 @@ ca_certificate = {{octavia_amphora_ca_dir}}/certs/ca.crt
 
 [haproxy_amphora]
 server_ca = {{octavia_amphora_ca_dir}}/certs/ca.crt
-client_cert = {{req_bundle_path}}
+client_cert = {{openstack_octavia.bundle_path}}
 
 [health_manager]
 bind_port = 5555
@@ -75,5 +75,5 @@ network_driver = allowed_address_pairs_driver
 compute_driver = compute_nova_driver
 amphora_driver = amphora_haproxy_rest_driver
 {% if octavia_worker %}
-client_ca = {{req_ca_cert_path}}
+client_ca = {{openstack_octavia.ca_cert_path}}
 {% endif %}

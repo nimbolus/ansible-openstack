@@ -55,9 +55,9 @@
     req_group: root
     req_post_command: systemctl restart libvirtd
     req_notify: restart libvirtd
-    req_override_privatekey_path: "{{nova_libvirt_vnc_ca_dir}}/server-key.pem"
-    req_override_cert_path: "{{nova_libvirt_vnc_ca_dir}}/server-cert.pem"
-    req_override_ca_cert_path: "{{nova_libvirt_vnc_ca_dir}}/ca-cert.pem"
+    req_privatekey_path: "{{nova_libvirt_vnc_ca_dir}}/server-key.pem"
+    req_cert_path: "{{nova_libvirt_vnc_ca_dir}}/server-cert.pem"
+    req_ca_cert_path: "{{nova_libvirt_vnc_ca_dir}}/ca-cert.pem"
   when: "is_compute_node
         and nova_libvirt_vnc_tls"
 

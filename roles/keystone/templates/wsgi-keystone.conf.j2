@@ -4,8 +4,8 @@ Listen 5000
 
 <VirtualHost *:5000>
     SSLEngine on
-    SSLCertificateFile {{req_cert_path}}
-    SSLCertificateKeyFile {{req_privatekey_path}}
+    SSLCertificateFile {{openstack_keystone.cert_path}}
+    SSLCertificateKeyFile {{openstack_keystone.privatekey_path}}
     WSGIDaemonProcess keystone-public processes=5 threads=1 user=keystone group=keystone display-name=%{GROUP}
     WSGIProcessGroup keystone-public
     WSGIScriptAlias / /usr/bin/keystone-wsgi-public

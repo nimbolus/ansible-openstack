@@ -8,15 +8,6 @@
     - "{{ca_dir}}/certs"
     - "{{ca_dir}}/csr"
 
-- name: create ssl directory
-  file:
-    name: "{{item}}"
-    state: directory
-  loop:
-    - "{{ca_ssl_dir}}"
-    - "{{ca_ssl_dir}}/private"
-    - "{{ca_ssl_dir}}/certs"
-
 - name: fetch ca certificate
   slurp:
     path: "{{ca_cert_path}}"

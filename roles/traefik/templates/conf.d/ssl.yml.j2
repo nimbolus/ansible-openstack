@@ -5,8 +5,8 @@ tls:
   stores:
     default:
       defaultCertificate:
-        certFile: {{req_cert_path}}
-        keyFile: {{req_privatekey_path}}
+        certFile: {{openstack_traefik.cert_path}}
+        keyFile: {{openstack_traefik.privatekey_path}}
 {% else %}
 # automated by let's encrypt
 {% endif %}

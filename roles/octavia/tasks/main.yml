@@ -55,7 +55,7 @@
 - name: request certificate for worker
   include_role:
     name: ca
-    tasks_from: req_cert.yml
+    tasks_from: request_cert.yml
   vars:
     req_name: octavia
     req_common_name: "{{ansible_nodename}}"

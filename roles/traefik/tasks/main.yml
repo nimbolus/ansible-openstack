@@ -37,7 +37,7 @@
 - name: request certificate
   include_role:
     name: ca
-    tasks_from: req_cert.yml
+    tasks_from: request_cert.yml
   vars:
     req_name: traefik
     req_common_name: "{{traefik_controller_domain}}"
@@ -80,4 +80,3 @@
     name: traefik
     state: started
     enabled: true
-
