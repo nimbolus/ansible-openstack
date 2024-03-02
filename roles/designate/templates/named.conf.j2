@@ -5,8 +5,8 @@ include "/etc/named.rfc1912.zones";
 include "/etc/named.root.key";
 
 options {
-    listen-on    port 53 { 127.0.0.1; {% if designate_named_ipv4_listen_address %}{{designate_named_ipv4_listen_address}}; {% endif %}};
-    listen-on-v6 port 53 { ::1; {% if designate_named_ipv6_listen_address %}{{designate_named_ipv6_listen_address}}; {% endif %}};
+    listen-on    port 53 { 127.0.0.1; {% for ip in designate_named_ipv4_listen_addresses %}{{ip}}; {% endfor %}};
+    listen-on-v6 port 53 { ::1; {% for ip in designate_named_ipv6_listen_addresses %}{{ip}}; {% endfor %}};
     directory    "/var/named";
 
     dump-file          "/var/named/data/cache_dump.db";
@@ -17,6 +17,9 @@ options {
 
     allow-query       { any; };
     allow-transfer    { {% if designate_allow_transfer | length > 0 %}{% for ip in designate_allow_transfer%}{{ip}}; {% endfor %}{% else %}"none"; {% endif %}};
+{% if designate_allow_transfer | length > 0 %}
+    also-notify       { {% for ip in designate_allow_transfer%}{{ip}}; {% endfor %}};
+{% endif %}
     recursion         {% if designate_recursion %}yes{% else %}no{% endif %};
     dnssec-enable     yes;
     dnssec-validation yes;
