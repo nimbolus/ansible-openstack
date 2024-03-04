@@ -17,9 +17,6 @@ options {
 
     allow-query       { any; };
     allow-transfer    { {% if designate_allow_transfer | length > 0 %}{% for ip in designate_allow_transfer%}{{ip}}; {% endfor %}{% else %}"none"; {% endif %}};
-{% if designate_allow_transfer | length > 0 %}
-    also-notify       { {% for ip in designate_allow_transfer%}{{ip}}; {% endfor %}};
-{% endif %}
     recursion         {% if designate_recursion %}yes{% else %}no{% endif %};
     dnssec-enable     yes;
     dnssec-validation yes;
