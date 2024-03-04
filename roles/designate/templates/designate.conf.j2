@@ -11,6 +11,13 @@ enable_api_admin = True
 enable_host_header = True
 enabled_extensions_admin = quotas, reports
 
+[service:central]
+scheduler_filters = {{designate_scheduler_filters | join(', ')}}
+
+[service:mdns]
+query_enforce_tsig = {{designate_mdns_query_enforce_tsig}}
+listen = {{designate_mdns_listen | join(', ')}}
+
 [keystone_authtoken]
 auth_type = password
 username = designate

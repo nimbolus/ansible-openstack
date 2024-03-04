@@ -30,6 +30,7 @@
   systemd:
     name: designate-mdns
     state: restarted
+    daemon_reload: true
 
 - name: init designate pools
   shell: su -s /bin/sh -c "designate-manage pool update" designate

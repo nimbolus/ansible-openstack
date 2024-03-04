@@ -12,5 +12,35 @@ designate_named_ipv4_listen_addresses:
   - "{{ansible_default_ipv4.address | default([])}}"
 designate_named_ipv6_listen_addresses:
   - "{{ansible_default_ipv6.address | default([])}}"
+designate_scheduler_filters:
+  - default_pool
+designate_mdns_listen:
+  - 0.0.0.0:5354
+designate_mdns_allow_privileged_ports: false
+designate_mdns_query_enforce_tsig: false
+designate_pools:
+  - "{{designate_default_pool}}"
+designate_default_pool:
+  name: default
+  description: Default Pool
+  attributes: {}
+  ns_records:
+    - hostname: "{{designate_default_ns_record}}"
+      priority: 1
+  nameservers:
+    - host: 127.0.0.1
+      port: 53
+  targets:
+    - type: bind9
+      description: BIND9 Server 1
+      masters:
+        - host: 127.0.0.1
+          port: 5354
+      options:
+        host: 127.0.0.1
+        port: 53
+        rndc_host: 127.0.0.1
+        rndc_port: 953
+        rndc_key_file: /etc/designate/rndc.key
 
 designate_url: "http://{{ansible_nodename}}:9001"
