@@ -56,3 +56,9 @@ controls {
     inet 127.0.0.1 port 953
     allow { 127.0.0.1; } keys { "designate"; };
 };
+
+{% if designate_mdns_query_enforce_tsig %}
+server 127.0.0.1 {
+    keys { designate; };
+};
+{% endif %}
