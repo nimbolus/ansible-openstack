@@ -6,12 +6,12 @@ It's highly recommended to setup TSIG key authentication for the default pool.
 
 1. Fetch generated TSIG key from `/etc/designate/rndc.key`
 2. Add TSIG key to OpenStack database:
-```sh
-openstack tsigkey create --name designate --algorithm hmac-md5 \
-    --scope POOL --resource-id <default-pool-id>
-    --secret <secret>
-```
-1. Set `designate_mdns_query_enforce_tsig` to `true`
+   ```sh
+   openstack tsigkey create --name designate --algorithm hmac-md5 \
+     --scope POOL --resource-id <default-pool-id>
+     --secret <secret>
+   ```
+3. Set `designate_mdns_query_enforce_tsig` to `true`
 
 ## Multiple DNS Server Pools
 
