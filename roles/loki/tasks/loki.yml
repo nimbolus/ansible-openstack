@@ -5,31 +5,17 @@
   check_mode: false
   changed_when: loki_version not in loki_current_version.stdout
 
-- name: download loki
-  unarchive:
-    src: "https://github.com/grafana/loki/releases/download/v{{loki_version}}/loki-linux-amd64.zip"
-    dest: /tmp
-    remote_src: true
-  when: loki_current_version.changed
-
-- name: install loki
-  copy:
-    src: /tmp/loki-linux-amd64
-    dest: /usr/local/bin/loki
-    mode: 0755
-    remote_src: true
+- name: install
+  include_tasks: install.yml
   when: loki_current_version.changed
 
 - name: create loki data directory
   file:
-    path: "{{item}}"
+    path: /var/lib/loki
     owner: loki
     group: loki
     mode: 0750
     state: directory
-  loop:
-    - /var/lib/loki
-    - /var/lib/loki/data
 
 - name: create loki systemd service
   copy:

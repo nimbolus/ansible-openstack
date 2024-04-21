@@ -1,4 +1,5 @@
 # {{ansible_managed}}
+# reference: https://grafana.com/docs/loki/latest/configure/examples/configuration-examples/#1-local-configuration-exampleyaml
 
 auth_enabled: false
 
@@ -7,52 +8,24 @@ server:
   http_listen_address: {{loki_listen_address}}
   log_level: warn
 
-ingester:
-  lifecycler:
-    address: 127.0.0.1
-    ring:
-      kvstore:
-        store: inmemory
-      replication_factor: 1
-    final_sleep: 0s
-  chunk_idle_period: 5m
-  chunk_retain_period: 30s
+common:
+  ring:
+    instance_addr: 127.0.0.1
+    kvstore:
+      store: inmemory
+  replication_factor: 1
+  path_prefix: /var/lib/loki
 
 schema_config:
   configs:
-  - from: 2019-01-11
-    store: boltdb
+  - from: 2020-05-15
+    store: tsdb
     object_store: filesystem
-    schema: v9
+    schema: v13
     index:
       prefix: index_
-      period: 168h
+      period: 24h
 
 storage_config:
-  boltdb:
-    directory: /var/lib/loki/data/index
-
   filesystem:
-    directory: /var/lib/loki/data/chunks
-
-limits_config:
-  enforce_metric_name: false
-  reject_old_samples: true
-  reject_old_samples_max_age: 168h
-
-chunk_store_config:
-  max_look_back_period: 0
-
-table_manager:
-  chunk_tables_provisioning:
-    inactive_read_throughput: 0
-    inactive_write_throughput: 0
-    provisioned_read_throughput: 0
-    provisioned_write_throughput: 0
-  index_tables_provisioning:
-    inactive_read_throughput: 0
-    inactive_write_throughput: 0
-    provisioned_read_throughput: 0
-    provisioned_write_throughput: 0
-  retention_deletes_enabled: false
-  retention_period: 0
+    directory: /var/lib/loki/chunks
