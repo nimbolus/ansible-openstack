@@ -52,6 +52,8 @@
     - init designate db
     - restart designate-central
     - restart designate-api
+    - restart designate-worker
+    - restart designate-mdns
 
 - name: configure pools
   template:
@@ -59,16 +61,12 @@
     dest: /etc/designate/pools.yaml
     group: designate
     backup: true
-  notify:
-    - init designate pools
-    - restart designate-worker
-    - restart designate-producer
-    - restart designate-mdns
+  notify: init designate pools
 
 - name: configure named
   template:
     src: named.conf.j2
-    dest: /etc/named.conf 
+    dest: /etc/named.conf
     backup: true
   notify: restart named
 
@@ -83,6 +81,21 @@
     owner: named
     group: designate
     mode: 0640
+
+- name: create mdns service overrides directory
+  file:
+    path: /etc/systemd/system/designate-mdns.service.d
+    state: directory
+  when: designate_mdns_allow_privileged_ports
+
+- name: allow using privileged port for mdns
+  copy:
+    dest: /etc/systemd/system/designate-mdns.service.d/override.conf
+    content: |
+      [Service]
+      AmbientCapabilities=CAP_NET_BIND_SERVICE
+  notify: restart designate-mdns
+  when: designate_mdns_allow_privileged_ports
 
 - name: flush handlers
   meta: flush_handlers
