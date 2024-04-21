@@ -1,21 +1,31 @@
 # downloads and extracts binary archives from github
-# required vars on include: download_url, download_folder, download_binaries
+# required vars on include: download_url, download_binaries
+# optional vars on include: download_folder
 
 - name: "install {{download_binaries[0]}}: download"
   unarchive:
     src: "{{download_url}}"
     remote_src: true
     dest: /tmp
+    include: "{{[] if download_folder is defined else download_binaries}}"
 
 - name: "install {{download_binaries[0]}}: copy binaries"
   copy:
-    src: "/tmp/{{download_folder}}/{{item}}"
+    src: "/tmp/{{download_folder + '/' if download_folder is defined}}{{item}}"
     remote_src: true
     dest: "/usr/local/bin/{{item}}"
     mode: 0755
   loop: "{{download_binaries}}"
 
-- name: "install {{download_binaries[0]}}: cleanup"
+- name: "install {{download_binaries[0]}}: cleanup binaries"
+  file:
+    path: "/tmp/{{item}}"
+    state: absent
+  when: download_folder is not defined
+  loop: "{{download_binaries}}"
+
+- name: "install {{download_binaries[0]}}: cleanup folder"
   file:
     path: "/tmp/{{download_folder}}"
     state: absent
+  when: download_folder is defined

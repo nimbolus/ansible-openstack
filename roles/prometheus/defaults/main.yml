@@ -1,5 +1,7 @@
-prometheus_version: 2.26.0
+# renovate: datasource=github-tags depName=prometheus/prometheus versioning=semver-coerced
+prometheus_version: 2.51.2
 prometheus_scrape_configs: []
 prometheus_enabled_exporters:
   - openstack
-prometheus_openstack_exporter_version: 1.4.0
+# renovate: datasource=github-tags depName=openstack-exporter/openstack-exporter versioning=semver-coerced
+prometheus_openstack_exporter_version: 1.7.0
