@@ -9,8 +9,7 @@
 - name: install openstack-exporter
   include_tasks: ../install.yml
   vars:
-    download_url: "https://github.com/openstack-exporter/openstack-exporter/releases/download/v{{prometheus_openstack_exporter_version}}/openstack-exporter-{{prometheus_openstack_exporter_version}}.linux-amd64.tar.gz"
-    download_folder: "openstack-exporter-{{prometheus_openstack_exporter_version}}.linux-amd64"
+    download_url: "https://github.com/openstack-exporter/openstack-exporter/releases/download/v{{prometheus_openstack_exporter_version}}/openstack-exporter_{{prometheus_openstack_exporter_version}}_linux_amd64.tar.gz"
     download_binaries:
       - openstack-exporter
     download_notify_service: prometheus-openstack-exporter

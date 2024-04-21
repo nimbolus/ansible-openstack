@@ -1,0 +1,14 @@
+{
+    "enabled": true,
+    "regexManagers": [
+        {
+            "fileMatch": [
+                "^roles\\/.*\\/defaults\\/main\\.yml$"
+            ],
+            "matchStrings": [
+                "renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?_version: (?<currentValue>.*)\\s"
+            ],
+            "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+        }
+    ]
+}
