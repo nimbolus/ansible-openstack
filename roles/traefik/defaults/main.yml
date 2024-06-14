@@ -1,5 +1,5 @@
 # renovate: datasource=github-tags depName=traefik/traefik versioning=semver-coerced
-traefik_version: 2.11.2
+traefik_version: 2.11.4
 # log level can be DEBUG, PANIC, FATAL, ERROR, WARN or INFO
 traefik_log_level: ERROR
 traefik_admin_domain: null
